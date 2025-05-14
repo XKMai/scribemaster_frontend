@@ -1,9 +1,9 @@
-import { SignupForm } from "@/components/SignupForm"
+import SignupForm2 from "@/components/SignupForm2"
 
 const SignupPage = () => {
   return (
     <>
-        <SignupForm />
+        <SignupForm2 />
     </>
   )
 }
