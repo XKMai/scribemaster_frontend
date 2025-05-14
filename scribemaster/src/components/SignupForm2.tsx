@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 // Zod schema with confirm password match
 const signupSchema = z
@@ -37,21 +38,22 @@ export default function SignupForm2() {
     },
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data: SignupSchema) => {
-    try {
-      const response = await axios.post("https://your-api.com/api/signup", {
-        username: data.username,
-        password: data.password,
-      });
+  try {
+    await axios.post("https://your-api.com/api/signup", {
+      username: data.username,
+      password: data.password,
+    });
 
-      console.log("Signup successful", response.data);
-      // Optionally store token or navigate to another page
+    // ✅ Redirect to login page after successful signup
+    navigate("/login");
 
-    } catch (error: any) {
-      console.error("Signup failed", error.response?.data || error.message);
-      // Optionally show error feedback
-    }
-  };
+  } catch (error: any) {
+    alert("signup failed");
+  }
+};
 
   return (
     <Form {...form}>

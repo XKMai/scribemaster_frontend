@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from 'axios';
+import { useNavigate } from "react-router";
 
 // Zod Schema
 const loginSchema = z.object({
@@ -30,16 +31,18 @@ export default function LoginForm2() {
     },
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data: LoginSchema) => {
   try {
-    const response = await axios.post("https://your-api.com/api/login", data);
-    const token = response.data.token;
-    localStorage.setItem("token", token); 
+    await axios.post("https://your-api.com/api/login", data, {
+      withCredentials: true,
+    });
 
-    // Redirect user or update auth context
-    console.log("Login successful");
+    navigate("/home");
+
   } catch (error: any) {
-    console.error("Login failed", error.response?.data || error.message);
+    alert("wrong username or password!");
   }
 };
 
