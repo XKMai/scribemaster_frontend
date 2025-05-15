@@ -17,7 +17,7 @@ import { useNavigate } from "react-router";
 // Zod schema with confirm password match
 const signupSchema = z
   .object({
-    username: z.string().min(2, { message: "Username is required" }),
+    name: z.string().min(2, { message: "Username is required" }),
     password: z.string().min(6, { message: "Password must be at least 6 characters" }),
     confirmPassword: z.string(),
   })
@@ -32,7 +32,7 @@ export default function SignupForm2() {
   const form = useForm<SignupSchema>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      username: "",
+      name: "",
       password: "",
       confirmPassword: "",
     },
@@ -42,12 +42,11 @@ export default function SignupForm2() {
 
   const onSubmit = async (data: SignupSchema) => {
   try {
-    await axios.post("https://your-api.com/api/signup", {
-      username: data.username,
+    await axios.post("http://127.0.0.1:5000/register", {
+      name: data.name,
       password: data.password,
     });
 
-    // ✅ Redirect to login page after successful signup
     navigate("/login");
 
   } catch (error: any) {
@@ -60,7 +59,7 @@ export default function SignupForm2() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full max-w-sm">
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>

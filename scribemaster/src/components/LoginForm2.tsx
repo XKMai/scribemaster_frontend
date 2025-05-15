@@ -16,7 +16,7 @@ import { useNavigate } from "react-router";
 
 // Zod Schema
 const loginSchema = z.object({
-  username: z.string().min(2, { message: "Username is required" }),
+  name: z.string().min(2, { message: "Username is required" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 });
 
@@ -26,7 +26,7 @@ export default function LoginForm2() {
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
+      name: "",
       password: "",
     },
   });
@@ -35,7 +35,7 @@ export default function LoginForm2() {
 
   const onSubmit = async (data: LoginSchema) => {
   try {
-    await axios.post("https://your-api.com/api/login", data, {
+    await axios.post("http://127.0.0.1:5000/login", data, {
       withCredentials: true,
     });
 
@@ -51,12 +51,12 @@ export default function LoginForm2() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full max-w-sm">
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="username" {...field} />
+                <Input placeholder="name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

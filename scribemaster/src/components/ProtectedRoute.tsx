@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await api.get("/me"); // Example: backend validates session via cookie
+        await api.get("http://127.0.0.1:5000/me"); 
         setIsAuthenticated(true);
       } catch {
         setIsAuthenticated(false);

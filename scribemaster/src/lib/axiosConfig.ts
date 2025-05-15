@@ -1,8 +1,7 @@
-// src/lib/axiosConfig.ts
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://your-api.com/api",
+  baseURL: "http://127.0.0.1:5000",
   withCredentials: true, // Automatically include cookies
   headers: {
     "Content-Type": "application/json",
