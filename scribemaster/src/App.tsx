@@ -2,6 +2,9 @@ import { Route, Routes, Navigate } from "react-router"
 import LoginPage from "./pages/LoginPage"
 import HomePage from "./pages/HomePage"
 import SignupPage from "./pages/SignupPage"
+import "./lib/axiosConfig";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 
 
 function App() {
@@ -12,7 +15,14 @@ function App() {
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/home" element={<HomePage />} />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <HomePage />
+                </ProtectedRoute>
+              }
+            />
       </Routes>
     </main>
     </>
