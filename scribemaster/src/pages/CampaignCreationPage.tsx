@@ -6,9 +6,9 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 const CampaignCreationPage = () => {
   return (
     <SidebarProvider>
-                    <AppSidebar/>
-                    <SidebarTrigger/>
-                        <CampaignCreation />
+        <AppSidebar/>
+        <SidebarTrigger/>
+        <CampaignCreation />
     </SidebarProvider>
   )
 }
