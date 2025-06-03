@@ -1,10 +1,15 @@
+import { AppSidebar } from "@/components/AppSidebar"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 const HomePage = () => {
   return (
     <>
-        <div>Hello There</div>
+      <SidebarProvider>
+        <AppSidebar/>
+        <SidebarTrigger/>
+        <div>Welcome to The Home Page!</div>
+      </SidebarProvider>
     </>
-    
   )
 }
 
