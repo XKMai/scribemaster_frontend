@@ -3,8 +3,8 @@ import LoginPage from "./pages/LoginPage"
 import HomePage from "./pages/HomePage"
 import SignupPage from "./pages/SignupPage"
 import "./lib/axiosConfig";
-import ProtectedRoute from "./components/ProtectedRoute";
-
+import CampaignCreationPage from "./pages/CampaignCreationPage";
+import CampaignReaderPage from "./pages/CampaignReaderPage";
 
 
 function App() {
@@ -12,15 +12,19 @@ function App() {
     <>
       <main className="flex flex-col items-center justify-center min-h-svh">   
       <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/campaigncreation" element={<CampaignCreationPage />} />
+            <Route path="/campaignreader" element={<CampaignReaderPage />} />
+
+
             <Route
               path="/home"
               element={
-                <ProtectedRoute>
-                  <HomePage />
-                </ProtectedRoute>
+                //<ProtectedRoute>    
+                    <HomePage />
+                //</ProtectedRoute>
               }
             />
       </Routes>
