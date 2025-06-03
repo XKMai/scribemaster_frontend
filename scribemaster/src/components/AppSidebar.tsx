@@ -1,4 +1,4 @@
-import { Calendar, ChevronUp, Home, Inbox, Search, Settings, User2 } from "lucide-react"
+import {  ChevronUp, Home, Inbox,  Settings, User2 } from "lucide-react"
 
 import {
   Sidebar,
@@ -7,7 +7,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -24,7 +23,12 @@ const items = [
   },
   {
     title: "Campaign Creation",
-    url: "#",
+    url: "/campaigncreation",
+    icon: Inbox,
+  },
+  {
+    title: "Campaign Reader",
+    url: "/campaignreader",
     icon: Inbox,
   },
   {
