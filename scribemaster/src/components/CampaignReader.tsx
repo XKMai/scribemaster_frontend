@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Label } from "@radix-ui/react-label";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
-import { Input } from "./ui/input";
-import { Alert, AlertDescription } from "./ui/alert";
 import { FileText } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
+import CampaignExplorer from './CampaignExplorer';
 
 const CampaignReader = () => {
 
@@ -44,9 +42,10 @@ const CampaignReader = () => {
 
     try {
       const response = await axios.get(`http://127.0.0.1:5000/campaigns/${selectedCampaignId}`);
-      setCampaignData(response.data); 
       alert("Campaign loaded successfully!");
-      console.log("Loaded campaign data:", response.data);
+      return (
+        <CampaignExplorer campaignId={selectedCampaignId} />
+      )
     } catch (error) {
       console.error("Failed to load campaign:", error);
       alert("Error loading campaign.");
