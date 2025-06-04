@@ -1,36 +1,75 @@
 {
-    "id": 2,
-    "name": "campaign2",
-    "settings": {
-        "users": [
-            1
-        ]
-    },
-    "items": [
-        {
-            "id": 5,
-            "type": "folder",
-            "refId": 4,
-            "position": 0,
-            "data": {
-                "id": 4,
-                "name": "folder1",
-                "isCampaign": false,
-                "settings": {},
-                "createdBy": 1
-            }
-        },
-        {
-            "id": 6,
+  "id": 1,
+  "name": "Nested Campaign",
+  "settings": {
+    "users": [1]
+  },
+  "items": [
+    {
+      "id": 1,
+      "type": "folder",
+      "refId": 101,
+      "position": 0,
+      "data": {
+        "id": 101,
+        "name": "Worldbuilding",
+        "isCampaign": false,
+        "settings": {},
+        "createdBy": 1,
+        "items": [
+          {
+            "id": 2,
             "type": "note",
-            "refId": 4,
+            "refId": 201,
             "position": 0,
             "data": {
-                "id": 4,
-                "title": "note1",
-                "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultrices vehicula nisl eu placerat. Donec condimentum iaculis risus sit amet hendrerit. Curabitur imperdiet vulputate mauris in pulvinar. Pellentesque libero neque. ",
-                "createdBy": 1
+              "id": 201,
+              "title": "Geography",
+              "content": "The world is divided into 3 major continents.",
+              "createdBy": 1
             }
-        }
-    ]
+          },
+          {
+            "id": 3,
+            "type": "folder",
+            "refId": 102,
+            "position": 1,
+            "data": {
+              "id": 102,
+              "name": "Factions",
+              "isCampaign": false,
+              "settings": {},
+              "createdBy": 1,
+              "items": [
+                {
+                  "id": 4,
+                  "type": "note",
+                  "refId": 202,
+                  "position": 0,
+                  "data": {
+                    "id": 202,
+                    "title": "The Crimson Order",
+                    "content": "A secretive guild of assassins operating in the shadows.",
+                    "createdBy": 1
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "type": "note",
+      "refId": 203,
+      "position": 1,
+      "data": {
+        "id": 203,
+        "title": "Main Quest",
+        "content": "Retrieve the artifact from the ruins of Elara.",
+        "createdBy": 1
+      }
+    }
+  ]
 }
