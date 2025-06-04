@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 
 const loginSchema = z.object({
-  campaignname: z.string().min(2, { message: "Campaign Name is required" }),
+  campaignname: z.string().min(4, { message: "Campaign Name is required" }),
 });
 
 type LoginSchema = z.infer<typeof loginSchema>;
@@ -34,7 +34,7 @@ const CampaignCreation = () => {
 
   const onSubmit = async (data: LoginSchema) => {
   try {
-    await axios.post("http://127.0.0.1:5000/campaigncreation", data);
+    await axios.post("http://127.0.0.1:5000/campaign", data);
 
     // open alert to inform user of successful campaign creation, give button to redirect to campaign reader
     alert("campaign created successfully");
