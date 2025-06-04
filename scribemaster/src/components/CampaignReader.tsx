@@ -32,9 +32,9 @@ const CampaignReader = () => {
             </CardTitle>
         </CardHeader>
         <CardContent className='grid gap-4'>
-            <DropdownMenu>
-                <DropdownMenuTrigger>
-                <Button variant="outline" onClick={fetchCampaigns}>
+            <DropdownMenu onOpenChange={(open) => open && fetchCampaigns()}>
+                <DropdownMenuTrigger asChild>
+                <Button variant="outline">
                 Open Campaigns
                 </Button>
                 </DropdownMenuTrigger>
@@ -51,7 +51,7 @@ const CampaignReader = () => {
                 </DropdownMenuContent>
             </DropdownMenu>
         </CardContent>
-        <CardFooter className='grid gap-2'>
+        <CardFooter className='grid gap-6'>
             <Button variant="outline" className='w-full'>
                 Load Campaign
             </Button>
