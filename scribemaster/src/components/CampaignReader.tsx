@@ -24,6 +24,11 @@ const CampaignReader = () => {
                 </DropdownMenuContent>
             </DropdownMenu>
         </CardContent>
+        <CardFooter className='grid gap-2'>
+            <Button variant="outline" className='w-full'>
+                Load Campaign
+            </Button>
+        </CardFooter>
     </Card>
 
   )
