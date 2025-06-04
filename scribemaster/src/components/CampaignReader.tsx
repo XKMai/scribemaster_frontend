@@ -15,6 +15,9 @@ const CampaignReader = () => {
                 Campaign Reader
             </CardTitle>
         </CardHeader>
+        <CardContent className='grid gap-4'>
+
+        </CardContent>
     </Card>
 
   )
