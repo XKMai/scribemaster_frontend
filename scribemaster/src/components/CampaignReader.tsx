@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "./ui/input";
 import { Alert, AlertDescription } from "./ui/alert";
 import { FileText } from 'lucide-react';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel } from '@radix-ui/react-dropdown-menu';
 
 const CampaignReader = () => {
   return (
@@ -16,7 +17,12 @@ const CampaignReader = () => {
             </CardTitle>
         </CardHeader>
         <CardContent className='grid gap-4'>
-
+            <DropdownMenu>
+                <DropdownMenuTrigger>Open Campaigns</DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuLabel>Sample Campaign</DropdownMenuLabel>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </CardContent>
     </Card>
 
