@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { Label } from "@radix-ui/react-label";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
@@ -8,7 +9,21 @@ import { FileText } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel } from '@radix-ui/react-dropdown-menu';
 
 const CampaignReader = () => {
-  return (
+
+    // storing list of campaigns when obtained
+    const [campaigns, setCampaigns] = useState<{id: string; name: string}[]>([])
+
+    // call to obtain list of campaigns
+    const fetchCampaigns = async () => {
+        try {
+        const response = await axios.get('http://127.0.0.1:5000/campaignslist');
+        setCampaigns(response.data); 
+        } catch (error) {
+        console.error('Failed to fetch campaigns:', error);
+        }
+    };
+
+    return (
     <Card className='w-full max-w-md mx-auto'>
         <CardHeader>
             <CardTitle>
@@ -18,9 +33,21 @@ const CampaignReader = () => {
         </CardHeader>
         <CardContent className='grid gap-4'>
             <DropdownMenu>
-                <DropdownMenuTrigger>Open Campaigns</DropdownMenuTrigger>
+                <DropdownMenuTrigger>
+                <Button variant="outline" onClick={fetchCampaigns}>
+                Open Campaigns
+                </Button>
+                </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuLabel>Sample Campaign</DropdownMenuLabel>
+                    {campaigns.length > 0 ? (
+                        campaigns.map((campaign) => (
+                            <DropdownMenuLabel key={campaign.id}>
+                                {campaign.name}
+                            </DropdownMenuLabel>
+                    ))
+                    ) : (
+                    <DropdownMenuLabel>No campaigns found</DropdownMenuLabel>
+                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
         </CardContent>
