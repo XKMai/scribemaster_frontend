@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "./ui/input";
 import { Alert, AlertDescription } from "./ui/alert";
 import { FileText } from 'lucide-react';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel } from '@radix-ui/react-dropdown-menu';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
 
 const CampaignReader = () => {
 
@@ -54,14 +54,14 @@ const CampaignReader = () => {
   };
 
     return (
-    <Card className='w-full max-w-md mx-auto'>
+    <Card className='w-full max-w-md mx-auto my-auto flex flex-col h-[400px]'>
         <CardHeader>
             <CardTitle>
-                <FileText className='w-4 h-4' />
+                <FileText className='w-4 h-4 inline-block mr-2' />
                 Campaign Reader
             </CardTitle>
         </CardHeader>
-        <CardContent className='grid gap-4'>
+        <CardContent className='grid gap-4 flex-grow'>
             <DropdownMenu onOpenChange={(open) => open && fetchCampaigns()}>
                 <DropdownMenuTrigger asChild>
                 <Button variant="outline">
@@ -71,12 +71,12 @@ const CampaignReader = () => {
                 <DropdownMenuContent>
                     {campaigns.length > 0 ? (
                         campaigns.map((campaign) => (
-                            <DropdownMenuLabel 
+                            <DropdownMenuItem
                             key={campaign.id}
                             onSelect={() => setSelectedCampaignId(campaign.id)}
                             >
                                 {campaign.name}
-                            </DropdownMenuLabel>
+                            </DropdownMenuItem>
                     ))
                     ) : (
                     <DropdownMenuLabel>No campaigns found</DropdownMenuLabel>
@@ -84,7 +84,7 @@ const CampaignReader = () => {
                 </DropdownMenuContent>
             </DropdownMenu>
         </CardContent>
-        <CardFooter className='grid gap-6'>
+        <CardFooter className='p-4 border-t mt-auto'>
             <Button variant="outline" className='w-full' onClick={loadCampaign}>
                 Load Campaign
             </Button>
