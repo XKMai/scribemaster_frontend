@@ -1,0 +1,36 @@
+{
+    "id": 2,
+    "name": "campaign2",
+    "settings": {
+        "users": [
+            1
+        ]
+    },
+    "items": [
+        {
+            "id": 5,
+            "type": "folder",
+            "refId": 4,
+            "position": 0,
+            "data": {
+                "id": 4,
+                "name": "folder1",
+                "isCampaign": false,
+                "settings": {},
+                "createdBy": 1
+            }
+        },
+        {
+            "id": 6,
+            "type": "note",
+            "refId": 4,
+            "position": 0,
+            "data": {
+                "id": 4,
+                "title": "note1",
+                "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultrices vehicula nisl eu placerat. Donec condimentum iaculis risus sit amet hendrerit. Curabitur imperdiet vulputate mauris in pulvinar. Pellentesque libero neque. ",
+                "createdBy": 1
+            }
+        }
+    ]
+}
