@@ -8,7 +8,15 @@ import { FileText } from 'lucide-react';
 
 const CampaignReader = () => {
   return (
-    <div>CampaignReader</div>
+    <Card className='w-full max-w-md mx-auto'>
+        <CardHeader>
+            <CardTitle>
+                <FileText className='w-4 h-4' />
+                Campaign Reader
+            </CardTitle>
+        </CardHeader>
+    </Card>
+
   )
 }
 
