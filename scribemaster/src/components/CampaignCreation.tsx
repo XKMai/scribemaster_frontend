@@ -1,8 +1,7 @@
-import { Label } from "@radix-ui/react-label"
 import { Button } from "./ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./ui/card"
 import { Input } from "./ui/input"
 import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -12,29 +11,59 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import axios from 'axios';
-import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 
+const loginSchema = z.object({
+  campaignname: z.string().min(2, { message: "Campaign Name is required" }),
+});
+
+type LoginSchema = z.infer<typeof loginSchema>;
+
+
+
 const CampaignCreation = () => {
+ const form = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      campaignname: "",
+    },
+  });
+
+  const onSubmit = async (data: LoginSchema) => {
+  try {
+    await axios.post("http://127.0.0.1:5000/campaigncreation", data);
+
+    // open alert to inform user of successful campaign creation, give button to redirect to campaign reader
+    alert("campaign created successfully");
+
+  } catch (error: any) {
+    alert("something went wrong!!!");
+  }
+};
+
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle className="text-2xl text-center">Campaign Creator</CardTitle>
-        <CardDescription className="text-center">
-          Enter the name of your next adventure!
-        </CardDescription>
-      </CardHeader> 
-      <CardContent className="grid gap-4">
-        <div className="grid gap-2">
-          <Label htmlFor="campaign_name">Name</Label>
-          <Input id="username" type="username" placeholder="The Marvelous Adventures of Foo" required />
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button className="w-full">Create Campaign</Button>
-      </CardFooter>
-    </Card>
-  )
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full max-w-sm mx-auto my-auto">
+        <FormField
+          control={form.control}
+          name="campaignname"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel><h1 className="mx-auto">Campaign Name</h1></FormLabel>
+              <FormControl>
+                <Input placeholder="The Marvelous Adventures of Foo" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" className="w-full">
+          Create Campaign
+        </Button>
+      </form>
+    </Form>
+  );
 }
 
 export default CampaignCreation
