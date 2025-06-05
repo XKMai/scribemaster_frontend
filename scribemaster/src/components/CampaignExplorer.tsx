@@ -42,6 +42,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     const [items, setItems] = useState<Item[]>([]);
     const [selectedNote, setSelectedNote] = useState<Item | null>(null);
     const [currentFolderId, setCurrentFolderId] = useState<number | null>(null); // for future folder navigation
+    const [expandedFolders, setExpandedFolders] = useState<Set<number>>(new Set());
 
     
     // use dummy data for now
@@ -68,19 +69,52 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
 
     fetchCampaignRoot();
     }, [campaignId]);
+    */
 
-     // Future use: fetch nested folder contents
-    const openFolder = async (folderId: number) => {
+     // fetch nested folder contents
+    const loadFolderItems = async (folder: Item) => {
+        const folderId = folder.data.id;
+        if (!isFolder(folder) || folder.data.items) return;
+
         try {
-            const response = await axios.get(`http://127.0.0.1:5000/folders/${folderId}`);
-            setItems(response.data.items);
-            setSelectedNote(null);
-            setCurrentFolderId(folderId);
+        // const response = await axios.get(`http://127.0.0.1:5000/folders/${folderId}`);
+        // folder.data.items = response.data.items;
+
+        // simulated folder data
+        folder.data.items = [
+            {
+            id: Math.random(), // dummy ID
+            type: "note",
+            refId: folderId,
+            position: 0,
+            data: {
+                id: Math.random(),
+                title: `New note in folder ${folder.data.name}`,
+                content: "This is a simulated note.",
+                createdBy: 1
+            }
+            }
+        ];
         } catch (error) {
-            console.error("Failed to load folder:", error);
+        console.error("Failed to load folder contents", error);
         }
     };
-    */
+    
+
+    const toggleFolder = async (folder: Item) => {
+        
+        const folderId = folder.data.id;
+        const newSet = new Set(expandedFolders);
+
+        if (expandedFolders.has(folderId)) {
+            newSet.delete(folderId);
+        } else {
+            await loadFolderItems(folder);
+            newSet.add(folderId);
+        }
+
+        setExpandedFolders(newSet);
+    };
 
     const renderItems = (items: Item[], level: number = 0) => {
         return items.map((item) => {
@@ -93,15 +127,20 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                 className="w-full justify-start text-left"
                 style={{ paddingLeft }}
                 onClick={() => {
-                  if (isNote(item)) {
-                    setSelectedNote(item);
-                  }
+                    if (isNote(item)) {
+                        setSelectedNote(item);
+                    } else if (isFolder(item)) {
+                        toggleFolder(item);
+                    }
                 }}
               >
-                {isFolder(item) ? `📁 ${item.data.name}` : isNote(item) ? item.data.title : ""}
+                {isFolder(item) 
+                ? `${expandedFolders.has(item.data.id) ? "📂" : "📁"} ${item.data.name}`
+                : item.data.title}
               </Button>
     
               {isFolder(item) &&
+                expandedFolders.has(item.data.id) &&
                 item.data.items &&
                 renderItems(item.data.items, level + 1)}
             </div>
