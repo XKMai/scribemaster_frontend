@@ -49,12 +49,13 @@ export const apiService = {
 
   // cookie call
   getCookie: async () => {
-    const response = await axios.get('http://127.0.0.1:5000/me');
+    const response = await axios.get(`${BASE_URL}/me`);
     return response.data;
   },
+  
   // campaign calls
   getCampaignList: async (userId: number) => {
-    const response = await axios.get(`http://127.0.0.1:5000/campaign/${userId}`);
+    const response = await axios.get(`${BASE_URL}/campaign/${userId}`);
     return response.data;
   },
 
