@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
 import axios from "axios";
 import { Button } from "./ui/button";
+import FolderContextMenu from "./FolderContextMenu";
 import samplecampaign from 'C:/Users/theay/Desktop/ScribeMaster_Frontend/scribemaster/src/assets/samplecampaign.json'
 
 type NoteData = {
@@ -124,23 +125,31 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     
           return (
             <div key={item.id} className="space-y-1">
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-left"
-                style={{ paddingLeft }}
-                onClick={() => {
-                    if (isNote(item)) {
-                        setSelectedNote(item);
-                    } else if (isFolder(item)) {
-                        toggleFolder(item);
+              {isFolder(item) ? (
+                <FolderContextMenu
+                    folder={item}
+                    onItemAdded={() => setItems([...items])}
+                    trigger={
+                    <Button
+                        variant="ghost"
+                        className="w-full justify-start text-left"
+                        style={{ paddingLeft }}
+                        onClick={() => toggleFolder(item)}
+                    >
+                        {`${expandedFolders.has(item.data.id) ? "📂" : "📁"} ${item.data.name}`}
+                    </Button>
                     }
-                }}
-              >
-                {isFolder(item) 
-                ? `${expandedFolders.has(item.data.id) ? "📂" : "📁"} ${item.data.name}`
-                : item.data.title}
-              </Button>
-    
+                />
+                ) : (
+                <Button
+                    variant="ghost"
+                    className="w-full justify-start text-left"
+                    style={{ paddingLeft }}
+                    onClick={() => setSelectedNote(item)}
+                >
+                    {item.data.title}
+                </Button>
+                )}
               {isFolder(item) &&
                 expandedFolders.has(item.data.id) &&
                 item.data.items &&
