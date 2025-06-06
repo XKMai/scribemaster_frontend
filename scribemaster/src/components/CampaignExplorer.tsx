@@ -1,37 +1,12 @@
 import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
-import axios from "axios";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import FolderContextMenu from "./FolderContextMenu";
 import samplecampaign from 'C:/Users/theay/Desktop/ScribeMaster_Frontend/scribemaster/src/assets/samplecampaign.json'
 import NoteContextMenu from "./NoteContextMenu";
-import { apiService } from "@/services/apiservice";
-
-type NoteData = {
-  id: number;
-  title: string;
-  content: string;
-  createdBy: number;
-};
-
-type FolderData = {
-  id: number;
-  name: string;
-  isCampaign: boolean;
-  settings: object;
-  createdBy: number;
-  items?: Item[];
-};
-
-type Item = {
-  id: number;
-  type: "note" | "folder";
-  refId: number;
-  position: number;
-  data: any; // contains `title` & `content` for notes, `name` for folders
-};
+import { apiService, type FolderData, type Item, type NoteData } from "@/services/apiservice";
 
 interface CampaignViewerProps {
   campaignId: string;
@@ -49,10 +24,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     const [expandedFolders, setExpandedFolders] = useState<Set<number>>(new Set());
     const [editableTitle, setEditableTitle] = useState("");
     const [editableContent, setEditableContent] = useState("");
-
-
-
-    
+  
     useEffect(() => {
     const loadDummyCampaign = async () => {
         const data = samplecampaign; 
@@ -74,12 +46,12 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     
 
     // fetch full campaign folder
-    /*
     useEffect(() => {
     const fetchCampaignRoot = async () => {
       try {
-        const campaigns = await axios.get(`http://127.0.0.1:5000/campaigns/${campaignId}`);
-        setItems(campaigns.data.items);
+        const id = Number(campaignId);
+        const campaign = await apiService.getCampaign(id);
+        setItems(campaign.items);
       } catch (error) {
         console.error("Failed to fetch campaign data:", error);
       }
@@ -87,7 +59,6 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
 
     fetchCampaignRoot();
     }, [campaignId]);
-    */
 
      // fetch nested folder contents
     const loadFolderItems = async (folder: Item) => {
@@ -95,8 +66,8 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
         if (!isFolder(folder) || folder.data.items) return;
 
         try {
-        const response = await axios.get(`http://127.0.0.1:5000/folders/${folderId}`);
-        folder.data.items = response.data.items;
+        const response = await apiService.getFolder(folderId);
+        folder.data.items = response.items;
 
         // simulated folder data
         folder.data.items = [
