@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { Button } from "./ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { FileText } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
 import CampaignExplorer from './CampaignExplorer';
+
 
 const CampaignReader = () => {
 
@@ -13,21 +14,23 @@ const CampaignReader = () => {
 
     // storing selected campaign choice from list
     const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
-    
-    // placeholder to store campaign data, to be passed to viewing component
-    const [campaignData, setCampaignData] = useState<any>(null);
 
+    const [loadedCampaignId, setLoadedCampaignId] = useState<string | null>(null);
+    
     // call to obtain list of campaigns
     const fetchCampaigns = async () => {
         try {
-        //const response = await axios.get('http://127.0.0.1:5000/campaignslist');
-        //setCampaigns(response.data); 
-        const dummy = [
-        { id: '1', name: 'Test Campaign 1' },
-        { id: '2', name: 'Test Campaign 2' }
-        ];
-        console.log("Using mock data");
-        setCampaigns(dummy);
+        const userdata = await axios.get('http://127.0.0.1:5000/me')
+        const userID: string = userdata.data.user.id
+        const response = await axios.get(`http://127.0.0.1:5000/campaign/${userID}`);
+        setCampaigns(response.data);
+
+        //const dummy = [
+        //{ id: '1', name: 'Test Campaign 1' },
+        //{ id: '2', name: 'Test Campaign 2' }
+        //];
+        //console.log("Using mock data");
+        //setCampaigns(dummy);
         } catch (error) {
         console.error('Failed to fetch campaigns:', error);
         }
@@ -41,18 +44,20 @@ const CampaignReader = () => {
     }
 
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/campaigns/${selectedCampaignId}`);
       alert("Campaign loaded successfully!");
-      return (
-        <CampaignExplorer campaignId={selectedCampaignId} />
-      )
+      setLoadedCampaignId(selectedCampaignId);
     } catch (error) {
       console.error("Failed to load campaign:", error);
       alert("Error loading campaign.");
     }
   };
 
+    if (loadedCampaignId) {
+      return <CampaignExplorer campaignId={loadedCampaignId} />;
+    }
+    
     return (
+
     <Card className='w-full max-w-md mx-auto my-auto flex flex-col h-[400px]'>
         <CardHeader>
             <CardTitle>
