@@ -4,6 +4,7 @@ import axios from "axios";
 import { Button } from "./ui/button";
 import FolderContextMenu from "./FolderContextMenu";
 import samplecampaign from 'C:/Users/theay/Desktop/ScribeMaster_Frontend/scribemaster/src/assets/samplecampaign.json'
+import NoteContextMenu from "./NoteContextMenu";
 
 type NoteData = {
   id: number;
@@ -118,6 +119,44 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
         setExpandedFolders(newSet);
     };
 
+    const updateNoteInTree = (tree: Item[], updatedNote: Item): Item[] => {
+        return tree.map((item) => {
+            if (isNote(item) && item.id === updatedNote.id) {
+            return { ...item, data: { ...item.data, title: updatedNote.data.title } };
+            }
+
+            if (isFolder(item) && item.data.items) {
+            return {
+                ...item,
+                data: {
+                ...item.data,
+                items: updateNoteInTree(item.data.items, updatedNote),
+                },
+            };
+            }
+
+            return item;
+        });
+    };
+
+    const deleteNoteFromTree = (tree: Item[], noteId: number): Item[] => {
+        return tree
+            .map((item) => {
+            if (isFolder(item) && item.data.items) {
+                return {
+                ...item,
+                data: {
+                    ...item.data,
+                    items: deleteNoteFromTree(item.data.items, noteId),
+                },
+                };
+            }
+            return item;
+            })
+            .filter((item) => !(isNote(item) && item.id === noteId));
+    };
+
+
     // recursive rendering function
     const renderItems = (items: Item[], level: number = 0) => {
         return items.map((item) => {
@@ -141,14 +180,31 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                     }
                 />
                 ) : (
-                <Button
-                    variant="ghost"
-                    className="w-full justify-start text-left"
-                    style={{ paddingLeft }}
-                    onClick={() => setSelectedNote(item)}
-                >
-                    {item.data.title}
-                </Button>
+                <NoteContextMenu
+                    note={item}
+                    onItemUpdated={(updatedNote) => {
+                        const updatedTree = updateNoteInTree(items, updatedNote);
+                        setItems(updatedTree);
+                    }}
+                    onItemDeleted={(deletedNote) => {
+                        const updatedTree = deleteNoteFromTree(items, deletedNote.id);
+                        setItems(updatedTree);
+                        if (selectedNote?.id === deletedNote.id) {
+                            setSelectedNote(null);
+                        }
+                    }}
+                    trigger={
+                        <Button
+                        variant="ghost"
+                        className="w-full justify-start text-left"
+                        style={{ paddingLeft }}
+                        onClick={() => setSelectedNote(item)}
+                        >
+                        {item.data.title}
+                        </Button>
+                    }
+                />
+
                 )}
               {isFolder(item) &&
                 expandedFolders.has(item.data.id) &&
