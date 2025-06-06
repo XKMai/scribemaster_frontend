@@ -17,6 +17,9 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
     const [creatingType, setCreatingType] = useState<"note" | "folder" | null>(null);
     const [newName, setNewName] = useState("");
 
+    const [renaming, setRenaming] = useState(false);
+    const [renameValue, setRenameValue] = useState(folder.data.name || "");
+
     const handleContextMenu = (e: React.MouseEvent) => {
         e.preventDefault();
         setPosition({ x: e.pageX, y: e.pageY });
@@ -75,6 +78,21 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
     setCreatingType(null);
   };
 
+    const renameFolder = async () => {
+        if (!renameValue.trim()) return;
+        try {
+            const updatedFolder = await apiService.updateFolder(folder.data.id, { name: renameValue });
+            folder.data.name = updatedFolder.name;
+            onItemAdded(folder); // Notify parent
+            setRenaming(false);
+            setMenuVisible(false);
+        } catch (error) {
+            console.error("Failed to rename folder:", error);
+            alert("Failed to rename folder.");
+        }
+    };
+
+
     return (
     <>
       <div onContextMenu={handleContextMenu}>
@@ -109,7 +127,7 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
                 onClick={async () => {
                     const confirmed = window.confirm(`Are you sure you want to delete the folder "${folder.data.name}"? This cannot be undone.`);
                     if (!confirmed) return;
-                    
+
                     try {
                     await apiService.deleteFolder(folder.data.id);
                     onItemAdded(folder);
@@ -121,6 +139,16 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
                 }}
                 >
                 🗑️ Delete Folder
+                </Button>
+                <Button
+                    variant="ghost"
+                    className="w-full justify-start text-left px-2 py-1 text-sm"
+                    onClick={() => {
+                        setRenaming(true);
+                        setRenameValue(folder.data.name);
+                    }}
+                >
+                ✏️ Rename Folder
                 </Button>
             </>
           )}
@@ -150,6 +178,28 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
               </div>
             </div>
           )}
+
+          {renaming && (
+            <div className="space-y-1">
+                <Input
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") renameFolder();
+                    if (e.key === "Escape") {
+                    setRenaming(false);
+                    setRenameValue(folder.data.name);
+                    }
+                }}
+                autoFocus
+                />
+                <div className="flex justify-end space-x-2">
+                <Button size="sm" variant="outline" onClick={() => setRenaming(false)}>Cancel</Button>
+                <Button size="sm" onClick={renameFolder}>Rename</Button>
+                </div>
+            </div>
+            )}
+
         </div>
       )}
     </>

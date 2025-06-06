@@ -57,6 +57,11 @@ export const apiService = {
     return response.data;
   },
 
+  updateFolder: async (folderId: number, data: { name: string }) => {
+  const response = await axios.patch(`${BASE_URL}/folder/${folderId}`, data);
+  return response.data;
+  },
+
   deleteFolder: async (folderId: number): Promise<void> => {
     await axios.delete(`${BASE_URL}/folder/${folderId}`);
   },
