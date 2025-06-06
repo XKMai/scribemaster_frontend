@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
 import axios from "axios";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 import FolderContextMenu from "./FolderContextMenu";
 import samplecampaign from 'C:/Users/theay/Desktop/ScribeMaster_Frontend/scribemaster/src/assets/samplecampaign.json'
 import NoteContextMenu from "./NoteContextMenu";
+import { apiService } from "@/services/apiservice";
 
 type NoteData = {
   id: number;
@@ -44,6 +47,9 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     const [items, setItems] = useState<Item[]>([]);
     const [selectedNote, setSelectedNote] = useState<Item | null>(null);
     const [expandedFolders, setExpandedFolders] = useState<Set<number>>(new Set());
+    const [editableTitle, setEditableTitle] = useState("");
+    const [editableContent, setEditableContent] = useState("");
+
 
 
     
@@ -56,6 +62,15 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
 
     loadDummyCampaign();
     }, [campaignId]);
+
+
+    useEffect(() => {
+    if (selectedNote && isNote(selectedNote)) {
+        setEditableTitle(selectedNote.data.title);
+        setEditableContent(selectedNote.data.content);
+    }
+    }, [selectedNote]);
+
     
 
     // fetch full campaign folder
@@ -156,6 +171,30 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
             .filter((item) => !(isNote(item) && item.id === noteId));
     };
 
+    const handleSave = async () => {
+        if (!selectedNote || !isNote(selectedNote)) return;
+
+        try {
+            const updated = await apiService.updateNote(selectedNote.data.id, {
+                title: editableTitle,
+                content: editableContent,
+             });
+
+            const updatedNote: Item = {
+                ...selectedNote,
+                data: { ...selectedNote.data, ...updated },
+            };
+
+            setSelectedNote(updatedNote);
+            const updatedTree = updateNoteInTree(items, updatedNote);
+            setItems(updatedTree);
+        } catch (err) {
+            console.error("Failed to update note:", err);
+            alert("Failed to save changes.");
+        }
+    };
+
+
 
     // recursive rendering function
     const renderItems = (items: Item[], level: number = 0) => {
@@ -228,18 +267,33 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
         <div className="w-2/3 p-4 h-full overflow-auto">
             <Card className="h-full flex flex-col">
             <CardHeader>
-                <CardTitle>
-                    {selectedNote && isNote(selectedNote)
-                    ? selectedNote.data.title 
-                    : "Select a note to view"}
-                </CardTitle>
+                {selectedNote && isNote(selectedNote) ? (
+                <Input
+                    className="font-bold text-lg"
+                    value={editableTitle}
+                    onChange={(e) => setEditableTitle(e.target.value)}
+                />
+                ) : (
+                <CardTitle>Select a note to view</CardTitle>
+                )}
             </CardHeader>
             <CardContent className="flex-1 overflow-auto">
-                <pre className="whitespace-pre-wrap text-sm text-muted-foreground">
-                    {selectedNote && isNote(selectedNote)
-                    ?selectedNote.data.content 
-                    :"...."}
-                </pre>
+                {selectedNote && isNote(selectedNote) ? (
+                    <>
+                        <Textarea
+                        className="flex-1 text-sm"
+                        value={editableContent}
+                        onChange={(e) => setEditableContent(e.target.value)}
+                        />
+                        <div className="flex justify-end mt-2">
+                        <Button onClick={handleSave}>💾 Save</Button>
+                        </div>
+                    </>
+                    ) : (
+                    <pre className="whitespace-pre-wrap text-sm text-muted-foreground">
+                        ....
+                    </pre>
+                )}
             </CardContent>
             </Card>
         </div>
