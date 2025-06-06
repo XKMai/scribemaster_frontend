@@ -50,7 +50,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     const fetchCampaignRoot = async () => {
       try {
         const id = Number(campaignId);
-        const campaign = await apiService.getCampaign(id);
+        const campaign = await apiService.getFolder(id);
         setItems(campaign.items);
       } catch (error) {
         console.error("Failed to fetch campaign data:", error);

@@ -58,10 +58,6 @@ export const apiService = {
     return response.data;
   },
 
-  getCampaign: async (userId: number) => {
-    const response = await axios.get(`http://127.0.0.1:5000/campaign/${userId}`);
-    return response.data;
-  },
   // folder calls
   getFolder: async (folderId: number) => {
     const response = await axios.get(`${BASE_URL}/folder/${folderId}`);
