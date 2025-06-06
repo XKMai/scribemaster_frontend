@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const BASE_URL = 'http://127.0.0.1:5000';
+import api from '../lib/axiosConfig';
 
 export type NoteData = {
   id: number;
@@ -49,48 +47,48 @@ export const apiService = {
 
   // cookie call
   getCookie: async () => {
-    const response = await axios.get(`${BASE_URL}/me`);
+    const response = await api.get('/me');
     return response.data;
   },
-  
+
   // campaign calls
   getCampaignList: async (userId: number) => {
-    const response = await axios.get(`${BASE_URL}/campaign/${userId}`);
+    const response = await api.get(`/campaign/${userId}`);
     return response.data;
   },
 
   // folder calls
   getFolder: async (folderId: number) => {
-    const response = await axios.get(`${BASE_URL}/folder/${folderId}`);
+    const response = await api.get(`/folder/${folderId}`);
     return response.data;
   },
 
   createFolder: async (data: CreateFolderRequest) => {
-    const response = await axios.post(`${BASE_URL}/folder`, data);
+    const response = await api.post(`/folder`, data);
     return response.data;
   },
 
   updateFolder: async (folderId: number, data: { name: string }) => {
-  const response = await axios.patch(`${BASE_URL}/folder/${folderId}`, data);
-  return response.data;
+    const response = await api.patch(`/folder/${folderId}`, data);
+    return response.data;
   },
 
   deleteFolder: async (folderId: number): Promise<void> => {
-    await axios.delete(`${BASE_URL}/folder/${folderId}`);
+    await api.delete(`/folder/${folderId}`);
   },
 
   // note calls
   createNote: async (data: CreateNoteRequest) => {
-    const response = await axios.post(`${BASE_URL}/notes`, data);
+    const response = await api.post(`/notes`, data);
     return response.data;
   },
 
   updateNote: async (noteId: number, data: UpdateNoteRequest) => {
-    const response = await axios.patch(`${BASE_URL}/notes/${noteId}`, data);
+    const response = await api.patch(`/notes/${noteId}`, data);
     return response.data;
   },
 
   deleteNote: async (noteId: number): Promise<void> => {
-    await axios.delete(`${BASE_URL}/notes/${noteId}`);
+    await api.delete(`/notes/${noteId}`);
   },
 };
