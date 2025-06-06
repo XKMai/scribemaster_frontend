@@ -41,27 +41,28 @@ const isFolder = (item: Item): item is Item & { data: FolderData } => item.type 
 const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     const [items, setItems] = useState<Item[]>([]);
     const [selectedNote, setSelectedNote] = useState<Item | null>(null);
-    const [currentFolderId, setCurrentFolderId] = useState<number | null>(null); // for future folder navigation
     const [expandedFolders, setExpandedFolders] = useState<Set<number>>(new Set());
 
+
     
-    // use dummy data for now
     useEffect(() => {
     const loadDummyCampaign = async () => {
         const data = samplecampaign; 
         setItems(data.items as Item[]);
     };
+    
 
     loadDummyCampaign();
     }, [campaignId]);
+    
 
     // fetch full campaign folder
     /*
     useEffect(() => {
     const fetchCampaignRoot = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/campaigns/${campaignId}`);
-        setItems(response.data.items);
+        const campaigns = await axios.get(`http://127.0.0.1:5000/campaigns/${campaignId}`);
+        setItems(campaigns.data.items);
       } catch (error) {
         console.error("Failed to fetch campaign data:", error);
       }
@@ -77,8 +78,8 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
         if (!isFolder(folder) || folder.data.items) return;
 
         try {
-        // const response = await axios.get(`http://127.0.0.1:5000/folders/${folderId}`);
-        // folder.data.items = response.data.items;
+        const response = await axios.get(`http://127.0.0.1:5000/folders/${folderId}`);
+        folder.data.items = response.data.items;
 
         // simulated folder data
         folder.data.items = [
@@ -116,6 +117,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
         setExpandedFolders(newSet);
     };
 
+    // recursive rendering function
     const renderItems = (items: Item[], level: number = 0) => {
         return items.map((item) => {
           const paddingLeft = `${level * 16}px`;
@@ -149,17 +151,17 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     };
 
     return (
-    <div className="flex h-full w-full">
+    <div className="flex h-screen w-full">
 
         {/* file explorer*/}
-        <div className="w-1/3 border-r p-4 bg-muted">
+        <div className="w-1/3 border-r p-4 bg-muted h-full overflow-auto">
             <h2 className="font-bold mb-4">Files</h2>
             {renderItems(items)}
         </div>
 
         {/* content viewer*/}
-        <div className="w-2/3 p-4 h-full">
-            <Card className="h-full">
+        <div className="w-2/3 p-4 h-full overflow-auto">
+            <Card className="h-full flex flex-col">
             <CardHeader>
                 <CardTitle>
                     {selectedNote && isNote(selectedNote)
@@ -167,7 +169,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                     : "Select a note to view"}
                 </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1 overflow-auto">
                 <pre className="whitespace-pre-wrap text-sm text-muted-foreground">
                     {selectedNote && isNote(selectedNote)
                     ?selectedNote.data.content 
