@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { FileText } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
 import CampaignExplorer from './CampaignExplorer';
+import { apiService } from '@/services/apiservice';
 
 
 const CampaignReader = () => {
@@ -20,10 +20,10 @@ const CampaignReader = () => {
     // call to obtain list of campaigns
     const fetchCampaigns = async () => {
         try {
-        const userdata = await axios.get('http://127.0.0.1:5000/me')
-        const userID: string = userdata.data.user.id
-        const response = await axios.get(`http://127.0.0.1:5000/campaign/${userID}`);
-        setCampaigns(response.data);
+        const userdata = await apiService.getCookie()
+        const userId: number = userdata.id
+        const campaigndata = await apiService.getCampaignList(userId);
+        setCampaigns(campaigndata);
 
         //const dummy = [
         //{ id: '1', name: 'Test Campaign 1' },

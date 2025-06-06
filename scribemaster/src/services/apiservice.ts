@@ -47,6 +47,17 @@ export type UpdateNoteRequest = {
 
 export const apiService = {
 
+  // cookie call
+  getCookie: async () => {
+    const response = await axios.get('http://127.0.0.1:5000/me');
+    return response.data;
+  },
+  // campaign calls
+  getCampaignList: async (userId: number) => {
+    const response = await axios.get(`http://127.0.0.1:5000/campaign/${userId}`);
+    return response.data;
+  },
+  // folder calls
   getFolder: async (folderId: number) => {
     const response = await axios.get(`${BASE_URL}/folder/${folderId}`);
     return response.data;
@@ -66,6 +77,7 @@ export const apiService = {
     await axios.delete(`${BASE_URL}/folder/${folderId}`);
   },
 
+  // note calls
   createNote: async (data: CreateNoteRequest) => {
     const response = await axios.post(`${BASE_URL}/notes`, data);
     return response.data;
