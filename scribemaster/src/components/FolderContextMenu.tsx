@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import type { Item } from "../services/apiservice";
 import { apiService } from "../services/apiservice";
+import { Input } from "./ui/input";
 
 interface FolderContextMenuProps {
   folder: Item;
@@ -13,10 +14,15 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
     const [menuVisible, setMenuVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
+    const [creatingType, setCreatingType] = useState<"note" | "folder" | null>(null);
+    const [newName, setNewName] = useState("");
+
     const handleContextMenu = (e: React.MouseEvent) => {
         e.preventDefault();
         setPosition({ x: e.pageX, y: e.pageY });
         setMenuVisible(true);
+        setCreatingType(null);
+        setNewName("");
     };
 
     useEffect(() => {
@@ -25,78 +31,129 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
         return () => window.removeEventListener("click", handleClick);
     }, []);
 
-    const handleNewNote = async () => {
-    const newNote = await apiService.createNote({
-        title: "New Note",
+    const createItem = async () => {
+    if (!newName.trim()) return;
+
+    if (creatingType === "note") {
+        const newNote = await apiService.createNote({
+        title: newName,
         content: "",
         createdBy: folder.data.createdBy,
         folderId: folder.data.id,
-    });
+        });
 
-    folder.data.items = folder.data.items || [];
-    folder.data.items.push({
+        folder.data.items = folder.data.items || [];
+        folder.data.items.push({
         id: newNote.id,
         type: "note",
         refId: folder.data.id,
         position: folder.data.items.length,
         data: newNote,
-    });
+        });
+    }
 
-    onItemAdded(folder);
-    setMenuVisible(false);
-    };
-
-    const handleNewFolder = async () => {
-    const newFolder = await apiService.createFolder({
-        name: "New Folder",
+    if (creatingType === "folder") {
+        const newFolder = await apiService.createFolder({
+        name: newName,
         createdBy: folder.data.createdBy,
         folderId: folder.data.id,
-    });
+        });
 
-    folder.data.items = folder.data.items || [];
-    folder.data.items.push({
+        folder.data.items = folder.data.items || [];
+        folder.data.items.push({
         id: newFolder.id,
         type: "folder",
         refId: folder.data.id,
         position: folder.data.items.length,
         data: newFolder,
-    });
+        });
+    }
 
     onItemAdded(folder);
     setMenuVisible(false);
-    };
+    setNewName("");
+    setCreatingType(null);
+  };
 
     return (
     <>
-        <div onContextMenu={handleContextMenu}>
-            {trigger}
-        </div>
+      <div onContextMenu={handleContextMenu}>
+        {trigger}
+      </div>
 
-        {menuVisible && (
-            <div
-                className="absolute z-50 w-40 bg-white border rounded shadow-md"
-                style={{ top: position.y, left: position.x }}
-
-            >
-                <Button
+      {menuVisible && (
+        <div
+          className="absolute z-50 w-64 bg-white border rounded shadow-md p-2 space-y-2"
+          style={{ top: position.y, left: position.x }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {!creatingType && (
+            <>
+              <Button
                 variant="ghost"
-                className="w-full justify-start text-left px-4 py-2"
-                onClick={handleNewNote}
-
-                >
-                ➕ New Note
-                </Button>
-                <Button
+                className="w-full justify-start text-left px-2 py-1 text-sm"
+                onClick={() => setCreatingType("note")}
+              >
+                📄 New Note
+              </Button>
+              <Button
                 variant="ghost"
-                className="w-full justify-start text-left px-4 py-2"
-                onClick={handleNewFolder}
-                >
+                className="w-full justify-start text-left px-2 py-1 text-sm"
+                onClick={() => setCreatingType("folder")}
+              >
                 📁 New Folder
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-left px-2 py-1 text-sm text-red-600 hover:bg-red-100"
+                onClick={async () => {
+                    const confirmed = window.confirm(`Are you sure you want to delete the folder "${folder.data.name}"? This cannot be undone.`);
+                    if (!confirmed) return;
+                    
+                    try {
+                    await apiService.deleteFolder(folder.data.id);
+                    onItemAdded(folder);
+                    setMenuVisible(false);
+                    } catch (err) {
+                    console.error("Failed to delete folder:", err);
+                    alert("Failed to delete folder.");
+                    }
+                }}
+                >
+                🗑️ Delete Folder
                 </Button>
+            </>
+          )}
+
+          {creatingType && (
+            <div className="space-y-1">
+              <Input
+                placeholder={`Enter ${creatingType} name`}
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") createItem();
+                  if (e.key === "Escape") {
+                    setCreatingType(null);
+                    setNewName("");
+                  }
+                }}
+                autoFocus
+              />
+              <div className="flex justify-end space-x-2">
+                <Button size="sm" variant="outline" onClick={() => setCreatingType(null)}>
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={createItem}>
+                  Create
+                </Button>
+              </div>
             </div>
-        )}
+          )}
+        </div>
+      )}
     </>
-    )
+  );
 }
 
 export default FolderContextMenu
