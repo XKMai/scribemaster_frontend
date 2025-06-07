@@ -5,7 +5,7 @@ import SignupPage from "./pages/SignupPage"
 import "./lib/axiosConfig";
 import CampaignCreationPage from "./pages/CampaignCreationPage";
 import CampaignReaderPage from "./pages/CampaignReaderPage";
-import CampaignExplorer from "./components/CampaignExplorer";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 function App() {
@@ -16,20 +16,11 @@ function App() {
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/campaigncreation" element={<CampaignCreationPage />} />
-            <Route path="/campaignreader" element={<CampaignReaderPage />} />
-            <Route path="/campaignexplorer" element={<CampaignExplorer campaignId="1" />} />
-
-
-
-            <Route
-              path="/home"
-              element={
-                //<ProtectedRoute>    
-                    <HomePage />
-                //</ProtectedRoute>
-              }
-            />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/campaigncreation" element={<CampaignCreationPage />} />
+              <Route path="/campaignreader" element={<CampaignReaderPage />} />
+            </Route>
       </Routes>
     </main>
     </>
