@@ -25,12 +25,6 @@ const CampaignReader = () => {
         const campaigndata = await apiService.getCampaignList(userId);
         setCampaigns(campaigndata);
 
-        //const dummy = [
-        //{ id: '1', name: 'Test Campaign 1' },
-        //{ id: '2', name: 'Test Campaign 2' }
-        //];
-        //console.log("Using mock data");
-        //setCampaigns(dummy);
         } catch (error) {
         console.error('Failed to fetch campaigns:', error);
         }

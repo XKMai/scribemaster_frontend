@@ -4,7 +4,6 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import FolderContextMenu from "./FolderContextMenu";
-import samplecampaign from 'C:/Users/theay/Desktop/ScribeMaster_Frontend/scribemaster/src/assets/samplecampaign.json'
 import NoteContextMenu from "./NoteContextMenu";
 import { apiService, type FolderData, type Item, type NoteData } from "@/services/apiservice";
 
@@ -25,6 +24,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     const [editableTitle, setEditableTitle] = useState("");
     const [editableContent, setEditableContent] = useState("");
   
+    /*
     useEffect(() => {
     const loadDummyCampaign = async () => {
         const data = samplecampaign; 
@@ -34,7 +34,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
 
     loadDummyCampaign();
     }, [campaignId]);
-
+    */
 
     useEffect(() => {
     if (selectedNote && isNote(selectedNote)) {
@@ -69,21 +69,6 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
         const response = await apiService.getFolder(folderId);
         folder.data.items = response.items;
 
-        // simulated folder data
-        folder.data.items = [
-            {
-            id: Math.random(), // dummy ID
-            type: "note",
-            refId: folderId,
-            position: 0,
-            data: {
-                id: Math.random(),
-                title: `New note in folder ${folder.data.name}`,
-                content: "This is a simulated note.",
-                createdBy: 1
-            }
-            }
-        ];
         } catch (error) {
         console.error("Failed to load folder contents", error);
         }
