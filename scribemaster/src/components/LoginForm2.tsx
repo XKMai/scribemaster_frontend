@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from 'axios';
 import { useNavigate } from "react-router";
+import api from "../lib/axiosConfig"
 
 // Zod Schema
 const loginSchema = z.object({
@@ -35,9 +35,9 @@ export default function LoginForm2() {
 
   const onSubmit = async (data: LoginSchema) => {
   try {
-    await axios.post("http://127.0.0.1:5000/login", data, {
+    await api.post('/login', data,{
       withCredentials: true,
-    });
+    })
 
     navigate("/home");
 

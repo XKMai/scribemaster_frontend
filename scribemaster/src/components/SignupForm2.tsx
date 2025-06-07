@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useNavigate } from "react-router";
+import api from "@/lib/axiosConfig";
 
 // Zod schema with confirm password match
 const signupSchema = z
@@ -42,7 +42,7 @@ export default function SignupForm2() {
 
   const onSubmit = async (data: SignupSchema) => {
   try {
-    await axios.post("http://127.0.0.1:5000/register", {
+    await api.post('/register',{
       name: data.name,
       password: data.password,
     });
