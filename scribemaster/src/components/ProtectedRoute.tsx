@@ -1,6 +1,6 @@
 import { Navigate } from "react-router";
 import { useEffect, useState } from "react";
-import api from "@/lib/axiosConfig";
+import { apiService } from "@/services/apiservice";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await api.get("http://127.0.0.1:5000/me"); 
+        await apiService.getCookie(); 
         setIsAuthenticated(true);
       } catch {
         setIsAuthenticated(false);
@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>; // Or a spinner
+    return <div>Loading...</div>; 
   }
 
   if (!isAuthenticated) {
