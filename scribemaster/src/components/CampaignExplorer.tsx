@@ -6,6 +6,7 @@ import { Textarea } from "./ui/textarea";
 import FolderContextMenu from "./FolderContextMenu";
 import NoteContextMenu from "./NoteContextMenu";
 import { apiService, type FolderData, type Item, type NoteData } from "@/services/apiservice";
+import EmptyContextMenu from "./EmptyContextMenu";
 
 interface CampaignViewerProps {
   campaignId: string;
@@ -153,13 +154,14 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
 
 
     // recursive rendering function
+
     const renderItems = (items: Item[], level: number = 0) => {
         return items.map((item) => {
-          const paddingLeft = `${level * 16}px`;
+        const paddingLeft = `${level * 16}px`;
     
-          return (
+        return (
             <div key={item.id} className="space-y-1">
-              {isFolder(item) ? (
+            {isFolder(item) ? (
                 <FolderContextMenu
                     folder={item}
                     onItemAdded={() => setItems([...items])}
@@ -201,14 +203,15 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                 />
 
                 )}
-              {isFolder(item) &&
+            {isFolder(item) &&
                 expandedFolders.has(item.data.id) &&
                 item.data.items &&
                 renderItems(item.data.items, level + 1)}
             </div>
-          );
+        );
         });
     };
+
 
     return (
     <div className="flex h-screen w-full">
@@ -216,7 +219,20 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
         {/* file explorer*/}
         <div className="w-1/3 border-r p-4 bg-muted h-full overflow-auto">
             <h2 className="font-bold mb-4">Files</h2>
-            {renderItems(items)}
+            <EmptyContextMenu
+                createdBy={items[0]?.data.createdBy || 1}
+                onItemAdded={(newItem) => setItems((prev) => [...prev, newItem])}
+            >
+                <div className="min-h-full">
+                {items.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center mt-4">
+                    Right-click to create your first folder or note
+                    </p>
+                ) : (
+                    renderItems(items)
+                )}
+                </div>
+            </EmptyContextMenu>
         </div>
 
         {/* content viewer*/}
