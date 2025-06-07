@@ -37,7 +37,7 @@ const CampaignCreation = () => {
   try {
 
     const userdata = await apiService.getCookie();
-    const userId = userdata.id;
+    const userId = userdata.user.id;
 
     const payload = {
       ...data,

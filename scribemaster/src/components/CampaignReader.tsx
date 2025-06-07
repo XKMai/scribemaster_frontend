@@ -21,7 +21,7 @@ const CampaignReader = () => {
     const fetchCampaigns = async () => {
         try {
         const userdata = await apiService.getCookie()
-        const userId: number = userdata.id
+        const userId: number = userdata.user.id
         const campaigndata = await apiService.getCampaignList(userId);
         setCampaigns(campaigndata);
 
