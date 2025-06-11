@@ -44,9 +44,9 @@ const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: Empt
         folderId: campaignId,
       });
       newItem = {
-        id: note.id,
+        folderId: campaignId,
         type: "note",
-        refId: campaignId,
+        refId: note.id,
         position: 0,
         data: note,
       };
@@ -59,9 +59,9 @@ const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: Empt
         folderId: campaignId,
       });
       newItem = {
-        id: folder.id,
+        folderId: campaignId,
         type: "folder",
-        refId: campaignId,
+        refId: folder.id,
         position: 0,
         data: folder,
       };

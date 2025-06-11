@@ -77,7 +77,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
 
     const updateNoteInTree = (tree: Item[], updatedNote: Item): Item[] => {
         return tree.map((item) => {
-            if (isNote(item) && item.data.id === updatedNote.id) {
+            if (isNote(item) && item.data.id === updatedNote.folderId) {
             return { ...item, data: { ...item.data, title: updatedNote.data.title } };
             }
 
@@ -174,7 +174,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
         const paddingLeft = `${level * 16}px`;
 
         return (
-            <div key={`${level}-${item.id}`} className="space-y-1">
+            <div key={item.refId} className={`space-y-1 ${level}-${item.folderId ?? "no-folder"}`}>
             {isFolder(item) ? (
                 <FolderContextMenu
                     folder={item}
