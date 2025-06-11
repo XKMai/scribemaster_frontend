@@ -10,12 +10,12 @@ import { apiService } from '@/services/apiservice';
 const CampaignReader = () => {
 
     // storing list of campaigns when obtained
-    const [campaigns, setCampaigns] = useState<{id: string; name: string}[]>([])
+    const [campaigns, setCampaigns] = useState<{id: number; name: string}[]>([])
 
     // storing selected campaign choice from list
-    const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
+    const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
 
-    const [loadedCampaignId, setLoadedCampaignId] = useState<string | null>(null);
+    const [loadedCampaignId, setLoadedCampaignId] = useState<number | null>(null);
     
     // call to obtain list of campaigns
     const fetchCampaigns = async () => {

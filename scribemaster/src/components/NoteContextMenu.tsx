@@ -35,7 +35,7 @@ const NoteContextMenu = ({ note, trigger, onItemUpdated, onItemDeleted }: NoteCo
   const renameNote = async () => {
     if (!renameValue.trim()) return;
     try {
-      const updatedNote = await apiService.updateNote(note.data.id, { title: renameValue });
+      const updatedNote = await apiService.updateNote(note.refId, { title: renameValue });
       note.data.title = updatedNote.title;
       onItemUpdated(note);
       setRenaming(false);
@@ -51,7 +51,7 @@ const NoteContextMenu = ({ note, trigger, onItemUpdated, onItemDeleted }: NoteCo
     if (!confirmed) return;
 
     try {
-      await apiService.deleteNote(note.data.id);
+      await apiService.deleteNote(note.refId);
       onItemDeleted(note);
       setMenuVisible(false);
     } catch (error) {

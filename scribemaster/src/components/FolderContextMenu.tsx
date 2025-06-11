@@ -7,10 +7,11 @@ import { Input } from "./ui/input";
 interface FolderContextMenuProps {
   folder: Item;
   trigger: React.ReactNode;
-  onItemAdded: (updatedFolder: Item) => void;
+  onItemAdded: (updatedFolder: Item, action: "added" | "deleted" | "renamed") => void;
 }
 
 const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuProps) => {
+
     const [menuVisible, setMenuVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -35,55 +36,61 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
     }, []);
 
     const createItem = async () => {
-    if (!newName.trim()) return;
+      const userdata = await apiService.getCookie();
+      const userId = userdata.user.id;
 
-    if (creatingType === "note") {
-        const newNote = await apiService.createNote({
-        title: newName,
-        content: "",
-        createdBy: folder.data.createdBy,
-        folderId: folder.data.id,
-        });
+      if (!newName.trim()) return;
 
-        folder.data.items = folder.data.items || [];
-        folder.data.items.push({
-        id: newNote.id,
-        type: "note",
-        refId: folder.data.id,
-        position: folder.data.items.length,
-        data: newNote,
-        });
-    }
+      if (creatingType === "note") {
+          const newNote = await apiService.createNote({
+          title: newName,
+          content: "",
+          createdBy: userId,
+          folderId: folder.id,
+          });
+          
+          folder.data.items = folder.data.items || [];
+          folder.data.items.push({
+          id: newNote.id,
+          type: "note",
+          refId: folder.data.id,
+          position: folder.data.items.length,
+          data: newNote,
+          });
 
-    if (creatingType === "folder") {
-        const newFolder = await apiService.createFolder({
-        name: newName,
-        createdBy: folder.data.createdBy,
-        folderId: folder.data.id,
-        });
+          console.log("note created")
+      }
 
-        folder.data.items = folder.data.items || [];
-        folder.data.items.push({
-        id: newFolder.id,
-        type: "folder",
-        refId: folder.data.id,
-        position: folder.data.items.length,
-        data: newFolder,
-        });
-    }
+      if (creatingType === "folder") {
+          const newFolder = await apiService.createFolder({
+          name: newName,
+          createdBy: userId,
+          folderId: folder.id,
+          });
 
-    onItemAdded(folder);
-    setMenuVisible(false);
-    setNewName("");
-    setCreatingType(null);
-  };
+          folder.data.items = folder.data.items || [];
+          folder.data.items = [...(folder.data.items || []), {
+          id: newFolder.id,
+          type: "folder",
+          refId: newFolder.id,
+          position: folder.data.items?.length || 0,
+          data: newFolder,
+        }];
+
+      }
+
+      onItemAdded(folder, "added");
+      setMenuVisible(false);
+      setNewName("");
+      setCreatingType(null);
+    };
 
     const renameFolder = async () => {
         if (!renameValue.trim()) return;
         try {
-            const updatedFolder = await apiService.updateFolder(folder.data.id, { name: renameValue });
+            const updatedFolder = await apiService.updateFolder(folder.refId, { name: renameValue });
             folder.data.name = updatedFolder.name;
-            onItemAdded(folder); // Notify parent
+            onItemAdded(folder, "renamed"); 
             setRenaming(false);
             setMenuVisible(false);
         } catch (error) {
@@ -91,6 +98,22 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
             alert("Failed to rename folder.");
         }
     };
+
+    const deleteFolder = async () => {
+      const confirmed = window.confirm(`Are you sure you want to delete the folder "${folder.data.name}"? This cannot be undone.`);
+      if (!confirmed) return;
+
+      try {
+      await apiService.deleteFolder(folder.refId);
+      // onItemAdded(folder, "deleted");
+      setMenuVisible(false);
+      } catch (err) {
+      console.error("Failed to delete folder:", err);
+      alert("Failed to delete folder.");
+      }
+    }
+
+    
 
 
     return (
@@ -124,19 +147,7 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
               <Button
                 variant="ghost"
                 className="w-full justify-start text-left px-2 py-1 text-sm text-red-600 hover:bg-red-100"
-                onClick={async () => {
-                    const confirmed = window.confirm(`Are you sure you want to delete the folder "${folder.data.name}"? This cannot be undone.`);
-                    if (!confirmed) return;
-
-                    try {
-                    await apiService.deleteFolder(folder.data.id);
-                    onItemAdded(folder);
-                    setMenuVisible(false);
-                    } catch (err) {
-                    console.error("Failed to delete folder:", err);
-                    alert("Failed to delete folder.");
-                    }
-                }}
+                onClick={async () => deleteFolder}
                 >
                 🗑️ Delete Folder
                 </Button>

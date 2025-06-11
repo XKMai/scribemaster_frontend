@@ -6,11 +6,12 @@ import type { Item } from "@/services/apiservice";
 
 interface EmptyContextMenuProps {
   createdBy: number;
+  campaignId: number;
   onItemAdded: (item: Item) => void;
   children: React.ReactNode;
 }
 
-const EmptyContextMenu = ({ createdBy, onItemAdded, children }: EmptyContextMenuProps) => {
+const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: EmptyContextMenuProps) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [creatingType, setCreatingType] = useState<"note" | "folder" | null>(null);
@@ -39,13 +40,13 @@ const EmptyContextMenu = ({ createdBy, onItemAdded, children }: EmptyContextMenu
       const note = await apiService.createNote({
         title: newName,
         content: "",
-        createdBy,
-        folderId: createdBy,
+        createdBy: createdBy,
+        folderId: campaignId,
       });
       newItem = {
         id: note.id,
         type: "note",
-        refId: createdBy,
+        refId: campaignId,
         position: 0,
         data: note,
       };
@@ -54,12 +55,13 @@ const EmptyContextMenu = ({ createdBy, onItemAdded, children }: EmptyContextMenu
     if (creatingType === "folder") {
       const folder = await apiService.createFolder({
         name: newName,
-        createdBy,
+        createdBy: createdBy,
+        folderId: campaignId,
       });
       newItem = {
         id: folder.id,
         type: "folder",
-        refId: createdBy,
+        refId: campaignId,
         position: 0,
         data: folder,
       };

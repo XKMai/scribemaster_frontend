@@ -35,7 +35,7 @@ export type CreateFolderRequest = {
   name: string;
   createdBy: number;
   settings?: object;
-  folderId?: number;
+  folderId: number;
 };
 
 export type UpdateNoteRequest = {

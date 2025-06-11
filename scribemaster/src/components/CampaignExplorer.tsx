@@ -9,14 +9,12 @@ import { apiService, type FolderData, type Item, type NoteData } from "@/service
 import EmptyContextMenu from "./EmptyContextMenu";
 
 interface CampaignViewerProps {
-  campaignId: string;
+  campaignId: number;
 }
 
 // type guards
 const isNote = (item: Item): item is Item & { data: NoteData } => item.type === "note";
 const isFolder = (item: Item): item is Item & { data: FolderData } => item.type === "folder";
-
-
 
 const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     const [items, setItems] = useState<Item[]>([]);
@@ -24,18 +22,6 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     const [expandedFolders, setExpandedFolders] = useState<Set<number>>(new Set());
     const [editableTitle, setEditableTitle] = useState("");
     const [editableContent, setEditableContent] = useState("");
-  
-    /*
-    useEffect(() => {
-    const loadDummyCampaign = async () => {
-        const data = samplecampaign; 
-        setItems(data.items as Item[]);
-    };
-    
-
-    loadDummyCampaign();
-    }, [campaignId]);
-    */
 
     useEffect(() => {
     if (selectedNote && isNote(selectedNote)) {
@@ -44,13 +30,11 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     }
     }, [selectedNote]);
 
-    
-
     // fetch full campaign folder
     useEffect(() => {
     const fetchCampaignRoot = async () => {
       try {
-        const id = Number(campaignId);
+        const id = campaignId;
         const campaign = await apiService.getFolder(id);
         setItems(campaign.items);
       } catch (error) {
@@ -63,8 +47,8 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
 
      // fetch nested folder contents
     const loadFolderItems = async (folder: Item) => {
-        const folderId = folder.data.id;
-        if (!isFolder(folder) || folder.data.items) return;
+        const folderId = folder.refId;
+        if (!isFolder(folder) || folder.data.items || folder.refId === Number(campaignId)) return;
 
         try {
         const response = await apiService.getFolder(folderId);
@@ -78,7 +62,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
 
     const toggleFolder = async (folder: Item) => {
         
-        const folderId = folder.data.id;
+        const folderId = folder.refId;
         const newSet = new Set(expandedFolders);
 
         if (expandedFolders.has(folderId)) {
@@ -93,7 +77,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
 
     const updateNoteInTree = (tree: Item[], updatedNote: Item): Item[] => {
         return tree.map((item) => {
-            if (isNote(item) && item.id === updatedNote.id) {
+            if (isNote(item) && item.data.id === updatedNote.id) {
             return { ...item, data: { ...item.data, title: updatedNote.data.title } };
             }
 
@@ -125,7 +109,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
             }
             return item;
             })
-            .filter((item) => !(isNote(item) && item.id === noteId));
+            .filter((item) => !(isNote(item) && item.data.id === noteId));
     };
 
     const handleSave = async () => {
@@ -151,6 +135,36 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
         }
     };
 
+    const removeItemFromTree = (tree: Item[], idToRemove: number): Item[] => {
+    return tree
+        .filter(item => item.data.id !== idToRemove)
+        .map(item => {
+        if (isFolder(item) && item.data.items) {
+            return {
+            ...item,
+            data: {
+                ...item.data,
+                items: removeItemFromTree(item.data.items, idToRemove),
+            },
+            };
+        }
+        return item;
+        });
+    };
+
+    const handleItemChange = (updatedItem: Item, action: "added" | "deleted" | "renamed") => {
+        if (action === "deleted") {
+            const updatedTree = removeItemFromTree(items, updatedItem.data.id);
+            setItems(updatedTree);
+        } else {
+            // for add or rename, reload the root folder to ensure the full tree updates
+            apiService.getFolder(campaignId)
+            .then(campaign => setItems(campaign.items))
+            .catch(err => {
+                console.error("Failed to reload campaign data after update:", err);
+            });
+        }
+    };
 
 
     // recursive rendering function
@@ -158,13 +172,13 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
     const renderItems = (items: Item[], level: number = 0) => {
         return items.map((item) => {
         const paddingLeft = `${level * 16}px`;
-    
+
         return (
-            <div key={item.id} className="space-y-1">
+            <div key={`${level}-${item.id}`} className="space-y-1">
             {isFolder(item) ? (
                 <FolderContextMenu
                     folder={item}
-                    onItemAdded={() => setItems([...items])}
+                    onItemAdded={handleItemChange}
                     trigger={
                     <Button
                         variant="ghost"
@@ -184,9 +198,9 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                         setItems(updatedTree);
                     }}
                     onItemDeleted={(deletedNote) => {
-                        const updatedTree = deleteNoteFromTree(items, deletedNote.id);
+                        const updatedTree = deleteNoteFromTree(items, deletedNote.data.id);
                         setItems(updatedTree);
-                        if (selectedNote?.id === deletedNote.id) {
+                        if (selectedNote?.data.id === deletedNote.data.id) {
                             setSelectedNote(null);
                         }
                     }}
@@ -219,11 +233,16 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
         {/* file explorer*/}
         <div className="w-1/3 border-r p-4 bg-muted h-full overflow-auto">
             <h2 className="font-bold mb-4">Files</h2>
+            <div className="min-h-full">
+            {items.length === 0 ? (
             <EmptyContextMenu
-                createdBy={items[0]?.data.createdBy || 1}
-                onItemAdded={(newItem) => setItems((prev) => [...prev, newItem])}
+            createdBy={items[0]?.data.createdBy || 1}
+            onItemAdded={(newItem) => setItems((prev) => [...prev, newItem])}
+            campaignId={campaignId}
             >
-                <div className="min-h-full">
+            <div className="w-1/3 border-r p-4 bg-muted h-full overflow-auto relative">
+                <h2 className="font-bold mb-4">Files</h2>
+                <div className="min-h-[300px]">
                 {items.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center mt-4">
                     Right-click to create your first folder or note
@@ -232,7 +251,12 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                     renderItems(items)
                 )}
                 </div>
+            </div>
             </EmptyContextMenu>
+            ) : (
+            renderItems(items)
+            )}
+            </div>
         </div>
 
         {/* content viewer*/}
