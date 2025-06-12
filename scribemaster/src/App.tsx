@@ -6,6 +6,7 @@ import "./lib/axiosConfig";
 import CampaignCreationPage from "./pages/CampaignCreationPage";
 import CampaignReaderPage from "./pages/CampaignReaderPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CampaignExplorerPage from "./pages/CampaignExplorerPage";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
               <Route path="/home" element={<HomePage />} />
               <Route path="/campaigncreation" element={<CampaignCreationPage />} />
               <Route path="/campaignreader" element={<CampaignReaderPage />} />
+              <Route path="/campaign/:campaignId" element={<CampaignExplorerPage/>} />
             </Route>
       </Routes>
     </main>

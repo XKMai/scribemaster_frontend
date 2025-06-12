@@ -3,8 +3,8 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { FileText } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
-import CampaignExplorer from './CampaignExplorer';
 import { apiService } from '@/services/apiservice';
+import { useNavigate } from 'react-router';
 
 
 const CampaignReader = () => {
@@ -15,7 +15,6 @@ const CampaignReader = () => {
     // storing selected campaign choice from list
     const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
 
-    const [loadedCampaignId, setLoadedCampaignId] = useState<number | null>(null);
     
     // call to obtain list of campaigns
     const fetchCampaigns = async () => {
@@ -30,6 +29,8 @@ const CampaignReader = () => {
         }
     };
 
+    const navigate = useNavigate();
+
     // function to get and load campaign folder
     const loadCampaign = async () => {
     if (!selectedCampaignId) {
@@ -39,17 +40,14 @@ const CampaignReader = () => {
 
     try {
       alert("Campaign loaded successfully!");
-      setLoadedCampaignId(selectedCampaignId);
+      // setLoadedCampaignId(selectedCampaignId);
+      navigate(`/campaign/${selectedCampaignId}`)
     } catch (error) {
       console.error("Failed to load campaign:", error);
       alert("Error loading campaign.");
     }
   };
 
-    if (loadedCampaignId) {
-      return <CampaignExplorer campaignId={loadedCampaignId} />;
-    }
-    
     return (
 
     <Card className='w-full max-w-md mx-auto my-auto flex flex-col h-[400px]'>
