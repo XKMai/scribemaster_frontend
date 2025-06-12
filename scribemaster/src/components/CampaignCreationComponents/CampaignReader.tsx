@@ -14,7 +14,7 @@ const CampaignReader = () => {
 
     // storing selected campaign choice from list
     const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
-
+    const [campaignName, setCampaignName] = useState<string | null>(null);
     
     // call to obtain list of campaigns
     const fetchCampaigns = async () => {
@@ -69,7 +69,11 @@ const CampaignReader = () => {
                         campaigns.map((campaign) => (
                             <DropdownMenuItem
                             key={campaign.id}
-                            onSelect={() => setSelectedCampaignId(campaign.id)}
+                            onSelect={() => {
+                                setSelectedCampaignId(campaign.id);
+                                setCampaignName(campaign.name)
+                            }}
+                            className='border-muted-foreground p-1'
                             >
                                 {campaign.name}
                             </DropdownMenuItem>
@@ -82,7 +86,7 @@ const CampaignReader = () => {
         </CardContent>
         <CardFooter className='p-4 border-t mt-auto'>
             <Button variant="outline" className='w-full' onClick={loadCampaign}>
-                Load Campaign
+                Load {campaignName ? campaignName : "Campaign"}
             </Button>
         </CardFooter>
     </Card>

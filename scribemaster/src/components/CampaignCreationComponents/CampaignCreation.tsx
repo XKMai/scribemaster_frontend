@@ -14,6 +14,7 @@ import api from "@/lib/axiosConfig";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { apiService } from "@/services/apiservice";
+import { Card, CardContent, CardTitle } from "../ui/card";
 
 const loginSchema = z.object({
   name: z.string().min(4, { message: "Campaign Name is required" }),
@@ -56,6 +57,12 @@ const CampaignCreation = () => {
 };
 
   return (
+    <Card className="w-full max-w-md mx-auto my-auto flex flex-col h-[400px]">
+
+      <CardTitle  className="mx-auto">
+              <h1>Campaign Name</h1>
+      </CardTitle>
+      <CardContent>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10 w-full max-w-sm mx-auto my-auto">
         <FormField
@@ -63,7 +70,7 @@ const CampaignCreation = () => {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel><h1 className="mx-auto">Campaign Name</h1></FormLabel>
+              
               <FormControl>
                 <Input placeholder="The Marvelous Adventures of Foo" {...field} />
               </FormControl>
@@ -71,12 +78,13 @@ const CampaignCreation = () => {
             </FormItem>
           )}
         />
-
-        <Button type="submit" className="w-full">
+        <Button variant="outline" type="submit" className="w-full">
           Create Campaign
         </Button>
       </form>
     </Form>
+    </CardContent>
+    </Card>
   );
 }
 
