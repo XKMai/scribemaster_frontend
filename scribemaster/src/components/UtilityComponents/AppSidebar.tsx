@@ -1,4 +1,4 @@
-import {  ChevronUp, Home, Inbox,  Settings, User2 } from "lucide-react"
+import {  ChevronUp, Home, Scroll,  Settings, User2, MapPlus } from "lucide-react"
 
 import {
   Sidebar,
@@ -24,12 +24,12 @@ const items = [
   {
     title: "Campaign Creation",
     url: "/campaigncreation",
-    icon: Inbox,
+    icon: MapPlus,
   },
   {
     title: "Campaign Reader",
     url: "/campaignreader",
-    icon: Inbox,
+    icon: Scroll,
   },
   {
     title: "Settings",
