@@ -1,36 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import type { Item } from "../../services/apiservice";
 import { apiService } from "../../services/apiservice";
 import { Input } from "../ui/input";
+import { ContextMenu } from "radix-ui";
 
 interface NoteContextMenuProps {
   note: Item;
-  trigger: React.ReactNode;
   onItemUpdated: (updatedNote: Item) => void;
   onItemDeleted: (deletedNote: Item) => void;
+  children: React.ReactNode;
 }
 
-const NoteContextMenu = ({ note, trigger, onItemUpdated, onItemDeleted }: NoteContextMenuProps) => {
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
+const NoteContextMenu = ({ note, onItemUpdated, onItemDeleted, children }: NoteContextMenuProps) => {
+  
   const [renaming, setRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState(note.data.title || "");
-
-  const handleContextMenu = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setPosition({ x: e.pageX, y: e.pageY });
-    setMenuVisible(true);
-    setRenaming(false);
-    setRenameValue(note.data.title);
-  };
-
-  useEffect(() => {
-    const handleClick = () => setMenuVisible(false);
-    window.addEventListener("click", handleClick);
-    return () => window.removeEventListener("click", handleClick);
-  }, []);
 
   const renameNote = async () => {
     if (!renameValue.trim()) return;
@@ -39,7 +24,6 @@ const NoteContextMenu = ({ note, trigger, onItemUpdated, onItemDeleted }: NoteCo
       note.data.title = updatedNote.title;
       onItemUpdated(note);
       setRenaming(false);
-      setMenuVisible(false);
     } catch (error) {
       console.error("Failed to rename note:", error);
       alert("Failed to rename note.");
@@ -53,7 +37,6 @@ const NoteContextMenu = ({ note, trigger, onItemUpdated, onItemDeleted }: NoteCo
     try {
       await apiService.deleteNote(note.refId);
       onItemDeleted(note);
-      setMenuVisible(false);
     } catch (error) {
       console.error("Failed to delete note:", error);
       alert("Failed to delete note.");
@@ -61,36 +44,27 @@ const NoteContextMenu = ({ note, trigger, onItemUpdated, onItemDeleted }: NoteCo
   };
 
   return (
-    <>
-      <div onContextMenu={handleContextMenu}>
-        {trigger}
-      </div>
-
-      {menuVisible && (
-        <div
-          className="absolute z-50 w-64 bg-white border rounded shadow-md p-2 space-y-2"
-          style={{ top: position.y, left: position.x }}
-          onClick={(e) => e.stopPropagation()}
-        >
+    <ContextMenu.Root>
+      <ContextMenu.Trigger asChild>{children}</ContextMenu.Trigger>
+      <ContextMenu.Content className="z-50 rounded bg-white shadow-md p-2 space-y-2 min-w-[200px]">
           {!renaming && (
             <>
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-left px-2 py-1 text-sm"
-                onClick={() => {
+              <ContextMenu.Item
+              className="cursor-pointer px-2 py-1 text-sm hover:bg-muted"
+                onSelect={(e) => {
+                  e.preventDefault();
                   setRenaming(true);
                   setRenameValue(note.data.title);
                 }}
               >
                 ✏️ Rename Note
-              </Button>
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-left px-2 py-1 text-sm text-red-600 hover:bg-red-100"
-                onClick={deleteNote}
+              </ContextMenu.Item>
+              <ContextMenu.Item
+                className="cursor-pointer px-2 py-1 text-sm text-red-600 hover:bg-red-100"
+                onSelect={deleteNote}
               >
                 🗑️ Delete Note
-              </Button>
+              </ContextMenu.Item>
             </>
           )}
 
@@ -114,9 +88,8 @@ const NoteContextMenu = ({ note, trigger, onItemUpdated, onItemDeleted }: NoteCo
               </div>
             </div>
           )}
-        </div>
-      )}
-    </>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
   )
 }
 

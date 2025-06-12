@@ -179,16 +179,16 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                 <FolderContextMenu
                     folder={item}
                     onItemAdded={handleItemChange}
-                    >
-                    <Button
-                        variant="ghost"
-                        className="w-full justify-start text-left"
-                        style={{ paddingLeft }}
-                        onClick={() => toggleFolder(item)}
-                    >
-                        {`${expandedFolders.has(item.data.id) ? "📂" : "📁"} ${item.data.name}`}
-                    </Button>
-                    </FolderContextMenu>
+                >
+                <Button
+                    variant="ghost"
+                    className="w-full justify-start text-left"
+                    style={{ paddingLeft }}
+                    onClick={() => toggleFolder(item)}
+                >
+                    {`${expandedFolders.has(item.data.id) ? "📂" : "📁"} ${item.data.name}`}
+                </Button>
+                </FolderContextMenu>
             
                 ) : (
                 <NoteContextMenu
@@ -204,7 +204,8 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                             setSelectedNote(null);
                         }
                     }}
-                    trigger={
+                    >
+                
                         <Button
                         variant="ghost"
                         className="w-full justify-start text-left"
@@ -213,8 +214,8 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                         >
                         {item.data.title}
                         </Button>
-                    }
-                />
+                    </NoteContextMenu>
+            
 
                 )}
             {isFolder(item) &&

@@ -7,35 +7,17 @@ import { ContextMenu } from "radix-ui";
 
 interface FolderContextMenuProps {
   folder: Item;
-  //trigger: React.ReactNode;
   onItemAdded: (updatedFolder: Item, action: "added" | "deleted" | "renamed") => void;
   children: React.ReactNode;
 }
 
 const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuProps) => {
 
-    // const [menuVisible, setMenuVisible] = useState(false);
-    // const [position, setPosition] = useState({ x: 0, y: 0 });
-
     const [creatingType, setCreatingType] = useState<"note" | "folder" | null>(null);
     const [newName, setNewName] = useState("");
 
     const [renaming, setRenaming] = useState(false);
     const [renameValue, setRenameValue] = useState(folder.data.name || "");
-
-    // const handleContextMenu = (e: React.MouseEvent) => {
-    //     e.preventDefault();
-    //     setPosition({ x: e.pageX, y: e.pageY });
-    //     setMenuVisible(true);
-    //     setCreatingType(null);
-    //     setNewName("");
-    // };
-
-    // useEffect(() => {
-    //     const handleClick = () => setMenuVisible(false);
-    //     window.addEventListener("click", handleClick);
-    //     return () => window.removeEventListener("click", handleClick);
-    // }, []);
 
     const createItem = async () => {
       const userdata = await apiService.getCookie();
@@ -84,8 +66,6 @@ const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuP
         onItemAdded(folder, "added");
 
       }
-
-      //setMenuVisible(false);
       setNewName("");
       setCreatingType(null);
     };
@@ -97,7 +77,6 @@ const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuP
             folder.data.name = updatedFolder.name;
             onItemAdded(folder, "renamed");
             setRenaming(false);
-            //setMenuVisible(false);
         } catch (error) {
             console.error("Failed to rename folder:", error);
             alert("Failed to rename folder.");
@@ -112,7 +91,6 @@ const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuP
       try {
       await apiService.deleteFolder(folder.refId);
       onItemAdded(folder, "deleted");
-      //setMenuVisible(false);
       } catch (err) {
       console.error("Failed to delete folder:", err);
       alert("Failed to delete folder.");
