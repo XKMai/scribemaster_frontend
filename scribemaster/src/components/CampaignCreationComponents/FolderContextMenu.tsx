@@ -3,17 +3,19 @@ import { Button } from "../ui/button";
 import type { Item } from "../../services/apiservice";
 import { apiService } from "../../services/apiservice";
 import { Input } from "../ui/input";
+import { ContextMenu } from "radix-ui";
 
 interface FolderContextMenuProps {
   folder: Item;
-  trigger: React.ReactNode;
+  //trigger: React.ReactNode;
   onItemAdded: (updatedFolder: Item, action: "added" | "deleted" | "renamed") => void;
+  children: React.ReactNode;
 }
 
-const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuProps) => {
+const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuProps) => {
 
-    const [menuVisible, setMenuVisible] = useState(false);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
+    // const [menuVisible, setMenuVisible] = useState(false);
+    // const [position, setPosition] = useState({ x: 0, y: 0 });
 
     const [creatingType, setCreatingType] = useState<"note" | "folder" | null>(null);
     const [newName, setNewName] = useState("");
@@ -21,19 +23,19 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
     const [renaming, setRenaming] = useState(false);
     const [renameValue, setRenameValue] = useState(folder.data.name || "");
 
-    const handleContextMenu = (e: React.MouseEvent) => {
-        e.preventDefault();
-        setPosition({ x: e.pageX, y: e.pageY });
-        setMenuVisible(true);
-        setCreatingType(null);
-        setNewName("");
-    };
+    // const handleContextMenu = (e: React.MouseEvent) => {
+    //     e.preventDefault();
+    //     setPosition({ x: e.pageX, y: e.pageY });
+    //     setMenuVisible(true);
+    //     setCreatingType(null);
+    //     setNewName("");
+    // };
 
-    useEffect(() => {
-        const handleClick = () => setMenuVisible(false);
-        window.addEventListener("click", handleClick);
-        return () => window.removeEventListener("click", handleClick);
-    }, []);
+    // useEffect(() => {
+    //     const handleClick = () => setMenuVisible(false);
+    //     window.addEventListener("click", handleClick);
+    //     return () => window.removeEventListener("click", handleClick);
+    // }, []);
 
     const createItem = async () => {
       const userdata = await apiService.getCookie();
@@ -84,7 +86,7 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
       }
 
       
-      setMenuVisible(false);
+      //setMenuVisible(false);
       setNewName("");
       setCreatingType(null);
     };
@@ -96,7 +98,7 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
             folder.data.name = updatedFolder.name;
             onItemAdded(folder, "renamed");
             setRenaming(false);
-            setMenuVisible(false);
+            //setMenuVisible(false);
         } catch (error) {
             console.error("Failed to rename folder:", error);
             alert("Failed to rename folder.");
@@ -111,7 +113,7 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
       try {
       await apiService.deleteFolder(folder.refId);
       onItemAdded(folder, "deleted");
-      setMenuVisible(false);
+      //setMenuVisible(false);
       } catch (err) {
       console.error("Failed to delete folder:", err);
       alert("Failed to delete folder.");
@@ -123,101 +125,91 @@ const FolderContextMenu = ({ folder, trigger, onItemAdded }: FolderContextMenuPr
 
     return (
     <>
-      <div onContextMenu={handleContextMenu}>
-        {trigger}
-      </div>
+    <ContextMenu.Root>
+      <ContextMenu.Trigger asChild>{children}</ContextMenu.Trigger>
 
-      {menuVisible && (
-        <div
-          className="absolute z-50 w-64 bg-white border rounded shadow-md p-2 space-y-2"
-          style={{ top: position.y, left: position.x }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {!creatingType && (
-            <>
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-left px-2 py-1 text-sm"
-                onClick={() => setCreatingType("note")}
-              >
-                📄 New Note
+      <ContextMenu.Content className="z-50 rounded bg-white shadow-md p-2 space-y-2 min-w-[200px]">
+        {!creatingType && !renaming && (
+          <>
+            <ContextMenu.Item
+              className="cursor-pointer px-2 py-1 text-sm hover:bg-muted"
+              onSelect={() => setCreatingType("note")}
+            >
+              📄 New Note
+            </ContextMenu.Item>
+            <ContextMenu.Item
+              className="cursor-pointer px-2 py-1 text-sm hover:bg-muted"
+              onSelect={() => setCreatingType("folder")}
+            >
+              📁 New Folder
+            </ContextMenu.Item>
+            <ContextMenu.Item
+              className="cursor-pointer px-2 py-1 text-sm hover:bg-muted"
+              onSelect={() => setRenaming(true)}
+            >
+              ✏️ Rename
+            </ContextMenu.Item>
+            <ContextMenu.Item
+              className="cursor-pointer px-2 py-1 text-sm text-red-600 hover:bg-red-100"
+              onSelect={deleteFolder}
+            >
+              🗑️ Delete
+            </ContextMenu.Item>
+          </>
+        )}
+
+        {creatingType && (
+          <div className="space-y-1">
+            <Input
+              placeholder={`Enter ${creatingType} name`}
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") createItem();
+                if (e.key === "Escape") {
+                  setCreatingType(null);
+                  setNewName("");
+                }
+              }}
+              autoFocus
+            />
+            <div className="flex justify-end space-x-2 pt-1">
+              <Button size="sm" variant="outline" onClick={() => setCreatingType(null)}>
+                Cancel
               </Button>
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-left px-2 py-1 text-sm"
-                onClick={() => setCreatingType("folder")}
-              >
-                📁 New Folder
+              <Button size="sm" onClick={createItem}>
+                Create
               </Button>
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-left px-2 py-1 text-sm text-red-600 hover:bg-red-100"
-                onClick={deleteFolder}
-                >
-                🗑️ Delete Folder
-                </Button>
-                <Button
-                    variant="ghost"
-                    className="w-full justify-start text-left px-2 py-1 text-sm"
-                    onClick={() => {
-                        setRenaming(true);
-                        setRenameValue(folder.data.name);
-                    }}
-                >
-                ✏️ Rename Folder
-                </Button>
-            </>
-          )}
-
-          {creatingType && (
-            <div className="space-y-1">
-              <Input
-                placeholder={`Enter ${creatingType} name`}
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") createItem();
-                  if (e.key === "Escape") {
-                    setCreatingType(null);
-                    setNewName("");
-                  }
-                }}
-                autoFocus
-              />
-              <div className="flex justify-end space-x-2">
-                <Button size="sm" variant="outline" onClick={() => setCreatingType(null)}>
-                  Cancel
-                </Button>
-                <Button size="sm" onClick={createItem}>
-                  Create
-                </Button>
-              </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {renaming && (
-            <div className="space-y-1">
-                <Input
-                value={renameValue}
-                onChange={(e) => setRenameValue(e.target.value)}
-                onKeyDown={(e) => {
-                    if (e.key === "Enter") renameFolder();
-                    if (e.key === "Escape") {
-                    setRenaming(false);
-                    setRenameValue(folder.data.name);
-                    }
-                }}
-                autoFocus
-                />
-                <div className="flex justify-end space-x-2">
-                <Button size="sm" variant="outline" onClick={() => setRenaming(false)}>Cancel</Button>
-                <Button size="sm" onClick={renameFolder}>Rename</Button>
-                </div>
+        {renaming && (
+          <div className="space-y-1">
+            <Input
+              value={renameValue}
+              onChange={(e) => setRenameValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") renameFolder();
+                if (e.key === "Escape") {
+                  setRenaming(false);
+                  setRenameValue(folder.data.name);
+                }
+              }}
+              autoFocus
+            />
+            <div className="flex justify-end space-x-2 pt-1">
+              <Button size="sm" variant="outline" onClick={() => setRenaming(false)}>
+                Cancel
+              </Button>
+              <Button size="sm" onClick={renameFolder}>
+                Rename
+              </Button>
             </div>
-            )}
-
-        </div>
-      )}
+          </div>
+        )}
+      </ContextMenu.Content>
+    </ContextMenu.Root>
     </>
   );
 }

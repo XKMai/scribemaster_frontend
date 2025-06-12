@@ -179,7 +179,7 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                 <FolderContextMenu
                     folder={item}
                     onItemAdded={handleItemChange}
-                    trigger={
+                    >
                     <Button
                         variant="ghost"
                         className="w-full justify-start text-left"
@@ -188,8 +188,8 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                     >
                         {`${expandedFolders.has(item.data.id) ? "📂" : "📁"} ${item.data.name}`}
                     </Button>
-                    }
-                />
+                    </FolderContextMenu>
+            
                 ) : (
                 <NoteContextMenu
                     note={item}
