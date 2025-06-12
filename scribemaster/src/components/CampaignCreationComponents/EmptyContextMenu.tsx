@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { apiService } from "@/services/apiservice";
 import type { Item } from "@/services/apiservice";
+import * as ContextMenu from "@radix-ui/react-context-menu";
+
 
 interface EmptyContextMenuProps {
   createdBy: number;
@@ -12,25 +14,22 @@ interface EmptyContextMenuProps {
 }
 
 const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: EmptyContextMenuProps) => {
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const containerRef = useRef<HTMLDivElement>(null);
   const [creatingType, setCreatingType] = useState<"note" | "folder" | null>(null);
   const [newName, setNewName] = useState("");
 
   const handleContextMenu = (e: React.MouseEvent) => {
 
-    const target = e.target as HTMLElement;
-    if (target.closest('.tree-item')) return;
+    if ((e.target as HTMLElement).closest(".tree-item")) return;
 
     e.preventDefault();
-    setPosition({ x: e.pageX, y: e.pageY });
-    setMenuVisible(true);
     setCreatingType(null);
     setNewName("");
   };
 
   useEffect(() => {
-    const handleClick = () => setMenuVisible(false);
+    const handleClick = () => 
     window.addEventListener("click", handleClick);
     return () => window.removeEventListener("click", handleClick);
   }, []);
@@ -75,28 +74,39 @@ const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: Empt
       onItemAdded(newItem);
     }
 
-    setMenuVisible(false);
     setNewName("");
     setCreatingType(null);
   };
 
   return (
-    <div onContextMenu={handleContextMenu} className="w-full h-full">
-      {children}
-      {menuVisible && (
-        <div
-          className="absolute z-50 w-64 bg-white border rounded shadow-md p-2 space-y-2"
-          style={{ top: position.y, left: position.x }}
-          onClick={(e) => e.stopPropagation()}
+    <div onContextMenu={handleContextMenu} ref={containerRef} className="w-full h-full">
+       <ContextMenu.Root>
+        <ContextMenu.Trigger asChild>
+          <div className="w-full h-full">{children}</div>
+        </ContextMenu.Trigger>
+        <ContextMenu.Content
+          className="z-50 min-w-[200px] bg-white border rounded shadow-md p-2 space-y-2"
         >
           {!creatingType ? (
             <>
-              <Button variant="ghost" className="w-full justify-start text-left" onClick={() => setCreatingType("note")}>
+              <ContextMenu.Item
+                className="cursor-pointer px-2 py-1 rounded hover:bg-gray-100"
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setCreatingType("note");
+              }}
+              >
                 📄 New Note
-              </Button>
-              <Button variant="ghost" className="w-full justify-start text-left" onClick={() => setCreatingType("folder")}>
+              </ContextMenu.Item>
+              <ContextMenu.Item
+                className="cursor-pointer px-2 py-1 rounded hover:bg-gray-100"
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setCreatingType("folder");
+                }}
+              >
                 📁 New Folder
-              </Button>
+              </ContextMenu.Item>
             </>
           ) : (
             <>
@@ -116,8 +126,8 @@ const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: Empt
               </div>
             </>
           )}
-        </div>
-      )}
+        </ContextMenu.Content>
+      </ContextMenu.Root>
     </div>
   );
 };
