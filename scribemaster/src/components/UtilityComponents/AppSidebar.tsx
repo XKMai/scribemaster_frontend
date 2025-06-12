@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
-import LogoutButton from "./LogoutButton"
+import LogoutButton from "../LoginComponents/LogoutButton"
 
 // Menu items.
 const items = [

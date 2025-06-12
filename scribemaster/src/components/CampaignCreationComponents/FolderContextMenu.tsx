@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import type { Item } from "../services/apiservice";
-import { apiService } from "../services/apiservice";
-import { Input } from "./ui/input";
+import { Button } from "../ui/button";
+import type { Item } from "../../services/apiservice";
+import { apiService } from "../../services/apiservice";
+import { Input } from "../ui/input";
 
 interface FolderContextMenuProps {
   folder: Item;

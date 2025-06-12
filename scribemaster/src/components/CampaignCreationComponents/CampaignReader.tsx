@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from "./ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { FileText } from 'lucide-react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
 import { apiService } from '@/services/apiservice';

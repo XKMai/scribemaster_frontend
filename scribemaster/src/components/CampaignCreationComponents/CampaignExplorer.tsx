@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "./ui/card"
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card"
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 import FolderContextMenu from "./FolderContextMenu";
 import NoteContextMenu from "./NoteContextMenu";
 import { apiService, type FolderData, type Item, type NoteData } from "@/services/apiservice";

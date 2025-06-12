@@ -1,5 +1,5 @@
-import CampaignCreation from "@/components/CampaignCreation"
-import { AppSidebar } from "@/components/AppSidebar"
+import CampaignCreation from "@/components/CampaignCreationComponents/CampaignCreation"
+import { AppSidebar } from "@/components/UtilityComponents/AppSidebar"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 

@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/components/AppSidebar"
-import CampaignExplorer from "@/components/CampaignExplorer"
+import { AppSidebar } from "@/components/UtilityComponents/AppSidebar"
+import CampaignExplorer from "@/components/CampaignCreationComponents/CampaignExplorer"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { useParams } from "react-router"
 

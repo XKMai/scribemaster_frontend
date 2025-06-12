@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/AppSidebar"
+import { AppSidebar } from "@/components/UtilityComponents/AppSidebar"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 const HomePage = () => {

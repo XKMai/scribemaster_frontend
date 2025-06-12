@@ -5,7 +5,7 @@ import SignupPage from "./pages/SignupPage"
 import "./lib/axiosConfig";
 import CampaignCreationPage from "./pages/CampaignCreationPage";
 import CampaignReaderPage from "./pages/CampaignReaderPage";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/UtilityComponents/ProtectedRoute";
 import CampaignExplorerPage from "./pages/CampaignExplorerPage";
 
 

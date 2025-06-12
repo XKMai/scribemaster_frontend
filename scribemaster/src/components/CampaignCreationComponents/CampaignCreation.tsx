@@ -1,5 +1,5 @@
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod";
 import {

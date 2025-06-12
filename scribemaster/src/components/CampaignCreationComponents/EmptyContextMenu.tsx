@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import { apiService } from "@/services/apiservice";
 import type { Item } from "@/services/apiservice";
 

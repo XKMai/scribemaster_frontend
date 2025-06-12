@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
-import api from "../lib/axiosConfig"
+import api from "../../lib/axiosConfig"
 
 // Zod Schema
 const loginSchema = z.object({

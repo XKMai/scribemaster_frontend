@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/components/AppSidebar"
-import CampaignReader from "@/components/CampaignReader"
+import { AppSidebar } from "@/components/UtilityComponents/AppSidebar"
+import CampaignReader from "@/components/CampaignCreationComponents/CampaignReader"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 
