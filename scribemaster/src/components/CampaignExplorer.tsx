@@ -232,14 +232,13 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
 
         {/* file explorer*/}
         <div className="w-1/3 border-r p-4 bg-muted h-full overflow-auto">
-            <h2 className="font-bold mb-4">Files</h2>
-            <div className="min-h-full">
+            <h2 className="font-bold mb-4">Files</h2>      
             <EmptyContextMenu
             createdBy={items[0]?.data.createdBy || 1}
             onItemAdded={(newItem) => setItems((prev) => [...prev, newItem])}
             campaignId={campaignId}
             >
-                <div className="min-h-[300px]">
+                <div className="min-h-full">
                 {items.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center mt-4">
                     Right-click to create your first folder or note
@@ -247,9 +246,8 @@ const CampaignExplorer = ({ campaignId }: CampaignViewerProps) => {
                 ) : (
                     renderItems(items)
                 )}
-            </div>
+                </div>
             </EmptyContextMenu>
-            </div>
         </div>
 
         {/* content viewer*/}
