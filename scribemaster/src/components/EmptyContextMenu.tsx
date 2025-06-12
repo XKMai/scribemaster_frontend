@@ -18,6 +18,10 @@ const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: Empt
   const [newName, setNewName] = useState("");
 
   const handleContextMenu = (e: React.MouseEvent) => {
+
+    const target = e.target as HTMLElement;
+    if (target.closest('.tree-item')) return;
+
     e.preventDefault();
     setPosition({ x: e.pageX, y: e.pageY });
     setMenuVisible(true);
