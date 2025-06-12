@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import type { Item } from "../../services/apiservice";
 import { apiService } from "../../services/apiservice";
@@ -85,7 +85,6 @@ const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuP
 
       }
 
-      
       //setMenuVisible(false);
       setNewName("");
       setCreatingType(null);
@@ -124,7 +123,7 @@ const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuP
 
 
     return (
-    <>
+
     <ContextMenu.Root>
       <ContextMenu.Trigger asChild>{children}</ContextMenu.Trigger>
 
@@ -133,19 +132,28 @@ const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuP
           <>
             <ContextMenu.Item
               className="cursor-pointer px-2 py-1 text-sm hover:bg-muted"
-              onSelect={() => setCreatingType("note")}
+              onSelect={(e) => {
+                e.preventDefault();
+                setCreatingType("note");
+              }}
             >
               📄 New Note
             </ContextMenu.Item>
             <ContextMenu.Item
               className="cursor-pointer px-2 py-1 text-sm hover:bg-muted"
-              onSelect={() => setCreatingType("folder")}
+              onSelect={(e) => {
+                e.preventDefault();
+                setCreatingType("folder");
+              }}
             >
               📁 New Folder
             </ContextMenu.Item>
             <ContextMenu.Item
               className="cursor-pointer px-2 py-1 text-sm hover:bg-muted"
-              onSelect={() => setRenaming(true)}
+              onSelect={(e) => {
+                e.preventDefault();
+                setRenaming(true);
+              }}
             >
               ✏️ Rename
             </ContextMenu.Item>
@@ -210,7 +218,7 @@ const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuP
         )}
       </ContextMenu.Content>
     </ContextMenu.Root>
-    </>
+  
   );
 }
 
