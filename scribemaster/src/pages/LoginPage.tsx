@@ -1,4 +1,4 @@
-import LoginForm2 from "@/components/LoginForm2"
+import LoginForm2 from "@/components/LoginComponents/LoginForm2"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router"
 
