@@ -1,0 +1,29 @@
+# Dependencies (reinstalled in image)
+node_modules
+
+# Build output (ignore if you're building inside Docker)
+build
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files — don't copy secrets into image
+.env
+.env.*
+
+# OS and editor junk
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Git
+.git
+.gitignore
+
+# Docker config files (optional)
+Dockerfile
+docker-compose.yml
+.dockerignore
