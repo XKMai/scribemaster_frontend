@@ -1,4 +1,4 @@
-name: Deploy Backend to ECS Fargate
+name: Deploy Frontend to ECS Fargate
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
         id: get-task-def
         run: |
           aws ecs describe-task-definition \
-            --task-definition scribemaster-backend-task \
+            --task-definition scribemaster-frontend-task \
             --query taskDefinition \
             > task-def.json
 
