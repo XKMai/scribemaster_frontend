@@ -12,7 +12,7 @@ export const StatBlockSchema = z.object({
 export const HitPointsSchema = z.object({
     current: z.number().min(0),
     max: z.number().min(1),
-    temporary: z.number().optional().default(0),
+    temporary: z.number().min(0),
 });
 
 export const CharacterSchema = z.object({
@@ -20,7 +20,7 @@ export const CharacterSchema = z.object({
     name: z.string().min(1),
     race: z.string().optional(),
     stats: StatBlockSchema,
-    hitPoints: HitPointsSchema,
+    //hitPoints: HitPointsSchema,
 })
 
-export type EntityFormData = z.infer<typeof CharacterSchema>;
+export type CharacterFormData = z.infer<typeof CharacterSchema>;
