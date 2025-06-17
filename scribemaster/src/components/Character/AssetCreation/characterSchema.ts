@@ -20,7 +20,7 @@ export const CharacterSchema = z.object({
     name: z.string().min(1),
     race: z.string().optional(),
     stats: StatBlockSchema,
-    //hitPoints: HitPointsSchema,
+    hitPoints: HitPointsSchema,
 })
 
 export type CharacterFormData = z.infer<typeof CharacterSchema>;
