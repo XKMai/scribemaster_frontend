@@ -26,7 +26,7 @@ export const PlayerSchema = CharacterSchema.omit({creature_type: true, creature_
 
 export type PlayerCharacterFormData = z.infer<typeof PlayerSchema>;
 
-export const PlayerCharacterDefaultValues = {
+export const PlayerCharacterDefaultValues: PlayerCharacterFormData = {
   name: "Kaelin Stormrider",
   type: "player",
   alignment: "neutral good",
