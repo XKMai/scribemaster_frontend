@@ -71,7 +71,7 @@ const PlayerCharacterCreationForm = () => {
                   </FormItem>
                 )}
               />
-              <div>
+              <div className="grid grid-cols-2">
                 {/* type */}
                 <FormField
                   control={form.control}
@@ -95,6 +95,47 @@ const PlayerCharacterCreationForm = () => {
                           <SelectItem value="player">Player</SelectItem>
                         </SelectContent>
                       </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="class"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Class</FormLabel>
+                      <FormControl>
+                        <Select
+                          value={field.value}
+                          onValueChange={(value) => field.onChange(value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select class(es)" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {[
+                              "Artificer",
+                              "Barbarian",
+                              "Bard",
+                              "Cleric",
+                              "Druid",
+                              "Fighter",
+                              "Monk",
+                              "Paladin",
+                              "Ranger",
+                              "Rogue",
+                              "Sorcerer",
+                              "Warlock",
+                              "Wizard",
+                            ].map((cls) => (
+                              <SelectItem key={cls} value={cls}>
+                                {cls}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
