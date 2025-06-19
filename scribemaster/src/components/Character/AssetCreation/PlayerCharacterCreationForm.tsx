@@ -71,7 +71,7 @@ const PlayerCharacterCreationForm = () => {
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-2">
+              <div className="grid grid-cols-3">
                 {/* type */}
                 <FormField
                   control={form.control}
@@ -135,6 +135,25 @@ const PlayerCharacterCreationForm = () => {
                             ))}
                           </SelectContent>
                         </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="characterLevel"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Character Level</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value))
+                          }
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
