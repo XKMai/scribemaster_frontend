@@ -24,6 +24,8 @@ export const PlayerSchema = CharacterSchema.omit({creature_type: true, creature_
     additionalNotes: z.string().optional() 
 })
 
+export type PlayerCharacterFormData = z.infer<typeof PlayerSchema>;
+
 export const PlayerCharacterDefaultValues = {
   name: "Kaelin Stormrider",
   type: "player",
