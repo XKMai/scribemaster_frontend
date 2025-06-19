@@ -1,4 +1,8 @@
-import { PlayerSchema } from "./playerCharacterSchema";
+import {
+  PlayerSchema,
+  type PlayerCharacterFormData,
+  PlayerCharacterDefaultValues,
+} from "./playerCharacterSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -22,6 +26,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 
 const PlayerCharacterCreationForm = () => {
+  const form = useForm<PlayerCharacterFormData>({
+    resolver: zodResolver(PlayerSchema),
+    defaultValues: PlayerCharacterDefaultValues,
+  });
   return <div>PlayerCharacterCreationForm</div>;
 };
 
