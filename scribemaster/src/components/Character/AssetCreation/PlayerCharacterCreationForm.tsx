@@ -71,7 +71,7 @@ const PlayerCharacterCreationForm = () => {
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-3">
+              <div className="grid grid-cols-4 gap-4">
                 {/* type */}
                 <FormField
                   control={form.control}
@@ -99,6 +99,21 @@ const PlayerCharacterCreationForm = () => {
                     </FormItem>
                   )}
                 />
+                {/* race */}
+                <FormField
+                  control={form.control}
+                  name="race"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Race</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Elf" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* class */}
                 <FormField
                   control={form.control}
                   name="class"
@@ -140,12 +155,13 @@ const PlayerCharacterCreationForm = () => {
                     </FormItem>
                   )}
                 />
+                {/* character level */}
                 <FormField
                   control={form.control}
                   name="characterLevel"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Character Level</FormLabel>
+                      <FormLabel>Level</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
