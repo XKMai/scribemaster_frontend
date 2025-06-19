@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
 
 type SaveKey = keyof CharacterFormData["savingThrows"]["savingThrows"];
 type SkillKey = keyof CharacterFormData["proficientSkills"];
@@ -32,6 +33,10 @@ const CharacterCreationForm = () => {
     resolver: zodResolver(CharacterSchema),
     defaultValues: CharacterDefaultValues,
   });
+
+  const [hitDiceInput, setHitDiceInput] = useState(
+    form.getValues("hitDice").join(", ")
+  );
 
   const onSubmit = async (data: CharacterFormData) => {
     try {
@@ -193,10 +198,9 @@ const CharacterCreationForm = () => {
                 />
               ))}
             </div>
-            {/* hitPoints */}
             {/* <div className="grid grid-cols-3 gap-4"> */}
 
-            {/* proficiencyBonus, armourClass, initiative, speed */}
+            {/* hitPoints, armourClass, initiative, speed */}
             <div className="grid grid-cols-4 gap-4">
               {(
                 ["hitPoints", "armourClass", "initiative", "speed"] as const
@@ -234,15 +238,16 @@ const CharacterCreationForm = () => {
                   <FormControl>
                     <Input
                       placeholder="e.g. 1d10, 2d8"
-                      value={field.value.join(", ")}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value
-                            .split(",")
-                            .map((s) => s.trim())
-                            .filter(Boolean)
-                        )
-                      }
+                      value={hitDiceInput}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        setHitDiceInput(raw);
+                        const parsed = raw
+                          .split(",")
+                          .map((s) => s.trim())
+                          .filter(Boolean);
+                        field.onChange(parsed);
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -275,6 +280,7 @@ const CharacterCreationForm = () => {
                 )
               )}
             </div>
+
             {/* savingThrows */}
             <div className="grid grid-cols-2 gap-2">
               <FormLabel>Saving Throws</FormLabel>
