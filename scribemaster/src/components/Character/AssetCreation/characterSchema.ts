@@ -1,18 +1,12 @@
-import { z } from "zod/v4"
+import { z } from "zod"
 
 export const StatBlockSchema = z.object({
-    strength: z.int().min(1).max(20),
-    dexterity: z.int().min(1).max(20),
-    constitution: z.int().min(1).max(20),
-    intelligence: z.int().min(1).max(20),
-    wisdom: z.int().min(1).max(20),
-    charisma: z.int().min(1).max(20),
-});
-
-export const HitPointsSchema = z.object({
-    current: z.int().min(0),
-    max: z.int().min(1),
-    temporary: z.int().min(0),
+    strength: z.number().int().min(1),
+    dexterity: z.number().int().min(1),
+    constitution: z.number().int().min(1),
+    intelligence: z.number().int().min(1),
+    wisdom: z.number().int().min(1),
+    charisma: z.number().int().min(1),
 });
 
 export const ProficientSkillsSchema = z.object({
@@ -32,6 +26,8 @@ export const ProficientSkillsSchema = z.object({
      persuasion: z.boolean(), 
      religion: z.boolean(), 
      sleightOfHand: z.boolean(),
+     stealth: z.boolean(),
+     survival: z.boolean(),
 })
 
 export const SavingThrowsSchema = z.object({
@@ -48,19 +44,28 @@ export const SavingThrowsSchema = z.object({
 export const CharacterSchema = z.object({
     name: z.string().min(1),
     type: z.enum(["friendly", "neutral", "enemy", "player"]),
-    alignment: z.enum(["lawful good, neutral good, chaotic good, lawful neutral, true neutral, chaotic neutral, lawful evil, neutral evil, chaotic evil"]),
-    size: z.enum(["tiny, small, medium, large, huge, gargantuan"]),
-    creature_type: z.enum(["aberration, beast, celestial, construct, dragon, elemental, fey, fiend, giant, humanoid, monstrosity, ooze, plant, undead"]),
+    alignment: z.enum(["lawful good",
+                        "neutral good",
+                        "chaotic good",
+                        "lawful neutral",
+                        "true neutral",
+                        "chaotic neutral",
+                        "lawful evil",
+                        "neutral evil",
+                        "chaotic evil",]),
+    size: z.enum(["tiny", "small", "medium", "large", "huge", "gargantuan"]),
+    creature_type: z.enum(["aberration", "beast", "celestial", "construct", "dragon", "elemental", "fey",
+  "fiend", "giant", "humanoid", "monstrosity", "ooze", "plant", "undead"]),
     creature_tag: z.string().optional(),
     stats: StatBlockSchema,
     proficientSkills: ProficientSkillsSchema,
     savingThrows: SavingThrowsSchema,
-    proficiencyBonus: z.int(),
-    armourClass:z.int(),
-    initiative: z.int(),
-    hitPoints: HitPointsSchema,
+    proficiencyBonus: z.number().int(),
+    armourClass:z.number().int(),
+    initiative: z.number().int(),
+    hitPoints: z.number().int(),
     hitDice: z.array(z.string().regex(/^\d+d\d+$/)),
-    speed: z.int(),
+    speed: z.number().int(),
     languages: z.string(),
     additional_senses: z.string().optional(),
     traits_and_features: z.string(),
@@ -92,4 +97,62 @@ export const PlayerSchema = CharacterSchema.omit({creature_type: true, creature_
     inspiration: z.boolean(),
     additionalNotes: z.string().optional() 
 })
+
+export const CharacterDefaultValues: CharacterFormData = {
+  name: "Seraphina Windrunner",
+  type: "player",
+  alignment: "chaotic good",
+  size: "medium",
+  creature_type: "humanoid",
+  creature_tag: "elf",
+  stats: {
+    strength: 10,
+    dexterity: 18,
+    constitution: 14,
+    intelligence: 12,
+    wisdom: 13,
+    charisma: 16,
+  },
+  proficientSkills: {
+    acrobatics: true,
+    animalHandling: false,
+    arcana: false,
+    athletics: false,
+    deception: true,
+    history: false,
+    insight: true,
+    intimidation: false,
+    investigation: false,
+    medicine: false,
+    nature: false,
+    perception: true,
+    performance: true,
+    persuasion: false,
+    religion: false,
+    sleightOfHand: false,
+    stealth: true,
+     survival: false,
+  },
+  savingThrows: {
+    savingThrows: {
+      strength: false,
+      dexterity: true,
+      constitution: true,
+      intelligence: false,
+      wisdom: false,
+      charisma: true,
+    },
+  },
+  proficiencyBonus: 2,
+  armourClass: 15,
+  initiative: 4,
+  hitPoints: 15,
+  hitDice: ["4d8"],
+  speed: 35,
+  languages: "Common, Elvish, Sylvan",
+  additional_senses: "Darkvision 60ft",
+  traits_and_features: "Fey Ancestry, Cunning Action, Sneak Attack",
+  equipment: "Rapier, Shortbow, Leather Armor, Thieves' Tools",
+  notes: "Often scouts ahead. Friendly, but elusive.",
+};
 
