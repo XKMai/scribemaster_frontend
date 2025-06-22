@@ -4,7 +4,7 @@ import { Card, CardTitle, CardContent } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
 import { useState } from "react";
-import { Swords } from "lucide-react";
+import { Swords, PawPrint } from "lucide-react";
 
 const CharacterCreationPage = () => {
   const [choice, setChoice] = useState("");
@@ -37,7 +37,7 @@ const CharacterCreationPage = () => {
               onClick={() => setChoice("general")}
             >
               <CardContent className="flex flex-col items-center gap-4">
-                <Swords className="w-12 h-12" />
+                <PawPrint className="w-12 h-12" />
                 <CardTitle>General Character</CardTitle>
               </CardContent>
             </Card>
