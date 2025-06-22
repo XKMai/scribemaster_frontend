@@ -255,17 +255,19 @@ const CharacterCreationForm = () => {
               )}
             />
 
-            {/* proficientSkills */}
-            <div className="grid grid-cols-2 gap-2">
-              <FormLabel>Proficient Skills</FormLabel>
-              {(Object.keys(form.watch("proficientSkills")) as SkillKey[]).map(
-                (skill) => (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                {/* proficientSkills */}
+                <FormLabel className="p-1">Proficient Skills</FormLabel>
+                {(
+                  Object.keys(form.watch("proficientSkills")) as SkillKey[]
+                ).map((skill) => (
                   <FormField
                     key={skill}
                     control={form.control}
                     name={`proficientSkills.${skill}` as const}
                     render={({ field }) => (
-                      <FormItem className="flex items-center gap-2">
+                      <FormItem className="flex items-center gap-4 p-1">
                         <FormControl>
                           <input
                             type="checkbox"
@@ -277,36 +279,35 @@ const CharacterCreationForm = () => {
                       </FormItem>
                     )}
                   />
-                )
-              )}
-            </div>
-
-            {/* savingThrows */}
-            <div className="grid grid-cols-2 gap-2">
-              <FormLabel>Saving Throws</FormLabel>
-              {(
-                Object.keys(
-                  form.watch("savingThrows.savingThrows")
-                ) as SaveKey[]
-              ).map((key) => (
-                <FormField
-                  key={key}
-                  name={`savingThrows.savingThrows.${key}`}
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-2">
-                      <FormControl>
-                        <input
-                          type="checkbox"
-                          checked={field.value}
-                          onChange={(e) => field.onChange(e.target.checked)}
-                        />
-                      </FormControl>
-                      <FormLabel className="capitalize">{key}</FormLabel>
-                    </FormItem>
-                  )}
-                />
-              ))}
+                ))}
+              </div>
+              {/* savingThrows */}
+              <div>
+                <FormLabel className="p-1">Saving Throws</FormLabel>
+                {(
+                  Object.keys(
+                    form.watch("savingThrows.savingThrows")
+                  ) as SaveKey[]
+                ).map((key) => (
+                  <FormField
+                    key={key}
+                    name={`savingThrows.savingThrows.${key}`}
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem className="flex items-center gap-4 p-1">
+                        <FormControl>
+                          <input
+                            type="checkbox"
+                            checked={field.value}
+                            onChange={(e) => field.onChange(e.target.checked)}
+                          />
+                        </FormControl>
+                        <FormLabel className="capitalize">{key}</FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
             </div>
 
             {/* languages, additional_senses, traits_and_features, equipment, notes */}
