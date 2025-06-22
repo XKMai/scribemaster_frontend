@@ -48,7 +48,7 @@ const PlayerCharacterCreationForm = () => {
   return (
     <Card className="w-full h-screen overflow-y-auto p-6">
       <CardHeader>
-        <CardTitle>Character Creation Form</CardTitle>
+        <CardTitle>Player Character Creation Form</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
