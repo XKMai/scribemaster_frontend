@@ -12,8 +12,8 @@ export const PlayerSchema = CharacterSchema.omit({creature_type: true, creature_
     background: z.string(),
     playerName: z.string(),
     race: z.string(),
-    experiencePoints: z.string(),
-    passiveSkills: z.string(), 
+    experience_points: z.string(),
+    passive_skills: z.string(), 
     attacks: z.union([z.string(), z.array(z.string())]),
     personality_traits: z.string(),
     ideals: z.string().optional(),
@@ -21,7 +21,7 @@ export const PlayerSchema = CharacterSchema.omit({creature_type: true, creature_
     flaws: z.string().optional(),
     death_saves: z.string().optional(), 
     inspiration: z.boolean(),
-    additionalNotes: z.string().optional() 
+    additional_notes: z.string().optional() 
 })
 
 export type PlayerCharacterFormData = z.infer<typeof PlayerSchema>;
@@ -88,8 +88,8 @@ export const PlayerCharacterDefaultValues: PlayerCharacterFormData = {
   background: "Entertainer",
   playerName: "Aerin",
   race: "Half-Elf",
-  experiencePoints: "2700",
-  passiveSkills: "Passive Perception: 15",
+  experience_points: "2700",
+  passive_skills: "Passive Perception: 15",
   attacks: ["Rapier +5 (1d8+3)", "Vicious Mockery (1d4)"],
   personality_traits: "Witty and overly curious.",
   ideals: "Freedom and creativity above all.",
@@ -97,5 +97,5 @@ export const PlayerCharacterDefaultValues: PlayerCharacterFormData = {
   flaws: "Can’t resist a good story.",
   death_saves: "2 successes, 1 failure",
   inspiration: true,
-  additionalNotes: "Secretly searching for their missing twin brother.",
+  additional_notes: "Secretly searching for their missing twin brother.",
 };

@@ -244,7 +244,7 @@ const PlayerCharacterCreationForm = () => {
               ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               {/* hitDice */}
               <FormField
                 control={form.control}
@@ -271,7 +271,20 @@ const PlayerCharacterCreationForm = () => {
                   </FormItem>
                 )}
               />
-
+              {/* experience points */}
+              <FormField
+                control={form.control}
+                name="experience_points"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Experience Points</FormLabel>
+                    <FormControl>
+                      <Input placeholder="..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               {/* inspiration */}
               <FormField
                 control={form.control}
@@ -291,17 +304,20 @@ const PlayerCharacterCreationForm = () => {
                 )}
               />
             </div>
-            {/* proficientSkills */}
-            <div className="grid grid-cols-2 gap-2">
-              <FormLabel>Proficient Skills</FormLabel>
-              {(Object.keys(form.watch("proficientSkills")) as SkillKey[]).map(
-                (skill) => (
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                {/* proficientSkills */}
+                <FormLabel className="p-1">Proficient Skills</FormLabel>
+                {(
+                  Object.keys(form.watch("proficientSkills")) as SkillKey[]
+                ).map((skill) => (
                   <FormField
                     key={skill}
                     control={form.control}
                     name={`proficientSkills.${skill}` as const}
                     render={({ field }) => (
-                      <FormItem className="flex items-center gap-2">
+                      <FormItem className="flex items-center gap-4 p-1">
                         <FormControl>
                           <input
                             type="checkbox"
@@ -313,41 +329,41 @@ const PlayerCharacterCreationForm = () => {
                       </FormItem>
                     )}
                   />
-                )
-              )}
-            </div>
-
-            {/* savingThrows */}
-            <div className="grid grid-cols-2 gap-2">
-              <FormLabel>Saving Throws</FormLabel>
-              {(
-                Object.keys(
-                  form.watch("savingThrows.savingThrows")
-                ) as SaveKey[]
-              ).map((key) => (
-                <FormField
-                  key={key}
-                  name={`savingThrows.savingThrows.${key}`}
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-2">
-                      <FormControl>
-                        <input
-                          type="checkbox"
-                          checked={field.value}
-                          onChange={(e) => field.onChange(e.target.checked)}
-                        />
-                      </FormControl>
-                      <FormLabel className="capitalize">{key}</FormLabel>
-                    </FormItem>
-                  )}
-                />
-              ))}
+                ))}
+              </div>
+              {/* savingThrows */}
+              <div>
+                <FormLabel className="p-1">Saving Throws</FormLabel>
+                {(
+                  Object.keys(
+                    form.watch("savingThrows.savingThrows")
+                  ) as SaveKey[]
+                ).map((key) => (
+                  <FormField
+                    key={key}
+                    name={`savingThrows.savingThrows.${key}`}
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem className="flex items-center gap-4 p-1">
+                        <FormControl>
+                          <input
+                            type="checkbox"
+                            checked={field.value}
+                            onChange={(e) => field.onChange(e.target.checked)}
+                          />
+                        </FormControl>
+                        <FormLabel className="capitalize">{key}</FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
             </div>
 
             {/* languages, additional_senses, traits_and_features, equipment, notes */}
             {(
               [
+                "passive_skills",
                 "languages",
                 "additional_senses",
                 "traits_and_features",
@@ -358,6 +374,7 @@ const PlayerCharacterCreationForm = () => {
                 "bonds",
                 "flaws",
                 "death_saves",
+                "additional_notes",
               ] as const
             ).map((key) => (
               <FormField
