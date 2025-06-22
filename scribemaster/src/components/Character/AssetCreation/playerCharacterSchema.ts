@@ -19,7 +19,7 @@ export const PlayerSchema = CharacterSchema.omit({creature_type: true, creature_
     ideals: z.string().optional(),
     bonds: z.string().optional(),
     flaws: z.string().optional(),
-    deathSaves: z.string().optional(), 
+    death_saves: z.string().optional(), 
     inspiration: z.boolean(),
     additionalNotes: z.string().optional() 
 })
@@ -95,7 +95,7 @@ export const PlayerCharacterDefaultValues: PlayerCharacterFormData = {
   ideals: "Freedom and creativity above all.",
   bonds: "Owes a life debt to a traveling knight.",
   flaws: "Can’t resist a good story.",
-  deathSaves: "2 successes, 1 failure",
+  death_saves: "2 successes, 1 failure",
   inspiration: true,
   additionalNotes: "Secretly searching for their missing twin brother.",
 };

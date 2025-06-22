@@ -244,33 +244,53 @@ const PlayerCharacterCreationForm = () => {
               ))}
             </div>
 
-            {/* hitDice */}
-            <FormField
-              control={form.control}
-              name="hitDice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Hit Dice</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="e.g. 1d10, 2d8"
-                      value={hitDiceInput}
-                      onChange={(e) => {
-                        const raw = e.target.value;
-                        setHitDiceInput(raw);
-                        const parsed = raw
-                          .split(",")
-                          .map((s) => s.trim())
-                          .filter(Boolean);
-                        field.onChange(parsed);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              {/* hitDice */}
+              <FormField
+                control={form.control}
+                name="hitDice"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Hit Dice</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="e.g. 1d10, 2d8"
+                        value={hitDiceInput}
+                        onChange={(e) => {
+                          const raw = e.target.value;
+                          setHitDiceInput(raw);
+                          const parsed = raw
+                            .split(",")
+                            .map((s) => s.trim())
+                            .filter(Boolean);
+                          field.onChange(parsed);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
+              {/* inspiration */}
+              <FormField
+                control={form.control}
+                name="inspiration"
+                render={({ field }) => (
+                  <FormItem className="flex items-center gap-2 space-y-0">
+                    <FormControl>
+                      <input
+                        type="checkbox"
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                      />
+                    </FormControl>
+                    <FormLabel>Inspiration</FormLabel>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             {/* proficientSkills */}
             <div className="grid grid-cols-2 gap-2">
               <FormLabel>Proficient Skills</FormLabel>
@@ -337,6 +357,7 @@ const PlayerCharacterCreationForm = () => {
                 "ideals",
                 "bonds",
                 "flaws",
+                "death_saves",
               ] as const
             ).map((key) => (
               <FormField
