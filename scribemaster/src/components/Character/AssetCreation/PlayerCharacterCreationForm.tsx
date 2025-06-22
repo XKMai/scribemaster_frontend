@@ -165,6 +165,7 @@ const PlayerCharacterCreationForm = () => {
                       <FormControl>
                         <Input
                           type="number"
+                          min="1"
                           {...field}
                           onChange={(e) =>
                             field.onChange(parseInt(e.target.value))
@@ -332,6 +333,10 @@ const PlayerCharacterCreationForm = () => {
                 "traits_and_features",
                 "equipment",
                 "notes",
+                "personality_traits",
+                "ideals",
+                "bonds",
+                "flaws",
               ] as const
             ).map((key) => (
               <FormField
