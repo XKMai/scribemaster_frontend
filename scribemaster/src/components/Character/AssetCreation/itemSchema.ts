@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const ItemSchema = z.object({
+    name: z.string().min(1, "Name is required"),
   type: z.string().min(1, "Item type is required"),
   description: z.string().min(1, "Description is required"),
   characteristics: z.record(z.any()),
@@ -12,6 +13,7 @@ export const ItemSchema = z.object({
 export type ItemFormData = z.infer<typeof ItemSchema>;
 
 export const ItemDefaultValues: ItemFormData = {
+  name: "Le Blade",
   type: "Weapon",
   description: "A finely crafted longsword with a jeweled hilt.",
   characteristics: {
