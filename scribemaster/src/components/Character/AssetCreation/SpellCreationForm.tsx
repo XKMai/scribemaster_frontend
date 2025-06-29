@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { apiService } from "@/services/apiservice";
+import api from "@/lib/axiosConfig";
 
 const schools = [
   "Abjuration",
@@ -58,15 +60,31 @@ const SpellCreationForm = () => {
     defaultValues: SpellDefaultValues,
   });
 
-  const onSubmit = (data: SpellFormData) => {
-    console.log("Spell submitted:", data);
-    // you can send this to your backend API here
+  const onSubmit = async (data: SpellFormData) => {
+    try {
+      const userdata = await apiService.getCookie();
+      const userId = userdata.user.id;
+
+      const payload = {
+        ...data,
+        createdBy: userId,
+      };
+
+      console.log(
+        `button pressed, data submitted: /n ${JSON.stringify(payload, null, 2)}`
+      );
+      await api.post("/spell", payload);
+
+      alert("spell created successfully");
+    } catch (error: any) {
+      alert("something went wrong!!!");
+    }
   };
 
   return (
     <Card className="w-full max-w-4xl mx-auto p-6">
       <CardHeader>
-        <CardTitle>Create a New Spell</CardTitle>
+        <CardTitle>Spell Creation Form</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -119,26 +137,43 @@ const SpellCreationForm = () => {
             <FormField
               control={form.control}
               name="classes"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
-                  <FormLabel>Class</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select class" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {classes.map((cls) => (
-                        <SelectItem key={cls} value={cls}>
-                          {cls}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Classes</FormLabel>
+                  <div className="grid grid-cols-2 gap-2">
+                    {classes.map((cls) => (
+                      <FormField
+                        key={cls}
+                        control={form.control}
+                        name="classes"
+                        render={({ field }) => {
+                          const isChecked = field.value?.includes(cls);
+                          return (
+                            <FormItem
+                              key={cls}
+                              className="flex items-center space-x-2"
+                            >
+                              <FormControl>
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={(e) => {
+                                    const newValue = e.target.checked
+                                      ? [...field.value, cls]
+                                      : field.value.filter((v) => v !== cls);
+                                    field.onChange(newValue);
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="capitalize">
+                                {cls}
+                              </FormLabel>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

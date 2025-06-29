@@ -17,11 +17,10 @@ export const SpellSchema = z.object({
   duration: z.string().min(1),
   description: z.string().min(1),
   higherLevel: z.string(),
-  classes:  z.enum([
-        "Artificer", "Barbarian", "Bard", "Cleric", "Druid", "Fighter",
-        "Monk", "Paladin", "Ranger", "Rogue", "Sorcerer", "Warlock", "Wizard"
-        ])
-    ,
+  classes: z.array(z.enum([
+  "Artificer", "Barbarian", "Bard", "Cleric", "Druid", "Fighter",
+  "Monk", "Paladin", "Ranger", "Rogue", "Sorcerer", "Warlock", "Wizard"
+])),
   createdBy: z.number().int(),
   settings: z.record(z.any()).optional(),
 });
@@ -38,7 +37,7 @@ export const SpellDefaultValues: SpellFormData = {
   duration: "Instantaneous",
   description: "You create three glowing darts of magical force. Each dart hits a creature of your choice that you can see within range.",
   higherLevel: "When you cast this spell using a spell slot of 2nd level or higher, the spell creates one more dart for each slot level above 1st.",
-  classes: "Wizard",
+  classes: ["Wizard"],
   createdBy: 0,
   settings: {}
 };
