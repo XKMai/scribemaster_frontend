@@ -265,7 +265,6 @@ const PlayerCharacterCreationForm = () => {
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-              {/* experience points */}
               {/* Experience */}
               <FormField
                 control={form.control}
@@ -381,9 +380,37 @@ const PlayerCharacterCreationForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Alignment</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Neutral Good" {...field} />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select alignment" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {[
+                          "Lawful Good",
+                          "Neutral Good",
+                          "Chaotic Good",
+                          "Lawful Neutral",
+                          "True Neutral",
+                          "Chaotic Neutral",
+                          "Lawful Evil",
+                          "Neutral Evil",
+                          "Chaotic Evil",
+                          "Other",
+                        ].map((alignment) => (
+                          <SelectItem
+                            key={alignment}
+                            value={alignment.toLowerCase()}
+                          >
+                            {alignment}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
