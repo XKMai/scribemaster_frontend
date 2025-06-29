@@ -106,7 +106,6 @@ const CharacterCreationForm = () => {
                           <SelectItem value="friendly">Friendly</SelectItem>
                           <SelectItem value="neutral">Neutral</SelectItem>
                           <SelectItem value="enemy">Enemy</SelectItem>
-                          <SelectItem value="player">Player</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -222,7 +221,7 @@ const CharacterCreationForm = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 {/* proficientSkills */}
-                <FormLabel className="p-1">Proficient Skills</FormLabel>
+                <FormLabel className="p-1 text-lg">Proficient Skills</FormLabel>
                 {(Object.keys(form.watch("skills")) as SkillKey[]).map(
                   (skill) => (
                     <FormField
@@ -247,7 +246,7 @@ const CharacterCreationForm = () => {
               </div>
               {/* savingThrows */}
               <div>
-                <FormLabel className="p-1">Saving Throws</FormLabel>
+                <FormLabel className="p-1 text-lg">Saving Throws</FormLabel>
                 {(Object.keys(form.watch("savingThrows")) as SaveKey[]).map(
                   (key) => (
                     <FormField
@@ -271,112 +270,111 @@ const CharacterCreationForm = () => {
                 )}
               </div>
             </div>
-            {/* features, attacks */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="features"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Features</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/* attacks */}
-              <div className="space-y-4">
-                <FormLabel className="text-lg font-semibold">Attacks</FormLabel>
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="attacks"
-                    render={() => (
-                      <FormItem>
-                        <FormLabel>Attack Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="e.g. Longsword, Fireball"
-                            value={attackInput.name}
-                            onChange={(e) =>
-                              setAttackInput({
-                                ...attackInput,
-                                name: e.target.value,
-                              })
-                            }
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="attacks"
-                    render={() => (
-                      <FormItem>
-                        <FormLabel>Attack Details</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="e.g. +5 to hit, 1d8+3 slashing"
-                            value={attackInput.details}
-                            onChange={(e) =>
-                              setAttackInput({
-                                ...attackInput,
-                                details: e.target.value,
-                              })
-                            }
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    if (attackInput.name && attackInput.details) {
-                      const currentAttacks = form.getValues("attacks") || {};
-                      form.setValue("attacks", {
-                        ...currentAttacks,
-                        [attackInput.name]: attackInput.details,
-                      });
-                      setAttackInput({ name: "", details: "" });
-                    }
-                  }}
-                >
-                  Add Attack
-                </Button>
 
-                {/* Display current attacks */}
-                <div className="space-y-2">
-                  {Object.entries(form.watch("attacks") || {}).map(
-                    ([name, details]) => (
-                      <div
-                        key={name}
-                        className="flex justify-between items-center p-2 border rounded"
-                      >
-                        <span>
-                          <strong>{name}:</strong> {details}
-                        </span>
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => {
-                            const currentAttacks =
-                              form.getValues("attacks") || {};
-                            const { [name]: removed, ...rest } = currentAttacks;
-                            form.setValue("attacks", rest);
-                          }}
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    )
+            {/* features */}
+            <FormField
+              control={form.control}
+              name="features"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Features</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* attacks */}
+            <div className="space-y-4">
+              <FormLabel className="text-lg">Attacks</FormLabel>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="attacks"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Attack Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g. Longsword, Fireball"
+                          value={attackInput.name}
+                          onChange={(e) =>
+                            setAttackInput({
+                              ...attackInput,
+                              name: e.target.value,
+                            })
+                          }
+                        />
+                      </FormControl>
+                    </FormItem>
                   )}
-                </div>
+                />
+                <FormField
+                  control={form.control}
+                  name="attacks"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Attack Details</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g. +5 to hit, 1d8+3 slashing"
+                          value={attackInput.details}
+                          onChange={(e) =>
+                            setAttackInput({
+                              ...attackInput,
+                              details: e.target.value,
+                            })
+                          }
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Button
+                type="button"
+                onClick={() => {
+                  if (attackInput.name && attackInput.details) {
+                    const currentAttacks = form.getValues("attacks") || {};
+                    form.setValue("attacks", {
+                      ...currentAttacks,
+                      [attackInput.name]: attackInput.details,
+                    });
+                    setAttackInput({ name: "", details: "" });
+                  }
+                }}
+              >
+                Add Attack
+              </Button>
+
+              {/* Display current attacks */}
+              <div className="space-y-2">
+                {Object.entries(form.watch("attacks") || {}).map(
+                  ([name, details]) => (
+                    <div
+                      key={name}
+                      className="flex justify-between items-center p-2 border rounded"
+                    >
+                      <span>
+                        <strong>{name}:</strong> {details}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => {
+                          const currentAttacks =
+                            form.getValues("attacks") || {};
+                          const { [name]: removed, ...rest } = currentAttacks;
+                          form.setValue("attacks", rest);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  )
+                )}
               </div>
             </div>
 
