@@ -24,25 +24,39 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { apiService } from "@/services/apiservice";
+import api from "@/lib/axiosConfig";
 
-type SaveKey = keyof PlayerCharacterFormData["savingThrows"]["savingThrows"];
-type SkillKey = keyof PlayerCharacterFormData["proficientSkills"];
+type SaveKey = keyof PlayerCharacterFormData["savingThrows"];
+type SkillKey = keyof PlayerCharacterFormData["skills"];
 
 const PlayerCharacterCreationForm = () => {
+  const [attackInput, setAttackInput] = useState({ name: "", details: "" });
+
   const form = useForm<PlayerCharacterFormData>({
     resolver: zodResolver(PlayerSchema),
     defaultValues: PlayerCharacterDefaultValues,
   });
 
-  const [hitDiceInput, setHitDiceInput] = useState(
-    form.getValues("hitDice").join(", ")
-  );
-
   const onSubmit = async (data: PlayerCharacterFormData) => {
     try {
-      console.log(`button pressed, data submitted: /n ${data}`);
+      const userdata = await apiService.getCookie();
+      const userId = userdata.user.id;
+
+      const payload = {
+        ...data,
+        createdBy: userId,
+      };
+
+      console.log(
+        `button pressed, data submitted: /n ${JSON.stringify(payload, null, 2)}`
+      );
+      await api.post("/entity", payload);
+
+      alert("character created successfully");
     } catch (error: any) {
-      alert("error occured");
+      alert("something went wrong!!!");
     }
   };
   return (
@@ -116,7 +130,7 @@ const PlayerCharacterCreationForm = () => {
                 {/* class */}
                 <FormField
                   control={form.control}
-                  name="class"
+                  name="characterClass"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Class</FormLabel>
@@ -158,7 +172,7 @@ const PlayerCharacterCreationForm = () => {
                 {/* character level */}
                 <FormField
                   control={form.control}
-                  name="characterLevel"
+                  name="level"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Level</FormLabel>
@@ -217,17 +231,23 @@ const PlayerCharacterCreationForm = () => {
             {/* <div className="grid grid-cols-3 gap-4"> */}
 
             {/* hitPoints, armourClass, initiative, speed */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-5 gap-4">
               {(
-                ["hitPoints", "armourClass", "initiative", "speed"] as const
-              ).map((key) => (
+                [
+                  ["maxhp", "Max Hit Points"],
+                  ["ac", "Armor Class"],
+                  ["speed", "Speed"],
+                  ["initiative", "Initiative"],
+                  ["passivePerception", "Passive Perception"],
+                ] as const
+              ).map(([key, label]) => (
                 <FormField
                   key={key}
                   control={form.control}
                   name={key}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="capitalize">{key}</FormLabel>
+                      <FormLabel>{label}</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -245,41 +265,23 @@ const PlayerCharacterCreationForm = () => {
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-              {/* hitDice */}
+              {/* experience points */}
+              {/* Experience */}
               <FormField
                 control={form.control}
-                name="hitDice"
+                name="experience"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Hit Dice</FormLabel>
+                    <FormLabel>Experience</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="e.g. 1d10, 2d8"
-                        value={hitDiceInput}
-                        onChange={(e) => {
-                          const raw = e.target.value;
-                          setHitDiceInput(raw);
-                          const parsed = raw
-                            .split(",")
-                            .map((s) => s.trim())
-                            .filter(Boolean);
-                          field.onChange(parsed);
-                        }}
+                        type="number"
+                        min="0"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value) || 0)
+                        }
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/* experience points */}
-              <FormField
-                control={form.control}
-                name="experience_points"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Experience Points</FormLabel>
-                    <FormControl>
-                      <Input placeholder="..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -309,91 +311,444 @@ const PlayerCharacterCreationForm = () => {
               <div>
                 {/* proficientSkills */}
                 <FormLabel className="p-1">Proficient Skills</FormLabel>
-                {(
-                  Object.keys(form.watch("proficientSkills")) as SkillKey[]
-                ).map((skill) => (
-                  <FormField
-                    key={skill}
-                    control={form.control}
-                    name={`proficientSkills.${skill}` as const}
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-4 p-1">
-                        <FormControl>
-                          <input
-                            type="checkbox"
-                            checked={field.value}
-                            onChange={(e) => field.onChange(e.target.checked)}
-                          />
-                        </FormControl>
-                        <FormLabel className="capitalize">{skill}</FormLabel>
-                      </FormItem>
-                    )}
-                  />
-                ))}
+                {(Object.keys(form.watch("skills")) as SkillKey[]).map(
+                  (skill) => (
+                    <FormField
+                      key={skill}
+                      control={form.control}
+                      name={`skills.${skill}` as const}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-4 p-1">
+                          <FormControl>
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                            />
+                          </FormControl>
+                          <FormLabel className="capitalize">{skill}</FormLabel>
+                        </FormItem>
+                      )}
+                    />
+                  )
+                )}
               </div>
               {/* savingThrows */}
               <div>
                 <FormLabel className="p-1">Saving Throws</FormLabel>
-                {(
-                  Object.keys(
-                    form.watch("savingThrows.savingThrows")
-                  ) as SaveKey[]
-                ).map((key) => (
-                  <FormField
-                    key={key}
-                    name={`savingThrows.savingThrows.${key}`}
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-4 p-1">
-                        <FormControl>
-                          <input
-                            type="checkbox"
-                            checked={field.value}
-                            onChange={(e) => field.onChange(e.target.checked)}
-                          />
-                        </FormControl>
-                        <FormLabel className="capitalize">{key}</FormLabel>
-                      </FormItem>
-                    )}
-                  />
-                ))}
+                {(Object.keys(form.watch("savingThrows")) as SaveKey[]).map(
+                  (key) => (
+                    <FormField
+                      key={key}
+                      name={`savingThrows.${key}`}
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-4 p-1">
+                          <FormControl>
+                            <input
+                              type="checkbox"
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                            />
+                          </FormControl>
+                          <FormLabel className="capitalize">{key}</FormLabel>
+                        </FormItem>
+                      )}
+                    />
+                  )
+                )}
               </div>
             </div>
-
-            {/* languages, additional_senses, traits_and_features, equipment, notes */}
-            {(
-              [
-                "passive_skills",
-                "languages",
-                "additional_senses",
-                "traits_and_features",
-                "equipment",
-                "notes",
-                "personality_traits",
-                "ideals",
-                "bonds",
-                "flaws",
-                "death_saves",
-                "additional_notes",
-              ] as const
-            ).map((key) => (
+            {/* Background and Alignment */}
+            <div className="grid grid-cols-2 gap-4">
               <FormField
-                key={key}
                 control={form.control}
-                name={key}
+                name="background"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="capitalize">
-                      {key.replace(/_/g, " ")}
-                    </FormLabel>
+                    <FormLabel>Background</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input placeholder="Entertainer" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            ))}
+
+              <FormField
+                control={form.control}
+                name="alignment"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Alignment</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Neutral Good" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Description */}
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Character description..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Features and Attacks */}
+            <FormField
+              control={form.control}
+              name="features"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Features</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Character features and abilities..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* attacks */}
+            <div className="space-y-4">
+              <FormLabel className="text-lg font-semibold">Attacks</FormLabel>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="attacks"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Attack Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g. Longsword, Fireball"
+                          value={attackInput.name}
+                          onChange={(e) =>
+                            setAttackInput({
+                              ...attackInput,
+                              name: e.target.value,
+                            })
+                          }
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="attacks"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Attack Details</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g. +5 to hit, 1d8+3 slashing"
+                          value={attackInput.details}
+                          onChange={(e) =>
+                            setAttackInput({
+                              ...attackInput,
+                              details: e.target.value,
+                            })
+                          }
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Button
+                type="button"
+                onClick={() => {
+                  if (attackInput.name && attackInput.details) {
+                    const currentAttacks = form.getValues("attacks") || {};
+                    form.setValue("attacks", {
+                      ...currentAttacks,
+                      [attackInput.name]: attackInput.details,
+                    });
+                    setAttackInput({ name: "", details: "" });
+                  }
+                }}
+              >
+                Add Attack
+              </Button>
+
+              {/* Display current attacks */}
+              <div className="space-y-2">
+                {Object.entries(form.watch("attacks") || {}).map(
+                  ([name, details]) => (
+                    <div
+                      key={name}
+                      className="flex justify-between items-center p-2 border rounded"
+                    >
+                      <span>
+                        <strong>{name}:</strong> {details}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => {
+                          const currentAttacks =
+                            form.getValues("attacks") || {};
+                          const { [name]: removed, ...rest } = currentAttacks;
+                          form.setValue("attacks", rest);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+            {/* Spellcasting */}
+            <div className="grid grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="spellcasting.spellcastingAbility"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Spellcasting Ability</FormLabel>
+                    <FormControl>
+                      <Input placeholder="charisma" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="spellcasting.spellSaveDC"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Spell Save DC</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value) || 0)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="spellcasting.spellAttackBonus"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Spell Attack Bonus</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value) || 0)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            {/* Currency */}
+            <div className="grid grid-cols-4 gap-4">
+              {(["gold", "electrum", "silver", "copper"] as const).map(
+                (currency) => (
+                  <FormField
+                    key={currency}
+                    control={form.control}
+                    name={`currency.${currency}`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="capitalize">{currency}</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            min="0"
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(parseInt(e.target.value) || 0)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )
+              )}
+            </div>
+            {/* Other Proficiencies */}
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="otherProficiencies.languages"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Languages</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Common, Elvish..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="otherProficiencies.tools"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tools</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Thieves' Tools..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            {/* Personality */}
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="personality.traits"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Traits</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Character traits..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="personality.ideals"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ideals</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Character ideals..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="personality.bonds"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bonds</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Character bonds..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="personality.flaws"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Flaws</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Character flaws..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Additional Fields */}
+            <FormField
+              control={form.control}
+              name="backstory"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Backstory</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Character backstory..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Notes</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Additional notes..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="treasure"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Treasure</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Character treasure..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="alliesOrgs"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Allies & Organizations</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Allies and organizations..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <Button type="submit" className="w-full">
               Create Character
