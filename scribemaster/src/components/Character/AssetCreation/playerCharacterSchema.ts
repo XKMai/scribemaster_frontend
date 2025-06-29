@@ -1,36 +1,47 @@
 import { z } from "zod"
-import { CharacterSchema } from "./characterSchema";
+import { EntitySchema } from "./characterSchema";
 
-export const PlayerSchema = CharacterSchema.omit({creature_type: true, creature_tag: true}).extend({
-    class: 
+export const PersonalitySchema = z.object({
+  traits: z.string().optional(),
+  ideals: z.string().optional(),
+    bonds: z.string().optional(),
+    flaws: z.string().optional(),
+})
+
+export const PlayerSchema = EntitySchema.extend({
+    
+  playerName: z.string(),
+  level: z.number().int().min(1),
+  characterClass: 
         z.enum([
         "Artificer", "Barbarian", "Bard", "Cleric", "Druid", "Fighter",
         "Monk", "Paladin", "Ranger", "Rogue", "Sorcerer", "Warlock", "Wizard"
         ])
     ,
-    characterLevel: z.number().int().min(1),
+    
     background: z.string(),
-    playerName: z.string(),
-    race: z.string(),
-    experience_points: z.string(),
-    passive_skills: z.string(), 
-    attacks: z.union([z.string(), z.array(z.string())]),
-    personality_traits: z.string(),
-    ideals: z.string().optional(),
-    bonds: z.string().optional(),
-    flaws: z.string().optional(),
-    death_saves: z.string().optional(), 
+    alignment: z.string().optional(),
+    experience: z.number().int(),
+    
     inspiration: z.boolean(),
-    additional_notes: z.string().optional() 
+
+    personality: PersonalitySchema,
+    notes: z.string().optional(),
+    backstory: z.string(),
+    treasure: z.string(),
+    alliesOrgs: z.string(),
 })
 
 export type PlayerCharacterFormData = z.infer<typeof PlayerSchema>;
 
 export const PlayerCharacterDefaultValues: PlayerCharacterFormData = {
+  // inherited from EntitySchema 
+  createdBy: 0,
   name: "Kaelin Stormrider",
   type: "player",
-  alignment: "neutral good",
-  size: "medium",
+  race: "Half-Elf",
+  description: "A charismatic bard with a mysterious past.",
+
   stats: {
     strength: 12,
     dexterity: 16,
@@ -39,7 +50,16 @@ export const PlayerCharacterDefaultValues: PlayerCharacterFormData = {
     wisdom: 13,
     charisma: 18,
   },
-  proficientSkills: {
+  hp: 30,
+  maxhp: 30,
+  temphp: 0,
+
+  ac: 15,
+  speed: 30,
+  initiative: 3,
+  passivePerception: 15,
+
+  skills: {
     acrobatics: true,
     animalHandling: false,
     arcana: false,
@@ -59,43 +79,58 @@ export const PlayerCharacterDefaultValues: PlayerCharacterFormData = {
     stealth: true,
     survival: false,
   },
-  savingThrows: {
-    savingThrows: {
-      strength: false,
-      dexterity: true,
-      constitution: true,
-      intelligence: false,
-      wisdom: false,
-      charisma: true,
-    },
-  },
-  proficiencyBonus: 2,
-  armourClass: 15,
-  initiative: 3,
-  hitPoints: 30,
-  hitDice: ["4d8"],
-  speed: 30,
-  languages: "Common, Elvish",
-  additional_senses: "Darkvision 60ft",
-  traits_and_features: "Fey Ancestry, Bardic Inspiration, Jack of All Trades",
-  equipment: "Rapier, Leather Armor, Lute, Backpack",
-  notes: "Keeps a journal of every encounter.",
-  
-  // player-exclusive fields
 
-  class: "Bard",
-  characterLevel: 4,
-  background: "Entertainer",
+  savingThrows: {
+    strength: false,
+    dexterity: true,
+    constitution: true,
+    intelligence: false,
+    wisdom: false,
+    charisma: true,
+  },
+
+  features: "Fey Ancestry, Bardic Inspiration, Jack of All Trades",
+  attacks: {
+    Rapier: "1d8+3",
+    Vicious_Mockery: "1d4"},
+
+  spellcasting: {
+    spellcastingAbility: "charisma",
+    spellSaveDC: 14,
+    spellAttackBonus: 6,
+  },
+
+  currency: {
+    gold: 50,
+    electrum: 0,
+    silver: 25,
+    copper: 10,
+  },
+
+  otherProficiencies: {
+    languages: "Common, Elvish, Sylvan",
+    tools: "Lute, Flute, Disguise Kit",
+  },
+
+  // player specific
   playerName: "Aerin",
-  race: "Half-Elf",
-  experience_points: "2700",
-  passive_skills: "Passive Perception: 15",
-  attacks: ["Rapier +5 (1d8+3)", "Vicious Mockery (1d4)"],
-  personality_traits: "Witty and overly curious.",
-  ideals: "Freedom and creativity above all.",
-  bonds: "Owes a life debt to a traveling knight.",
-  flaws: "Can’t resist a good story.",
-  death_saves: "2 successes, 1 failure",
+  level: 4,
+  characterClass: "Bard",
+  background: "Entertainer",
+  alignment: "neutral good",
+  experience: 2700,
   inspiration: true,
-  additional_notes: "Secretly searching for their missing twin brother.",
+
+  personality: {
+    traits: "Witty and overly curious.",
+    ideals: "Freedom and creativity above all.",
+    bonds: "Owes a life debt to a traveling knight.",
+    flaws: "Can’t resist a good story.",
+  },
+
+  notes: "Secretly searching for their missing twin brother.",
+  backstory: "Grew up learning bardic tales of the Feywild.",
+  treasure: "Ornate silver flute gifted by a forest spirit.",
+  alliesOrgs: "College of Lore, Bardic Council",
 };
+
