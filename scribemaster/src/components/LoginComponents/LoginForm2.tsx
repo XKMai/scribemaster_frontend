@@ -12,12 +12,14 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
-import api from "../../lib/axiosConfig"
+import api from "../../lib/axiosConfig";
 
 // Zod Schema
 const loginSchema = z.object({
   name: z.string().min(2, { message: "Username is required" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
 });
 
 type LoginSchema = z.infer<typeof loginSchema>;
@@ -34,21 +36,23 @@ export default function LoginForm2() {
   const navigate = useNavigate();
 
   const onSubmit = async (data: LoginSchema) => {
-  try {
-    await api.post('/login', data,{
-      withCredentials: true,
-    })
+    try {
+      await api.post("/login", data, {
+        withCredentials: true,
+      });
 
-    navigate("/home");
-
-  } catch (error: any) {
-    alert("wrong username or password!");
-  }
-};
+      navigate("/home");
+    } catch (error: any) {
+      alert("wrong username or password!");
+    }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full max-w-sm">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 w-full max-w-sm"
+      >
         <FormField
           control={form.control}
           name="name"
