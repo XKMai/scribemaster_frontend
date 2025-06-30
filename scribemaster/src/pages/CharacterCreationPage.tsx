@@ -4,12 +4,15 @@ import { Card, CardTitle, CardContent } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
 import { useState } from "react";
-import { Swords, PawPrint, WandSparkles, Gem } from "lucide-react";
+import { Sword, PawPrint, WandSparkles, Gem } from "lucide-react";
 import SpellCreationForm from "@/components/Character/AssetCreation/SpellCreationForm";
 import ItemCreationForm from "@/components/Character/AssetCreation/ItemCreationForm";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
 
 const CharacterCreationPage = () => {
   const [choice, setChoice] = useState("");
+  const navigate = useNavigate();
 
   return (
     <SidebarProvider>
@@ -34,7 +37,7 @@ const CharacterCreationPage = () => {
               onClick={() => setChoice("player")}
             >
               <CardContent className="flex flex-col items-center gap-4">
-                <Swords className="w-12 h-12" />
+                <Sword className="w-12 h-12" />
                 <CardTitle className="text-center">Player Character</CardTitle>
               </CardContent>
             </Card>
@@ -65,6 +68,11 @@ const CharacterCreationPage = () => {
                 <CardTitle className="text-center">Item</CardTitle>
               </CardContent>
             </Card>
+          </div>
+          <div className="p-5">
+            <Button onClick={() => navigate("/characterinsertion")}>
+              Insert your current assets into your campaigns!
+            </Button>
           </div>
         </div>
       )}
