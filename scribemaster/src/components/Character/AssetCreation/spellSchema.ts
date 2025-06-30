@@ -25,9 +25,9 @@ export const SpellSchema = z.object({
   settings: z.record(z.any()).optional(),
 });
 
-export type SpellFormData = z.infer<typeof SpellSchema>;
+export type Spell = z.infer<typeof SpellSchema>;
 
-export const SpellDefaultValues: SpellFormData = {
+export const SpellDefaultValues: Spell = {
   name: "Magic Missile",
   level: 1,
   school: "Evocation",
