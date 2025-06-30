@@ -90,9 +90,25 @@ export const EntitySchema = z.object({
     otherProficiencies: otherProficienciesSchema,
 })
 
-export type CharacterFormData = z.infer<typeof EntitySchema>;
+export type EntityFormData = z.infer<typeof EntitySchema>;
 
-export const EntityDefaultValues: CharacterFormData = {
+export type Entity = EntityFormData & { id: number };
+
+export type EntitySummary = Pick<
+  Entity,
+  | "id"
+  | "name"
+  | "hp"
+  | "maxhp"
+  | "ac"
+  | "stats"
+  | "speed"
+  | "passivePerception"
+  | "spellcasting"
+  | "type"
+>;
+
+export const EntityDefaultValues: EntityFormData = {
   createdBy: 0,
   name: "Seraphina Windrunner",
   type: "player",
