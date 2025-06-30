@@ -6,6 +6,7 @@ import {
   User2,
   MapPlus,
   VenetianMask,
+  Swords,
 } from "lucide-react";
 
 import {
@@ -48,6 +49,11 @@ const items = [
     title: "Campaign Reader",
     url: "/campaignreader",
     icon: Scroll,
+  },
+  {
+    title: "Combat Encounter",
+    url: "/combat",
+    icon: Swords,
   },
   {
     title: "Settings",
