@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   EntitySchema,
-  type CharacterFormData,
+  type EntityFormData,
   EntityDefaultValues,
 } from "./characterSchema";
 import { useForm } from "react-hook-form";
@@ -28,17 +28,17 @@ import { apiService } from "@/services/apiservice";
 import api from "@/lib/axiosConfig";
 import { useState } from "react";
 
-type SaveKey = keyof CharacterFormData["savingThrows"];
-type SkillKey = keyof CharacterFormData["skills"];
+type SaveKey = keyof EntityFormData["savingThrows"];
+type SkillKey = keyof EntityFormData["skills"];
 
 const CharacterCreationForm = () => {
   const [attackInput, setAttackInput] = useState({ name: "", details: "" });
-  const form = useForm<CharacterFormData>({
+  const form = useForm<EntityFormData>({
     resolver: zodResolver(EntitySchema),
     defaultValues: EntityDefaultValues,
   });
 
-  const onSubmit = async (data: CharacterFormData) => {
+  const onSubmit = async (data: EntityFormData) => {
     try {
       const userdata = await apiService.getCookie();
       const userId = userdata.user.id;
