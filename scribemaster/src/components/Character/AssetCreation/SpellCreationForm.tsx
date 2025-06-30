@@ -1,10 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  SpellSchema,
-  type SpellFormData,
-  SpellDefaultValues,
-} from "./spellSchema";
+import { SpellSchema, type Spell, SpellDefaultValues } from "./spellSchema";
 import {
   Form,
   FormField,
@@ -55,12 +51,12 @@ const classes = [
 ] as const;
 
 const SpellCreationForm = () => {
-  const form = useForm<SpellFormData>({
+  const form = useForm<Spell>({
     resolver: zodResolver(SpellSchema),
     defaultValues: SpellDefaultValues,
   });
 
-  const onSubmit = async (data: SpellFormData) => {
+  const onSubmit = async (data: Spell) => {
     try {
       const userdata = await apiService.getCookie();
       const userId = userdata.user.id;
