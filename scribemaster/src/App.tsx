@@ -8,6 +8,8 @@ import CampaignReaderPage from "./pages/CampaignReaderPage";
 import ProtectedRoute from "./components/UtilityComponents/ProtectedRoute";
 import CampaignExplorerPage from "./pages/CampaignExplorerPage";
 import CharacterCreationPage from "./pages/CharacterCreationPage";
+import CombatStagePage from "./pages/CombatStagePage";
+import CharacterInsertionPage from "./pages/CharacterInsertionPage";
 
 function App() {
   return (
@@ -32,6 +34,11 @@ function App() {
               path="/charactercreation"
               element={<CharacterCreationPage />}
             />
+            <Route
+              path="/characterinsertion"
+              element={<CharacterInsertionPage />}
+            />
+            <Route path="/combat" element={<CombatStagePage />} />
           </Route>
         </Routes>
       </main>
