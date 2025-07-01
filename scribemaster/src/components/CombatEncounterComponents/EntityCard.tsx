@@ -4,7 +4,7 @@ import {
   HoverCardContent,
 } from "@/components/ui/hover-card";
 import { Card, CardContent } from "@/components/ui/card";
-import type { EntitySummary } from "../Character/AssetCreation/characterSchema";
+import type { EntitySummary } from "../../types/characterSchema";
 
 type SummaryCardProps = {
   entity: EntitySummary;

@@ -3,7 +3,7 @@ import {
   EntitySchema,
   type EntityFormData,
   EntityDefaultValues,
-} from "./characterSchema";
+} from "../../../types/characterSchema";
 import { useForm } from "react-hook-form";
 import {
   Form,
