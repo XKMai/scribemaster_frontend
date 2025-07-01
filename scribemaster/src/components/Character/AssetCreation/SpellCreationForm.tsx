@@ -1,6 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SpellSchema, type Spell, SpellDefaultValues } from "./spellSchema";
+import {
+  SpellSchema,
+  type Spell,
+  SpellDefaultValues,
+} from "../../../types/spellSchema";
 import {
   Form,
   FormField,

@@ -1,6 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ItemSchema, type ItemFormData, ItemDefaultValues } from "./itemSchema";
+import {
+  ItemSchema,
+  type ItemFormData,
+  ItemDefaultValues,
+} from "../../../types/itemSchema";
 import {
   Form,
   FormField,
