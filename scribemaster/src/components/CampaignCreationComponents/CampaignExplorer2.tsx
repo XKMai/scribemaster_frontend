@@ -8,6 +8,7 @@ import {
 } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
 import { apiService } from "@/services/apiservice";
+import { useState } from "react";
 
 interface CampaignExplorer2Props {
   campaignId: number;
@@ -20,8 +21,11 @@ const isFolder = (item: Item): item is Item & { data: FolderData } =>
   item.type === "folder";
 
 export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
+  const [expandedItems, setExpandedItems] = useState([`folder-${campaignId}`]);
+
   const tree = useTree<Item>({
-    initialState: { expandedItems: [`folder-${campaignId}`] },
+    initialState: { expandedItems },
+    setExpandedItems,
     rootItemId: `folder-${campaignId}`,
     getItemName: (itemInstance) => {
       const item = itemInstance.getItemData();
@@ -80,6 +84,21 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
         );
       },
     },
+    onPrimaryAction: (itemInstance) => {
+      const id = itemInstance.getId();
+
+      if (itemInstance.isFolder()) {
+        setExpandedItems(
+          (prev) =>
+            itemInstance.isExpanded()
+              ? prev.filter((i) => i !== id) // collapse
+              : [...prev, id] // expand
+        );
+      } else {
+        console.log("Clicked note:", id);
+      }
+    },
+
     indent: 20,
     features: [
       asyncDataLoaderFeature,
@@ -92,55 +111,59 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
   console.log("Tree Items:", tree.getItems());
 
   return (
-    <div
-      {...tree.getContainerProps()}
-      className="tree w-full h-full overflow-auto"
-    >
-      {tree.getItems().length === 0 && (
-        <div className="p-4 text-sm text-muted-foreground">
-          No items to display.
-        </div>
-      )}
-      {tree.getItems().map((itemInstance) => {
-        const item = itemInstance.getItemData();
-        if (!item) return null;
-        const level = itemInstance.getItemMeta().level;
-
-        return (
-          <button
-            key={itemInstance.getId()}
-            {...itemInstance.getProps()}
-            className="w-full text-left hover:bg-gray-100 focus:outline-none"
-            style={{ paddingLeft: `${level * 20}px` }}
-            onClick={async () => {
-              if (itemInstance.isFolder() && !itemInstance.isExpanded()) {
-                await itemInstance.expand();
-              }
-            }}
-          >
-            <div
-              className={cn(
-                "flex items-center gap-2 px-2 py-1 rounded text-sm",
-                {
-                  "bg-blue-100 border border-blue-300":
-                    itemInstance.isSelected(),
-                  "ring-2 ring-blue-500": itemInstance.isFocused(),
-                  "font-semibold": itemInstance.isFolder(),
-                }
-              )}
-            >
-              <span>
-                {itemInstance.isFolder()
-                  ? itemInstance.isExpanded()
-                    ? "📂"
-                    : "📁"
-                  : "📄"}
-              </span>
-              <span className="truncate">{itemInstance.getItemName()}</span>
+    <div className="flex h-full w-screen">
+      {/* Tree */}
+      <div className="w-1/3 h-full border-r overflow-auto p-4">
+        <div {...tree.getContainerProps()} className="tree w-full h-full">
+          {tree.getItems().length === 0 && (
+            <div className="p-4 text-sm text-muted-foreground">
+              No items to display.
             </div>
-          </button>
-        );
-      })}
+          )}
+          {tree.getItems().map((itemInstance) => {
+            const item = itemInstance.getItemData();
+            if (!item) return null;
+            const level = itemInstance.getItemMeta().level;
+
+            return (
+              <div
+                key={itemInstance.getId()}
+                {...itemInstance.getProps()}
+                role="button"
+                tabIndex={0}
+                className="w-full text-left hover:bg-gray-100 focus:outline-none"
+                style={{ paddingLeft: `${level * 20}px` }}
+              >
+                <div
+                  className={cn(
+                    "flex items-center gap-2 px-2 py-1 rounded text-sm",
+                    {
+                      "bg-blue-100 border border-blue-300":
+                        itemInstance.isSelected(),
+                      "ring-2 ring-blue-500": itemInstance.isFocused(),
+                      "font-semibold": itemInstance.isFolder(),
+                    }
+                  )}
+                >
+                  <span>
+                    {itemInstance.isFolder()
+                      ? itemInstance.isExpanded()
+                        ? "📂"
+                        : "📁"
+                      : "📄"}
+                  </span>
+                  <span className="truncate">{itemInstance.getItemName()}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ContentViewer */}
+      <div className="flex-1 h-full p-4 bg-muted rounded-2xl">
+        <div className="text-muted-foreground italic">ContentViewer</div>
+      </div>
     </div>
   );
 };
