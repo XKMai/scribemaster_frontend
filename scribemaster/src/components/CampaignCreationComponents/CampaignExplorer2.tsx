@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 import type { FolderData, Item, NoteData } from "@/types/TreeTypes";
 import {
-  syncDataLoaderFeature,
   selectionFeature,
   hotkeysCoreFeature,
   dragAndDropFeature,
+  asyncDataLoaderFeature,
 } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
 import { apiService } from "@/services/apiservice";
@@ -19,53 +19,128 @@ const isNote = (item: Item): item is Item & { data: NoteData } =>
 const isFolder = (item: Item): item is Item & { data: FolderData } =>
   item.type === "folder";
 
-export const CampaignExplorer2 = () => {
-  const tree = useTree<string>({
-    initialState: { expandedItems: ["folder-1"] },
-    rootItemId: "folder",
-    getItemName: (item) => item.getItemData(),
-    isItemFolder: (item) => !item.getItemData().endsWith("item"),
+export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
+  const tree = useTree<Item>({
+    initialState: { expandedItems: [`folder-${campaignId}`] },
+    rootItemId: `folder-${campaignId}`,
+    getItemName: (itemInstance) => {
+      const item = itemInstance.getItemData();
+      if (!item) return "Loading...";
+
+      return isNote(item)
+        ? item.data.title
+        : isFolder(item)
+        ? item.data.name
+        : "Unnamed";
+    },
+
+    isItemFolder: (itemInstance) => {
+      const item = itemInstance.getItemData();
+      return !!item && isFolder(item);
+    },
+
     dataLoader: {
-      getItem: (itemId) => itemId,
-      getChildren: (itemId) => [
-        `${itemId}-1`,
-        `${itemId}-2`,
-        `${itemId}-3`,
-        `${itemId}-1item`,
-        `${itemId}-2item`,
-      ],
-      //getItem: async (itemId) =>  await apiService.getFolder(Number(itemId)),
-      //getChildren: async (itemId) => await dataSources.getChildren(itemId),
+      getItem: async (itemId) => {
+        const [type, idStr] = itemId.split("-");
+        const id = Number(idStr);
+        if (isNaN(id)) throw new Error(`Invalid itemId: ${itemId}`);
+
+        if (type === "folder") {
+          const folderData = await apiService.getFolder(id); // ← This is FolderData, not Item
+          return {
+            folderId: folderData.id,
+            refId: folderData.id,
+            position: 0,
+            type: "folder",
+            data: folderData,
+          } satisfies Item;
+        }
+
+        const noteData = await apiService.getNote(id);
+        return {
+          folderId: noteData.id,
+          refId: noteData.id,
+          position: 0,
+          type: "note",
+          data: noteData,
+        } satisfies Item;
+      },
+
+      getChildren: async (itemId) => {
+        const id = Number(itemId.split("-")[1]);
+        const folderData = await apiService.getFolder(id);
+
+        if (!folderData.items) {
+          console.warn("No items in folderData:", folderData);
+          return [];
+        }
+
+        return folderData.items.map(
+          (child: Item) => `${child.type}-${child.refId}`
+        );
+      },
     },
     indent: 20,
     features: [
-      syncDataLoaderFeature,
+      asyncDataLoaderFeature,
       selectionFeature,
       hotkeysCoreFeature,
       dragAndDropFeature,
     ],
   });
 
+  console.log("Tree Items:", tree.getItems());
+
   return (
-    <div {...tree.getContainerProps()} className="tree">
-      {tree.getItems().map((item) => (
-        <button
-          {...item.getProps()}
-          key={item.getId()}
-          className="w-full text-left"
-          style={{ paddingLeft: `${item.getItemMeta().level * 20}px` }}
-        >
-          <div
-            className={cn("block px-2 py-1 rounded text-left w-full", {
-              "bg-blue-200": item.isSelected(),
-              "outline-2 outline-blue-500": item.isFocused(),
-              "font-semibold": item.isFolder(),
-            })}
+    <div
+      {...tree.getContainerProps()}
+      className="tree w-full h-full overflow-auto"
+    >
+      {tree.getItems().length === 0 && (
+        <div className="p-4 text-sm text-muted-foreground">
+          No items to display.
+        </div>
+      )}
+      {tree.getItems().map((itemInstance) => {
+        const item = itemInstance.getItemData();
+        if (!item) return null;
+        const level = itemInstance.getItemMeta().level;
+
+        return (
+          <button
+            key={itemInstance.getId()}
+            {...itemInstance.getProps()}
+            className="w-full text-left hover:bg-gray-100 focus:outline-none"
+            style={{ paddingLeft: `${level * 20}px` }}
+            onClick={async () => {
+              if (itemInstance.isFolder() && !itemInstance.isExpanded()) {
+                await itemInstance.expand();
+              }
+            }}
           >
-            {item.getItemName()}
-          </div>
-        </button>
-      ))}
+            <div
+              className={cn(
+                "flex items-center gap-2 px-2 py-1 rounded text-sm",
+                {
+                  "bg-blue-100 border border-blue-300":
+                    itemInstance.isSelected(),
+                  "ring-2 ring-blue-500": itemInstance.isFocused(),
+                  "font-semibold": itemInstance.isFolder(),
+                }
+              )}
+            >
+              <span>
+                {itemInstance.isFolder()
+                  ? itemInstance.isExpanded()
+                    ? "📂"
+                    : "📁"
+                  : "📄"}
+              </span>
+              <span className="truncate">{itemInstance.getItemName()}</span>
+            </div>
+          </button>
+        );
+      })}
     </div>
   );
 };
