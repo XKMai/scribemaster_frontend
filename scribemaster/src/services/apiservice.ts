@@ -91,4 +91,9 @@ export const apiService = {
   deleteNote: async (noteId: number): Promise<void> => {
     await api.delete(`/notes/${noteId}`);
   },
+
+  getNote: async (noteId: number) => {
+    const response = await api.get(`/notes/${noteId}`);
+    return response.data;
+  }
 };
