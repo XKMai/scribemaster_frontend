@@ -21,3 +21,9 @@ export type Item = {
   position: number;
   data: any;
 };
+
+export const isNote = (item: Item): item is Item & { data: NoteData } =>
+  item.type === "note";
+
+export const isFolder = (item: Item): item is Item & { data: FolderData } =>
+  item.type === "folder";

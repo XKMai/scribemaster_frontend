@@ -1,27 +1,33 @@
 import { cn } from "@/lib/utils";
-import type { FolderData, Item, NoteData } from "@/types/TreeTypes";
+import {
+  isFolder,
+  isNote,
+  type FolderData,
+  type Item,
+  type NoteData,
+} from "@/types/TreeTypes";
 import {
   selectionFeature,
   hotkeysCoreFeature,
   dragAndDropFeature,
   asyncDataLoaderFeature,
+  type ItemInstance,
 } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
 import { apiService } from "@/services/apiservice";
 import { useState } from "react";
+import { ContentViewer } from "./ContentViewer";
 
 interface CampaignExplorer2Props {
   campaignId: number;
 }
 
 // Type guards
-const isNote = (item: Item): item is Item & { data: NoteData } =>
-  item.type === "note";
-const isFolder = (item: Item): item is Item & { data: FolderData } =>
-  item.type === "folder";
 
 export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
   const [expandedItems, setExpandedItems] = useState([`folder-${campaignId}`]);
+  const [selectedItemInstance, setSelectedItemInstance] =
+    useState<ItemInstance<Item> | null>(null);
 
   const tree = useTree<Item>({
     initialState: { expandedItems },
@@ -96,6 +102,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
         );
       } else {
         console.log("Clicked note:", id);
+        setSelectedItemInstance(itemInstance);
       }
     },
 
@@ -162,7 +169,9 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
 
       {/* ContentViewer */}
       <div className="flex-1 h-full p-4 bg-muted rounded-2xl">
-        <div className="text-muted-foreground italic">ContentViewer</div>
+        <div className="text-muted-foreground italic">
+          <ContentViewer itemInstance={selectedItemInstance} />
+        </div>
       </div>
     </div>
   );
