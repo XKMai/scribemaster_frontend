@@ -1,11 +1,5 @@
 import { cn } from "@/lib/utils";
-import {
-  isFolder,
-  isNote,
-  type FolderData,
-  type Item,
-  type NoteData,
-} from "@/types/TreeTypes";
+import { isFolder, isNote, type Item } from "@/types/TreeTypes";
 import {
   selectionFeature,
   hotkeysCoreFeature,
@@ -19,12 +13,11 @@ import { useState } from "react";
 import { ContentViewer } from "./ContentViewer";
 import { NoteContextMenu2 } from "./NoteContextMenu2";
 import { FolderContextMenu2 } from "./FolderContextMenu2";
+import { EmptyContextMenu2 } from "./EmptyContextMenu2";
 
 interface CampaignExplorer2Props {
   campaignId: number;
 }
-
-// Type guards
 
 export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
   const [expandedItems, setExpandedItems] = useState([`folder-${campaignId}`]);
@@ -58,7 +51,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
         if (isNaN(id)) throw new Error(`Invalid itemId: ${itemId}`);
 
         if (type === "folder") {
-          const folderData = await apiService.getFolder(id); // ← This is FolderData, not Item
+          const folderData = await apiService.getFolder(id); // This is FolderData, not Item
           return {
             folderId: folderData.id,
             refId: folderData.id,
@@ -123,73 +116,76 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
     <div className="flex h-full w-screen">
       {/* Tree */}
       <div className="w-1/3 h-full border-r overflow-auto p-4">
-        <div {...tree.getContainerProps()} className="tree w-full h-full">
-          {tree.getItems().length === 0 && (
-            <div className="p-4 text-sm text-muted-foreground">
-              No items to display.
-            </div>
-          )}
-          {tree.getItems().map((itemInstance) => {
-            const item = itemInstance.getItemData();
-            if (!item) return null;
-            const level = itemInstance.getItemMeta().level;
-
-            const node = (
-              <div
-                key={itemInstance.getId()}
-                {...itemInstance.getProps()}
-                role="button"
-                tabIndex={0}
-                className="w-full text-left hover:bg-gray-100 focus:outline-none"
-                style={{ paddingLeft: `${level * 20}px` }}
-              >
-                <div
-                  className={cn(
-                    "flex items-center gap-2 px-2 py-1 rounded text-sm",
-                    {
-                      "bg-blue-100 border border-blue-300":
-                        itemInstance.isSelected(),
-                      "ring-2 ring-blue-500": itemInstance.isFocused(),
-                      "font-semibold": itemInstance.isFolder(),
-                    }
-                  )}
-                >
-                  <span>
-                    {itemInstance.isFolder()
-                      ? itemInstance.isExpanded()
-                        ? "📂"
-                        : "📁"
-                      : "📄"}
-                  </span>
-                  <span className="truncate">{itemInstance.getItemName()}</span>
-                </div>
+        <EmptyContextMenu2 rootFolderId={campaignId} tree={tree}>
+          <div {...tree.getContainerProps()} className="tree w-full h-full">
+            {tree.getItems().length === 0 && (
+              <div className="p-4 text-sm text-muted-foreground">
+                No items to display.
               </div>
-            );
+            )}
+            {tree.getItems().map((itemInstance) => {
+              const item = itemInstance.getItemData();
+              if (!item) return null;
+              const level = itemInstance.getItemMeta().level;
 
-            // 🧠 Wrap note-type nodes in a context menu
-            if (isNote(item)) {
-              return (
-                <NoteContextMenu2
+              const node = (
+                <div
                   key={itemInstance.getId()}
-                  itemInstance={itemInstance}
+                  {...itemInstance.getProps()}
+                  role="button"
+                  tabIndex={0}
+                  className="w-full text-left hover:bg-gray-100 focus:outline-none"
+                  style={{ paddingLeft: `${level * 20}px` }}
                 >
-                  {node}
-                </NoteContextMenu2>
+                  <div
+                    className={cn(
+                      "flex items-center gap-2 px-2 py-1 rounded text-sm",
+                      {
+                        "bg-blue-100 border border-blue-300":
+                          itemInstance.isSelected(),
+                        "ring-2 ring-blue-500": itemInstance.isFocused(),
+                        "font-semibold": itemInstance.isFolder(),
+                      }
+                    )}
+                  >
+                    <span>
+                      {itemInstance.isFolder()
+                        ? itemInstance.isExpanded()
+                          ? "📂"
+                          : "📁"
+                        : "📄"}
+                    </span>
+                    <span className="truncate">
+                      {itemInstance.getItemName()}
+                    </span>
+                  </div>
+                </div>
               );
-            } else if (isFolder(item)) {
-              return (
-                <FolderContextMenu2
-                  key={itemInstance.getId()}
-                  itemInstance={itemInstance}
-                >
-                  {node}
-                </FolderContextMenu2>
-              );
-            }
 
-            return node;
-          })}
-        </div>
+              if (isNote(item)) {
+                return (
+                  <NoteContextMenu2
+                    key={itemInstance.getId()}
+                    itemInstance={itemInstance}
+                  >
+                    {node}
+                  </NoteContextMenu2>
+                );
+              } else if (isFolder(item)) {
+                return (
+                  <FolderContextMenu2
+                    key={itemInstance.getId()}
+                    itemInstance={itemInstance}
+                  >
+                    {node}
+                  </FolderContextMenu2>
+                );
+              }
+
+              return node;
+            })}
+          </div>
+        </EmptyContextMenu2>
       </div>
 
       {/* ContentViewer */}

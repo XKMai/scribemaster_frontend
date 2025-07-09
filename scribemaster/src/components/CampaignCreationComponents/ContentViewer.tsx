@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { apiService } from "@/services/apiservice";
-import { isNote, type Item, type NoteData } from "@/types/TreeTypes";
+import { isNote, type Item } from "@/types/TreeTypes";
 import type { ItemInstance } from "@headless-tree/core";
 //import type { ItemInstance } from "@headless-tree/react";
 

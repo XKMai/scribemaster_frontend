@@ -40,7 +40,7 @@ export const NoteContextMenu2 = ({
       await apiService.deleteNote(item.data.id);
       const parent = itemInstance.getParent();
       if (parent) {
-        parent.invalidateChildrenIds(); // 🔁 Reload children list
+        parent.invalidateChildrenIds();
       }
     } catch {
       alert("Failed to delete note.");
