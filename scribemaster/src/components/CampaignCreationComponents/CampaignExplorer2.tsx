@@ -18,6 +18,7 @@ import { apiService } from "@/services/apiservice";
 import { useState } from "react";
 import { ContentViewer } from "./ContentViewer";
 import { NoteContextMenu2 } from "./NoteContextMenu2";
+import { FolderContextMenu2 } from "./FolderContextMenu2";
 
 interface CampaignExplorer2Props {
   campaignId: number;
@@ -174,6 +175,15 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
                 >
                   {node}
                 </NoteContextMenu2>
+              );
+            } else if (isFolder(item)) {
+              return (
+                <FolderContextMenu2
+                  key={itemInstance.getId()}
+                  itemInstance={itemInstance}
+                >
+                  {node}
+                </FolderContextMenu2>
               );
             }
 
