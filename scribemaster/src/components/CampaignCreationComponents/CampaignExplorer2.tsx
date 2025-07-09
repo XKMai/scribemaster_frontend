@@ -17,6 +17,7 @@ import { useTree } from "@headless-tree/react";
 import { apiService } from "@/services/apiservice";
 import { useState } from "react";
 import { ContentViewer } from "./ContentViewer";
+import { NoteContextMenu2 } from "./NoteContextMenu2";
 
 interface CampaignExplorer2Props {
   campaignId: number;
@@ -132,7 +133,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
             if (!item) return null;
             const level = itemInstance.getItemMeta().level;
 
-            return (
+            const node = (
               <div
                 key={itemInstance.getId()}
                 {...itemInstance.getProps()}
@@ -163,6 +164,20 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
                 </div>
               </div>
             );
+
+            // 🧠 Wrap note-type nodes in a context menu
+            if (isNote(item)) {
+              return (
+                <NoteContextMenu2
+                  key={itemInstance.getId()}
+                  itemInstance={itemInstance}
+                >
+                  {node}
+                </NoteContextMenu2>
+              );
+            }
+
+            return node;
           })}
         </div>
       </div>
