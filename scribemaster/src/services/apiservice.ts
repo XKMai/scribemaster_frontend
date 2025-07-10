@@ -43,6 +43,12 @@ export type UpdateNoteRequest = {
   content?: string;
 };
 
+export type MoveItemRequest = {
+  itemId: number;
+  toFolderId: number;
+  newPosition: number;
+}
+
 export const apiService = {
 
   // cookie call
@@ -95,5 +101,9 @@ export const apiService = {
   getNote: async (noteId: number) => {
     const response = await api.get(`/notes/${noteId}`);
     return response.data;
+  },
+
+  moveItem: async (data: MoveItemRequest) => {
+    await api.patch('/folder/move', data);
   }
 };

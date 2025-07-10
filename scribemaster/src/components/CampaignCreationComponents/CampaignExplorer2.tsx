@@ -53,6 +53,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
         if (type === "folder") {
           const folderData = await apiService.getFolder(id); // This is FolderData, not Item
           return {
+            id: folderData.id,
             folderId: folderData.id,
             refId: folderData.id,
             position: 0,
@@ -63,6 +64,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
 
         const noteData = await apiService.getNote(id);
         return {
+          id: noteData.id,
           folderId: noteData.id,
           refId: noteData.id,
           position: 0,
@@ -101,6 +103,41 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
       }
     },
 
+    onDrop: async (items, target) => {
+      const source = items[0]; // assume single-item drag
+      const sourceData = source.getItemData();
+      const targetItem = target.item;
+      const targetData = targetItem.getItemData();
+
+      if (!sourceData || !targetData) return;
+
+      // Get the target folder ID
+      const newFolderId = isFolder(targetData)
+        ? targetData.refId
+        : targetData.folderId;
+
+      if (!newFolderId) return;
+
+      try {
+        console.log("itemId: %d", sourceData.id);
+        console.log("toFolderId: %d", newFolderId);
+        await apiService.moveItem({
+          itemId: sourceData.id,
+          toFolderId: newFolderId,
+          newPosition: 0,
+        });
+
+        source.getParent()?.invalidateChildrenIds();
+        (isFolder(targetData)
+          ? targetItem
+          : targetItem.getParent()
+        )?.invalidateChildrenIds();
+      } catch (err) {
+        console.error("Failed to move item:", err);
+        alert("Failed to move item.");
+      }
+    },
+
     indent: 20,
     features: [
       asyncDataLoaderFeature,
@@ -110,7 +147,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
     ],
   });
 
-  console.log("Tree Items:", tree.getItems());
+  //console.log("Tree Items:", tree.getItems());
 
   return (
     <div className="flex h-screen w-full">

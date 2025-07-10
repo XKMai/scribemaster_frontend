@@ -15,6 +15,7 @@ export type FolderData = {
 };
 
 export type Item = {
+  id: number;
   folderId: number; // what folder this item is in
   type: "note" | "folder";
   refId: number; // what item this is referencing
