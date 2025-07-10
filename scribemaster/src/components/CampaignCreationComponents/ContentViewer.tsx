@@ -42,8 +42,8 @@ export const ContentViewer = ({ itemInstance }: ContentViewerProps) => {
   };
 
   return (
-    <div className="w-2/3 p-4 h-full overflow-auto">
-      <Card className="h-full flex flex-col">
+    <div className="w-full h-full p-4">
+      <Card className="w-full h-full flex flex-col">
         <CardHeader>
           {item && isNote(item) ? (
             <Input
@@ -55,15 +55,18 @@ export const ContentViewer = ({ itemInstance }: ContentViewerProps) => {
             <CardTitle>Select a note to view</CardTitle>
           )}
         </CardHeader>
-        <CardContent className="flex-1 overflow-auto">
+
+        {/* Scrollable content inside fixed height */}
+        <CardContent className="flex-1 overflow-y-auto overflow-x-hidden space-y-4">
           {item && isNote(item) ? (
             <>
               <Textarea
-                className="flex-1 text-sm"
+                className="w-full text-sm h-full resize-none"
+                style={{ minHeight: "100px", maxHeight: "85%" }}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
-              <div className="flex justify-end mt-2">
+              <div className="flex justify-end">
                 <Button onClick={handleSave}>💾 Save</Button>
               </div>
             </>

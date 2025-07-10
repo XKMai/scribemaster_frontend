@@ -113,9 +113,11 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
   console.log("Tree Items:", tree.getItems());
 
   return (
-    <div className="flex h-full w-screen">
+    <div className="flex h-screen w-full">
       {/* Tree */}
       <div className="w-1/3 h-full border-r overflow-auto p-4">
+        <h2 className="p-1">Campaign: </h2>
+        <br />
         <EmptyContextMenu2 rootFolderId={campaignId} tree={tree}>
           <div {...tree.getContainerProps()} className="tree w-full h-full">
             {tree.getItems().length === 0 && (
@@ -189,10 +191,8 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
       </div>
 
       {/* ContentViewer */}
-      <div className="flex-1 h-full p-4 bg-muted rounded-2xl">
-        <div className="text-muted-foreground italic">
-          <ContentViewer itemInstance={selectedItemInstance} />
-        </div>
+      <div className="w-2/3 p-1 h-full overflow-auto bg-muted rounded-2xl">
+        <ContentViewer itemInstance={selectedItemInstance} />
       </div>
     </div>
   );

@@ -8,9 +8,7 @@ const CharacterInsertionPage = () => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarTrigger />
-      <div className="h-screen">
-        <CampaignExplorer2 campaignId={1} />
-      </div>
+      <CampaignExplorer2 campaignId={1} />
     </SidebarProvider>
   );
 };
