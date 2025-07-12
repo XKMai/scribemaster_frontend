@@ -4,7 +4,7 @@ import {
   SpellSchema,
   type Spell,
   SpellDefaultValues,
-} from "../../../types/spellSchema";
+} from "../../../../types/spellSchema";
 import {
   Form,
   FormField,

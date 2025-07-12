@@ -4,7 +4,7 @@ import {
   ItemSchema,
   type ItemFormData,
   ItemDefaultValues,
-} from "../../../types/itemSchema";
+} from "../../../../types/itemSchema";
 import {
   Form,
   FormField,
