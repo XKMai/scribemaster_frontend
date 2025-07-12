@@ -5,8 +5,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
 import { useState } from "react";
 import { Sword, PawPrint, WandSparkles, Gem } from "lucide-react";
-import SpellCreationForm from "@/components/Character/AssetCreation/SpellCreationForm";
-import ItemCreationForm from "@/components/Character/AssetCreation/ItemCreationForm";
+import SpellCreationForm from "@/components/Character/AssetCreation/CreationForms/SpellCreationForm";
+import ItemCreationForm from "@/components/Character/AssetCreation/CreationForms/ItemCreationForm";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 
