@@ -2,6 +2,7 @@ import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
 import CampaignExplorer from "@/components/CampaignCreationComponents/CampaignExplorer";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useParams } from "react-router";
+import { CampaignExplorer2 } from "@/components/CampaignCreationComponents/CampaignExplorer2";
 
 const CampaignExplorerPage = () => {
   const { campaignId } = useParams<{ campaignId: string }>();
@@ -12,7 +13,7 @@ const CampaignExplorerPage = () => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarTrigger />
-      <CampaignExplorer campaignId={parseInt(campaignId)} />
+      <CampaignExplorer2 campaignId={parseInt(campaignId)} />
     </SidebarProvider>
   );
 };
