@@ -9,7 +9,7 @@ import {
 } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
 import { apiService } from "@/services/apiservice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ContentViewer } from "./ContentViewer";
 import { NoteContextMenu2 } from "./NoteContextMenu2";
 import { FolderContextMenu2 } from "./FolderContextMenu2";
@@ -20,6 +20,22 @@ interface CampaignExplorer2Props {
 }
 
 export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
+  const [campaignName, setCampaignName] = useState("");
+
+  useEffect(() => {
+    const fetchCampaignName = async () => {
+      try {
+        const folder = await apiService.getFolder(campaignId);
+        setCampaignName(folder.name);
+      } catch (err) {
+        console.error("Failed to fetch campaign name:", err);
+        setCampaignName("Unnamed Campaign");
+      }
+    };
+
+    fetchCampaignName();
+  }, [campaignId]);
+
   const [expandedItems, setExpandedItems] = useState([`folder-${campaignId}`]);
   const [selectedItemInstance, setSelectedItemInstance] =
     useState<ItemInstance<Item> | null>(null);
@@ -56,33 +72,6 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
         console.log("Fetched item:", item);
         return item;
       },
-      // getItem: async (itemId) => {
-      //   const [type, idStr] = itemId.split("-");
-      //   const id = Number(idStr);
-      //   if (isNaN(id)) throw new Error(`Invalid itemId: ${itemId}`);
-
-      //   if (type === "folder") {
-      //     const folderData = await apiService.getFolder(id); // This is FolderData, not Item
-      //     return {
-      //       id: folderData.id,
-      //       folderId: folderData.id,
-      //       refId: folderData.id,
-      //       position: 0,
-      //       type: "folder",
-      //       data: folderData,
-      //     } satisfies Item;
-      //   }
-
-      //   const noteData = await apiService.getNote(id);
-      //   return {
-      //     id: noteData.id,
-      //     folderId: noteData.id,
-      //     refId: noteData.id,
-      //     position: 0,
-      //     type: "note",
-      //     data: noteData,
-      //   } satisfies Item;
-      // },
 
       getChildren: async (itemId) => {
         const [type, rawId] = itemId.split("-");
@@ -203,7 +192,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
     <div className="flex h-screen w-full">
       {/* Tree */}
       <div className="w-1/3 h-full border-r overflow-auto p-4">
-        <h2 className="p-1">Campaign: </h2>
+        <h2 className="p-1">Campaign: {campaignName}</h2>
         <br />
         <EmptyContextMenu2 rootFolderId={campaignId} tree={tree}>
           <div {...tree.getContainerProps()} className="tree w-full h-full">
