@@ -49,6 +49,10 @@ export type MoveItemRequest = {
   newPosition: number;
 }
 
+export type GetItemRequest = {
+    itemId: number;
+}
+
 export const apiService = {
 
   // cookie call
@@ -105,5 +109,10 @@ export const apiService = {
 
   moveItem: async (data: MoveItemRequest) => {
     await api.patch('/folder/move', data);
+  },
+
+  getItem: async (data: GetItemRequest) => {
+    const response = await api.get(`/folder/item/${data.itemId}`);
+    return response.data;
   }
 };
