@@ -27,7 +27,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
   const tree = useTree<Item>({
     initialState: { expandedItems },
     setExpandedItems,
-    rootItemId: `folder-${campaignId}`,
+    rootItemId: `campaign-${campaignId}`,
     getItemName: (itemInstance) => {
       const item = itemInstance.getItemData();
       if (!item) return "Loading...";
@@ -46,47 +46,82 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
 
     dataLoader: {
       getItem: async (itemId) => {
-        const [type, idStr] = itemId.split("-");
+        console.log(itemId);
+        const [, idStr] = itemId.split("-");
         const id = Number(idStr);
         if (isNaN(id)) throw new Error(`Invalid itemId: ${itemId}`);
 
-        if (type === "folder") {
-          const folderData = await apiService.getFolder(id); // This is FolderData, not Item
-          return {
-            id: folderData.id,
-            folderId: folderData.id,
-            refId: folderData.id,
-            position: 0,
-            type: "folder",
-            data: folderData,
-          } satisfies Item;
-        }
+        const item = await apiService.getItem({ itemId: id });
 
-        const noteData = await apiService.getNote(id);
-        return {
-          id: noteData.id,
-          folderId: noteData.id,
-          refId: noteData.id,
-          position: 0,
-          type: "note",
-          data: noteData,
-        } satisfies Item;
+        console.log("Fetched item:", item);
+        return item;
       },
+      // getItem: async (itemId) => {
+      //   const [type, idStr] = itemId.split("-");
+      //   const id = Number(idStr);
+      //   if (isNaN(id)) throw new Error(`Invalid itemId: ${itemId}`);
+
+      //   if (type === "folder") {
+      //     const folderData = await apiService.getFolder(id); // This is FolderData, not Item
+      //     return {
+      //       id: folderData.id,
+      //       folderId: folderData.id,
+      //       refId: folderData.id,
+      //       position: 0,
+      //       type: "folder",
+      //       data: folderData,
+      //     } satisfies Item;
+      //   }
+
+      //   const noteData = await apiService.getNote(id);
+      //   return {
+      //     id: noteData.id,
+      //     folderId: noteData.id,
+      //     refId: noteData.id,
+      //     position: 0,
+      //     type: "note",
+      //     data: noteData,
+      //   } satisfies Item;
+      // },
 
       getChildren: async (itemId) => {
-        const id = Number(itemId.split("-")[1]);
-        const folderData = await apiService.getFolder(id);
+        const [type, rawId] = itemId.split("-");
+        const id = Number(rawId);
+        if (isNaN(id)) throw new Error(`Invalid itemId: ${itemId}`);
 
-        if (!folderData.items) {
-          console.warn("No items in folderData:", folderData);
+        let folderId: number;
+
+        if (type === "campaign") {
+          // Directly use the campaign ID (acts as a root folder)
+          folderId = id;
+        } else if (type === "folder") {
+          // Must fetch the folder item to get its refId
+          try {
+            const item = await apiService.getItem({ itemId: id });
+            folderId = item.refId; // real folder ID
+          } catch (err) {
+            console.error(`Failed to fetch item for folder-${id}:`, err);
+            return [];
+          }
+        } else {
+          console.warn(`getChildren called on unsupported type: ${type}`);
+          return [];
+        }
+
+        // Now use the resolved folderId to fetch its children
+        const folderData = await apiService.getFolder(folderId);
+
+        if (!folderData.items || folderData.items.length === 0) {
+          console.warn("No items in folder:", folderData);
           return [];
         }
 
         return folderData.items.map(
-          (child: Item) => `${child.type}-${child.refId}`
+          (child: Item) => `${child.type}-${child.id}`
         );
       },
     },
+
     onPrimaryAction: (itemInstance) => {
       const id = itemInstance.getId();
 
@@ -119,6 +154,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
       if (!newFolderId) return;
 
       try {
+        console.log("source item:", JSON.stringify(sourceData, null, 2));
         console.log("itemId: %d", sourceData.id);
         console.log("toFolderId: %d", newFolderId);
         await apiService.moveItem({
