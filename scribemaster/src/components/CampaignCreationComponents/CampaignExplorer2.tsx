@@ -142,32 +142,46 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
       const source = items[0]; // assume single-item drag
       const sourceData = source.getItemData();
       const targetItem = target.item;
-      const targetData = targetItem.getItemData();
 
-      if (!sourceData || !targetData) return;
+      if (!sourceData || !targetItem) return;
 
-      // Get the target folder ID
-      const newFolderId = isFolder(targetData)
-        ? targetData.refId
-        : targetData.folderId;
+      let newFolderId: number;
 
-      if (!newFolderId) return;
+      const targetId = targetItem.getId(); // e.g., "campaign-123" or "folder-456"
+      const [targetType, targetRawId] = targetId.split("-");
+      const parsedId = Number(targetRawId);
+
+      if (isNaN(parsedId)) {
+        console.error("Invalid target ID:", targetId);
+        return;
+      }
+
+      if (targetType === "campaign") {
+        // Special handling for root folder
+        newFolderId = parsedId;
+      } else {
+        const targetData = targetItem.getItemData();
+        if (!targetData) return;
+
+        newFolderId = isFolder(targetData)
+          ? targetData.refId
+          : targetData.folderId;
+      }
 
       try {
         console.log("source item:", JSON.stringify(sourceData, null, 2));
-        console.log("itemId: %d", sourceData.id);
-        console.log("toFolderId: %d", newFolderId);
+        console.log("itemId:", sourceData.id);
+        console.log("toFolderId:", newFolderId);
+
         await apiService.moveItem({
           itemId: sourceData.id,
           toFolderId: newFolderId,
           newPosition: 0,
         });
 
+        // Refresh parent and target folder
         source.getParent()?.invalidateChildrenIds();
-        (isFolder(targetData)
-          ? targetItem
-          : targetItem.getParent()
-        )?.invalidateChildrenIds();
+        targetItem.invalidateChildrenIds();
       } catch (err) {
         console.error("Failed to move item:", err);
         alert("Failed to move item.");

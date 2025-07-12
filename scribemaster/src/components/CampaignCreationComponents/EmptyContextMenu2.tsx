@@ -55,13 +55,11 @@ export const EmptyContextMenu2 = ({
         });
       }
 
-      const root = tree.getItemInstance(`folder-${rootFolderId}`);
+      const root = tree.getItemInstance(`campaign-${rootFolderId}`);
       if (root) {
-        if (!root.isExpanded()) {
-          await root.expand(); // fetch fresh children
-        } else {
-          await root.invalidateChildrenIds(); // force refresh
-        }
+        root.invalidateItemData(); // optional: clear cached item data
+        root.invalidateChildrenIds(); // force reload of children
+        root.expand(); // trigger reload if not already expanded
       }
 
       setNewName("");
