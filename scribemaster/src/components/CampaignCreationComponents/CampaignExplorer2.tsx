@@ -14,6 +14,7 @@ import { ContentViewer } from "./ContentViewer";
 import { NoteContextMenu2 } from "./NoteContextMenu2";
 import { FolderContextMenu2 } from "./FolderContextMenu2";
 import { EmptyContextMenu2 } from "./EmptyContextMenu2";
+import { CampaignHeader } from "./CampaignHeader";
 
 interface CampaignExplorer2Props {
   campaignId: number;
@@ -192,8 +193,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
     <div className="flex h-screen w-full">
       {/* Tree */}
       <div className="w-1/3 h-full border-r overflow-auto p-4">
-        <h2 className="p-1">Campaign: {campaignName}</h2>
-        <br />
+        <CampaignHeader campaignId={campaignId} campaignName={campaignName} />
         <EmptyContextMenu2 rootFolderId={campaignId} tree={tree}>
           <div {...tree.getContainerProps()} className="tree w-full h-full">
             {tree.getItems().length === 0 && (
