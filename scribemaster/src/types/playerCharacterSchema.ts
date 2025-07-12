@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { EntitySchema } from "../../../types/characterSchema";
+import { EntitySchema } from "./characterSchema";
 
 export const PersonalitySchema = z.object({
   traits: z.string().optional(),
