@@ -1,9 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  EntitySchema,
-  type EntityFormData,
-  EntityDefaultValues,
-} from "../../../types/characterSchema";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -27,6 +22,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { apiService } from "@/services/apiservice";
 import api from "@/lib/axiosConfig";
 import { useState } from "react";
+import {
+  type EntityFormData,
+  EntitySchema,
+  EntityDefaultValues,
+} from "@/types/characterSchema";
 
 type SaveKey = keyof EntityFormData["savingThrows"];
 type SkillKey = keyof EntityFormData["skills"];

@@ -1,5 +1,5 @@
-import CharacterCreationForm from "@/components/Character/AssetCreation/CharacterCreationForm";
-import PlayerCharacterCreationForm from "@/components/Character/AssetCreation/PlayerCharacterCreationForm";
+import CharacterCreationForm from "@/components/Character/AssetCreation/CreationForms/CharacterCreationForm";
+import PlayerCharacterCreationForm from "@/components/Character/AssetCreation/CreationForms/PlayerCharacterCreationForm";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";

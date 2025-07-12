@@ -1,8 +1,3 @@
-import {
-  PlayerSchema,
-  type PlayerCharacterFormData,
-  PlayerCharacterDefaultValues,
-} from "./playerCharacterSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -27,6 +22,11 @@ import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { apiService } from "@/services/apiservice";
 import api from "@/lib/axiosConfig";
+import {
+  type PlayerCharacterFormData,
+  PlayerSchema,
+  PlayerCharacterDefaultValues,
+} from "@/types/playerCharacterSchema";
 
 type SaveKey = keyof PlayerCharacterFormData["savingThrows"];
 type SkillKey = keyof PlayerCharacterFormData["skills"];
