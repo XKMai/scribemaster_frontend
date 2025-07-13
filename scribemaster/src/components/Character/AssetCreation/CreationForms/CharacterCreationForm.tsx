@@ -20,7 +20,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { apiService } from "@/services/apiservice";
-import api from "@/lib/axiosConfig";
 import { useState } from "react";
 import {
   type EntityFormData,
@@ -51,7 +50,7 @@ const CharacterCreationForm = () => {
       console.log(
         `button pressed, data submitted: /n ${JSON.stringify(payload, null, 2)}`
       );
-      await api.post("/entity", payload);
+      await apiService.createEntity(payload);
 
       alert("character created successfully");
     } catch (error: any) {
