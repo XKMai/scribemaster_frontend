@@ -1,3 +1,4 @@
+import type { EntityFormData } from '@/types/characterSchema';
 import api from '../lib/axiosConfig';
 
 export type NoteData = {
@@ -53,6 +54,14 @@ export type GetItemRequest = {
     itemId: number;
 }
 
+export type AddEntityToFolderRequest = {
+    entityId: number;
+    folderId: number;
+    position?: number;
+}
+
+
+
 export const apiService = {
 
   // cookie call
@@ -87,6 +96,17 @@ export const apiService = {
     await api.delete(`/folder/${folderId}`);
   },
 
+
+  // folder item calls
+  moveItem: async (data: MoveItemRequest) => {
+    await api.patch('/folder/move', data);
+  },
+
+  getItem: async (data: GetItemRequest) => {
+    const response = await api.get(`/folder/item/${data.itemId}`);
+    return response.data;
+  },
+
   // note calls
   createNote: async (data: CreateNoteRequest) => {
     const response = await api.post(`/notes`, data);
@@ -107,12 +127,37 @@ export const apiService = {
     return response.data;
   },
 
-  moveItem: async (data: MoveItemRequest) => {
-    await api.patch('/folder/move', data);
+  // character creation/insertion calls
+  // entity calls
+  createEntity: async (data: EntityFormData) => {
+    await api.post(`/entity`, data)
   },
 
-  getItem: async (data: GetItemRequest) => {
-    const response = await api.get(`/folder/item/${data.itemId}`);
+  getEntity: async (entityId: number) => {
+    const response = await api.get(`/entity/${entityId}`);
     return response.data;
+  },
+
+  getEntitySummary: async (entityId: number) => {
+    const response = await api.get(`/entity/${entityId}/summary`);
+    return response.data; // get partial data object of entity
+  },
+
+  deleteEntity: async (entityId: number) => {
+    await api.delete(`/entity/${entityId}`);
+  },
+
+  updateEntity: async (entityId: number) => {
+    await api.patch(`/entity/${entityId}`);
+  },
+
+  addEntityToFolder: async (data: AddEntityToFolderRequest) => {
+    await api.post(`/entity/folder`, data);
+  },
+
+  getEntityIds: async (userId: number) => {
+    const response = await api.get(`/entity/user/${userId}`);
+    return response.data; // returns array of entity ids linked to user 
   }
+  
 };
