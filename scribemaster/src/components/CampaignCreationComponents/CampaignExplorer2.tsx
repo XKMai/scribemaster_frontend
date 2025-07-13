@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { isFolder, isNote, type Item } from "@/types/TreeTypes";
+import { isEntity, isFolder, isNote, type Item } from "@/types/TreeTypes";
 import {
   selectionFeature,
   hotkeysCoreFeature,
@@ -15,6 +15,7 @@ import { NoteContextMenu2 } from "./NoteContextMenu2";
 import { FolderContextMenu2 } from "./FolderContextMenu2";
 import { EmptyContextMenu2 } from "./EmptyContextMenu2";
 import { CampaignHeader } from "./CampaignHeader";
+import { PersonStanding, FolderOpen, Folder, NotepadText } from "lucide-react";
 
 interface CampaignExplorer2Props {
   campaignId: number;
@@ -49,11 +50,16 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
       const item = itemInstance.getItemData();
       if (!item) return "Loading...";
 
-      return isNote(item)
-        ? item.data.title
-        : isFolder(item)
-        ? item.data.name
-        : "Unnamed";
+      // return isNote(item)
+      //   ? item.data.title
+      //   : isFolder(item) || isEntity(item)
+      //   ? item.data.name
+      //   : "Unnamed";
+
+      if (isNote(item)) return item.data.title;
+      if (isFolder(item)) return item.data.name;
+      if (isEntity(item)) return item.data.name;
+      return "Unnamed";
     },
 
     isItemFolder: (itemInstance) => {
@@ -123,7 +129,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
               : [...prev, id] // expand
         );
       } else {
-        console.log("Clicked note:", id);
+        console.log("Clicked item:", itemInstance.getItemName());
         setSelectedItemInstance(itemInstance);
       }
     },
@@ -227,11 +233,17 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
                     )}
                   >
                     <span>
-                      {itemInstance.isFolder()
-                        ? itemInstance.isExpanded()
-                          ? "📂"
-                          : "📁"
-                        : "📄"}
+                      {itemInstance.isFolder() ? (
+                        itemInstance.isExpanded() ? (
+                          <FolderOpen size={18} />
+                        ) : (
+                          <Folder size={18} />
+                        )
+                      ) : isEntity(item) ? (
+                        <PersonStanding size={18} />
+                      ) : (
+                        <NotepadText size={18} />
+                      )}
                     </span>
                     <span className="truncate">
                       {itemInstance.getItemName()}
@@ -258,6 +270,8 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
                     {node}
                   </FolderContextMenu2>
                 );
+              } else if (isEntity(item)) {
+                return <div key={itemInstance.getId()}>{node}</div>;
               }
 
               return node;

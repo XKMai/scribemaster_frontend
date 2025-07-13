@@ -34,6 +34,8 @@ export const PlayerSchema = EntitySchema.extend({
 
 export type PlayerCharacterFormData = z.infer<typeof PlayerSchema>;
 
+export type PlayerCharacter = PlayerCharacterFormData & { id: number };
+
 export const PlayerCharacterDefaultValues: PlayerCharacterFormData = {
   // inherited from EntitySchema 
   createdBy: 0,
