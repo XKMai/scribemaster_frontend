@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ContextMenu } from "radix-ui";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import type { Item } from "@/types/TreeTypes";
 import { apiService } from "@/services/apiservice";
 import type { ItemInstance } from "@headless-tree/core";

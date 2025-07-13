@@ -11,9 +11,9 @@ import { useTree } from "@headless-tree/react";
 import { apiService } from "@/services/apiservice";
 import { useEffect, useState } from "react";
 import { ContentViewer } from "./ContentViewer";
-import { NoteContextMenu2 } from "./NoteContextMenu2";
-import { FolderContextMenu2 } from "./FolderContextMenu2";
-import { EmptyContextMenu2 } from "./EmptyContextMenu2";
+import { NoteContextMenu2 } from "./ContextMenus/NoteContextMenu2";
+import { FolderContextMenu2 } from "./ContextMenus/FolderContextMenu2";
+import { EmptyContextMenu2 } from "./ContextMenus/EmptyContextMenu2";
 import { CampaignHeader } from "./CampaignHeader";
 import { PersonStanding, FolderOpen, Folder, NotepadText } from "lucide-react";
 
