@@ -4,8 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { apiService } from "@/services/apiservice";
-import { isNote, type Item } from "@/types/TreeTypes";
+import { isEntity, isNote, type Item } from "@/types/TreeTypes";
 import type { ItemInstance } from "@headless-tree/core";
+import { Save } from "lucide-react";
+import { EntityViewerForm } from "./EntityViewer";
 //import type { ItemInstance } from "@headless-tree/react";
 
 interface ContentViewerProps {
@@ -33,7 +35,6 @@ export const ContentViewer = ({ itemInstance }: ContentViewerProps) => {
         content,
       });
 
-      // Ask headless tree to refresh the item's data
       itemInstance.invalidateItemData();
     } catch (err) {
       console.error("Failed to update note:", err);
@@ -45,35 +46,43 @@ export const ContentViewer = ({ itemInstance }: ContentViewerProps) => {
     <div className="w-full h-full p-4">
       <Card className="w-full h-full flex flex-col">
         <CardHeader>
-          {item && isNote(item) ? (
-            <Input
-              className="font-bold text-lg"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
+          {item ? (
+            isNote(item) ? (
+              <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+            ) : isEntity(item) ? (
+              <CardTitle>{item.data.name}</CardTitle>
+            ) : (
+              <CardTitle>Unsupported item</CardTitle>
+            )
           ) : (
-            <CardTitle>Select a note to view</CardTitle>
+            <CardTitle>Select an item to view</CardTitle>
           )}
         </CardHeader>
 
         {/* Scrollable content inside fixed height */}
         <CardContent className="flex-1 overflow-y-auto overflow-x-hidden space-y-4">
-          {item && isNote(item) ? (
-            <>
-              <Textarea
-                className="w-full text-sm h-full resize-none"
-                style={{ minHeight: "100px", maxHeight: "85%" }}
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-              />
-              <div className="flex justify-end">
-                <Button onClick={handleSave}>💾 Save</Button>
-              </div>
-            </>
+          {item ? (
+            isNote(item) ? (
+              <>
+                <Textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                />
+                <div className="flex justify-end">
+                  <Button variant="ghost" onClick={handleSave}>
+                    <Save /> Save
+                  </Button>
+                </div>
+              </>
+            ) : isEntity(item) && itemInstance ? (
+              <EntityViewerForm itemInstance={itemInstance} />
+            ) : (
+              <pre className="text-sm text-muted-foreground">
+                Unsupported content type.
+              </pre>
+            )
           ) : (
-            <pre className="whitespace-pre-wrap text-sm text-muted-foreground">
-              ...
-            </pre>
+            <pre className="text-sm text-muted-foreground">...</pre>
           )}
         </CardContent>
       </Card>
