@@ -6,9 +6,9 @@ export const PersonalitySchema = z.object({
   ideals: z.string().optional(),
     bonds: z.string().optional(),
     flaws: z.string().optional(),
-})
+}).optional()
 
-export const PlayerSchema = EntitySchema.extend({
+export const FlatPlayerSchema = z.object({
     
   playerName: z.string(),
   level: z.number().int().min(1),
@@ -19,18 +19,23 @@ export const PlayerSchema = EntitySchema.extend({
         ])
     ,
     
-    background: z.string(),
+    background: z.string().optional(),
     alignment: z.string().optional(),
-    experience: z.number().int(),
+    experience: z.number().int().optional(),
     
-    inspiration: z.boolean(),
+    inspiration: z.boolean().optional(),
 
     personality: PersonalitySchema,
     notes: z.string().optional(),
-    backstory: z.string(),
-    treasure: z.string(),
-    alliesOrgs: z.string(),
+    backstory: z.string().optional(),
+    treasure: z.string().optional(),
+    alliesOrgs: z.string().optional(),
 })
+
+export const PlayerSchema = EntitySchema.extend({
+  playerCharacter: FlatPlayerSchema
+});
+
 
 export type PlayerCharacterFormData = z.infer<typeof PlayerSchema>;
 
@@ -115,6 +120,7 @@ export const PlayerCharacterDefaultValues: PlayerCharacterFormData = {
   },
 
   // player specific
+  playerCharacter: {
   playerName: "Aerin",
   level: 4,
   characterClass: "Bard",
@@ -134,5 +140,6 @@ export const PlayerCharacterDefaultValues: PlayerCharacterFormData = {
   backstory: "Grew up learning bardic tales of the Feywild.",
   treasure: "Ornate silver flute gifted by a forest spirit.",
   alliesOrgs: "College of Lore, Bardic Council",
+}
 };
 

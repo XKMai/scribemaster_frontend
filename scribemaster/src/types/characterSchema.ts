@@ -57,7 +57,7 @@ export const spellCastingSchema = z.object({
   spellcastingAbility: z.string(),
   spellSaveDC: z.number(), 
   spellAttackBonus: z.number(),
-})
+}).nullable().optional()
 
 export const EntitySchema = z.object({
     

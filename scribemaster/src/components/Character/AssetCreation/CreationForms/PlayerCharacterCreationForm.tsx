@@ -71,20 +71,37 @@ const PlayerCharacterCreationForm = () => {
             className="space-y-6 w-full max-w-6xl mx-auto"
           >
             <div className="grid grid-cols-2 gap-4">
-              {/* name */}
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Character Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-2 gap-4">
+                {/* name */}
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Character Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* player name */}
+                <FormField
+                  control={form.control}
+                  name="playerCharacter.playerName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Player Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Character Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <div className="grid grid-cols-4 gap-4">
                 {/* type */}
                 <FormField
@@ -130,7 +147,7 @@ const PlayerCharacterCreationForm = () => {
                 {/* class */}
                 <FormField
                   control={form.control}
-                  name="characterClass"
+                  name="playerCharacter.characterClass"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Class</FormLabel>
@@ -172,7 +189,7 @@ const PlayerCharacterCreationForm = () => {
                 {/* character level */}
                 <FormField
                   control={form.control}
-                  name="level"
+                  name="playerCharacter.level"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Level</FormLabel>
@@ -268,7 +285,7 @@ const PlayerCharacterCreationForm = () => {
               {/* Experience */}
               <FormField
                 control={form.control}
-                name="experience"
+                name="playerCharacter.experience"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Experience</FormLabel>
@@ -289,7 +306,7 @@ const PlayerCharacterCreationForm = () => {
               {/* inspiration */}
               <FormField
                 control={form.control}
-                name="inspiration"
+                name="playerCharacter.inspiration"
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-2 space-y-0">
                     <FormControl>
@@ -362,7 +379,7 @@ const PlayerCharacterCreationForm = () => {
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="background"
+                name="playerCharacter.background"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Background</FormLabel>
@@ -376,7 +393,7 @@ const PlayerCharacterCreationForm = () => {
 
               <FormField
                 control={form.control}
-                name="alignment"
+                name="playerCharacter.alignment"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Alignment</FormLabel>
@@ -662,7 +679,7 @@ const PlayerCharacterCreationForm = () => {
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="personality.traits"
+                name="playerCharacter.personality.traits"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Traits</FormLabel>
@@ -676,7 +693,7 @@ const PlayerCharacterCreationForm = () => {
 
               <FormField
                 control={form.control}
-                name="personality.ideals"
+                name="playerCharacter.personality.ideals"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Ideals</FormLabel>
@@ -690,7 +707,7 @@ const PlayerCharacterCreationForm = () => {
 
               <FormField
                 control={form.control}
-                name="personality.bonds"
+                name="playerCharacter.personality.bonds"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Bonds</FormLabel>
@@ -704,7 +721,7 @@ const PlayerCharacterCreationForm = () => {
 
               <FormField
                 control={form.control}
-                name="personality.flaws"
+                name="playerCharacter.personality.flaws"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Flaws</FormLabel>
@@ -720,7 +737,7 @@ const PlayerCharacterCreationForm = () => {
             {/* Additional Fields */}
             <FormField
               control={form.control}
-              name="backstory"
+              name="playerCharacter.backstory"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Backstory</FormLabel>
@@ -734,7 +751,7 @@ const PlayerCharacterCreationForm = () => {
 
             <FormField
               control={form.control}
-              name="notes"
+              name="playerCharacter.notes"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Notes</FormLabel>
@@ -748,7 +765,7 @@ const PlayerCharacterCreationForm = () => {
 
             <FormField
               control={form.control}
-              name="treasure"
+              name="playerCharacter.treasure"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Treasure</FormLabel>
@@ -762,7 +779,7 @@ const PlayerCharacterCreationForm = () => {
 
             <FormField
               control={form.control}
-              name="alliesOrgs"
+              name="playerCharacter.alliesOrgs"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Allies & Organizations</FormLabel>
