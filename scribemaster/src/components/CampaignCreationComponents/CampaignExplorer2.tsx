@@ -16,6 +16,7 @@ import { FolderContextMenu2 } from "./ContextMenus/FolderContextMenu2";
 import { EmptyContextMenu2 } from "./ContextMenus/EmptyContextMenu2";
 import { CampaignHeader } from "./CampaignHeader";
 import { PersonStanding, FolderOpen, Folder, NotepadText } from "lucide-react";
+import { EntityContextMenu } from "./ContextMenus/EntityContextMenu";
 
 interface CampaignExplorer2Props {
   campaignId: number;
@@ -193,8 +194,6 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
     ],
   });
 
-  //console.log("Tree Items:", tree.getItems());
-
   return (
     <div className="flex h-screen w-full">
       {/* Tree */}
@@ -271,7 +270,14 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
                   </FolderContextMenu2>
                 );
               } else if (isEntity(item)) {
-                return <div key={itemInstance.getId()}>{node}</div>;
+                return (
+                  <EntityContextMenu
+                    key={itemInstance.getId()}
+                    itemInstance={itemInstance}
+                  >
+                    {node}
+                  </EntityContextMenu>
+                );
               }
 
               return node;
