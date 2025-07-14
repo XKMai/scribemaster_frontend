@@ -1,5 +1,6 @@
 import type { EntityFormData } from '@/types/characterSchema';
 import api from '../lib/axiosConfig';
+import type { PlayerCharacterFormData } from '@/types/playerCharacterSchema';
 
 export type NoteData = {
   id: number;
@@ -147,8 +148,8 @@ export const apiService = {
     await api.delete(`/entity/${entityId}`);
   },
 
-  updateEntity: async (entityId: number) => {
-    await api.patch(`/entity/${entityId}`);
+  updateEntity: async (entityId: number, data: PlayerCharacterFormData | EntityFormData) => {
+    await api.patch(`/entity/${entityId}`, data);
   },
 
   addEntityToFolder: async (data: AddEntityToFolderRequest) => {
