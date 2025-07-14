@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import FolderContextMenu from "./ContextMenus/FolderContextMenu";
-import NoteContextMenu from "./ContextMenus/NoteContextMenu";
+import { Card, CardHeader, CardTitle, CardContent } from "../../ui/card";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Textarea } from "../../ui/textarea";
+import FolderContextMenu from "../ContextMenus/FolderContextMenu";
+import NoteContextMenu from "../ContextMenus/NoteContextMenu";
 import {
   apiService,
   type FolderData,
   type Item,
   type NoteData,
 } from "@/services/apiservice";
-import EmptyContextMenu from "./ContextMenus/EmptyContextMenu";
+import EmptyContextMenu from "../ContextMenus/EmptyContextMenu";
 
 interface CampaignViewerProps {
   campaignId: number;

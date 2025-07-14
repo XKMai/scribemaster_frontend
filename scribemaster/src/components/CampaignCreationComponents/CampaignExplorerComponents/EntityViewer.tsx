@@ -27,7 +27,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { Separator } from "../ui/separator";
+import { Separator } from "../../ui/separator";
 
 interface Props {
   itemInstance: ItemInstance<Item>;
