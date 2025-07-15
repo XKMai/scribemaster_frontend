@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   SpellSchema,
-  type Spell,
+  type SpellFormData,
   SpellDefaultValues,
 } from "../../../../types/spellSchema";
 import {
@@ -55,12 +55,12 @@ const classes = [
 ] as const;
 
 const SpellCreationForm = () => {
-  const form = useForm<Spell>({
+  const form = useForm<SpellFormData>({
     resolver: zodResolver(SpellSchema),
     defaultValues: SpellDefaultValues,
   });
 
-  const onSubmit = async (data: Spell) => {
+  const onSubmit = async (data: SpellFormData) => {
     try {
       const userdata = await apiService.getCookie();
       const userId = userdata.user.id;
@@ -73,7 +73,8 @@ const SpellCreationForm = () => {
       console.log(
         `button pressed, data submitted: /n ${JSON.stringify(payload, null, 2)}`
       );
-      await api.post("/spell", payload);
+      //await api.post("/spell", payload);
+      await apiService.createSpell(payload);
 
       alert("spell created successfully");
     } catch (error: any) {
