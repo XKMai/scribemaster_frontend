@@ -1,4 +1,4 @@
-import CharacterInsertion from "@/components/Character/AssetCreation/CharacterInsertion";
+import CharacterInsertion from "@/components/Character/AssetCreation/Insertion/CharacterInsertion";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
 

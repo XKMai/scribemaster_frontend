@@ -33,7 +33,7 @@ const CharacterInsertion = () => {
 
         {/* Column 3: Spells */}
         <div className="flex flex-col h-full bg-white rounded-xl shadow p-4 overflow-hidden">
-          <h2 className="text-lg font-semibold mb-2">Items</h2>
+          <h2 className="text-lg font-semibold mb-2">Spells</h2>
           <div className="flex-1 overflow-hidden">
             <SpellList userId={userId} />
           </div>
