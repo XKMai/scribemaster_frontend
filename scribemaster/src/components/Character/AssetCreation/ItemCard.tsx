@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Trash2, FolderPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiService } from "@/services/apiservice";

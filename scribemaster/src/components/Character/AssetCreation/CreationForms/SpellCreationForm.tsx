@@ -25,7 +25,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { apiService } from "@/services/apiservice";
-import api from "@/lib/axiosConfig";
 
 const schools = [
   "Abjuration",
