@@ -1,6 +1,7 @@
 import type { EntityFormData } from '@/types/characterSchema';
 import api from '../lib/axiosConfig';
 import type { PlayerCharacterFormData } from '@/types/playerCharacterSchema';
+import type { ItemFormData } from '@/types/itemSchema';
 
 export type NoteData = {
   id: number;
@@ -99,11 +100,11 @@ export const apiService = {
 
 
   // folder item calls
-  moveItem: async (data: MoveItemRequest) => {
+  moveFolderItem: async (data: MoveItemRequest) => {
     await api.patch('/folder/move', data);
   },
 
-  getItem: async (data: GetItemRequest) => {
+  getFolderItem: async (data: GetItemRequest) => {
     const response = await api.get(`/folder/item/${data.itemId}`);
     return response.data;
   },
@@ -159,6 +160,32 @@ export const apiService = {
   getEntityIds: async (userId: number) => {
     const response = await api.get(`/entity/user/${userId}`);
     return response.data; // returns array of entity ids linked to user 
-  }
+  },
   
+  //item object calls
+  createItem: async (data: ItemFormData) => {
+    await api.post(`/item`, data);
+  },
+
+  getItem: async (itemId: number) => {
+    const response = await api.get(`/item/${itemId}`);
+    return response.data;
+  },
+
+  getItemIds: async (userId: number) => {
+    const response = await api.get(`/item/user/${userId}`);
+    return response.data;
+  },
+
+  updateItem: async (
+    itemId: number,
+    data: Partial<Pick<ItemFormData, "type" | "description" | "characteristics" | "settings">>
+  ) => {
+    await api.patch(`/item/${itemId}`, data);
+  },
+
+  deleteItem: async (itemId: number) => {
+    await api.delete(`/item/${itemId}`);
+  },
+
 };
