@@ -2,6 +2,7 @@ import type { EntityFormData } from '@/types/characterSchema';
 import api from '../lib/axiosConfig';
 import type { PlayerCharacterFormData } from '@/types/playerCharacterSchema';
 import type { ItemFormData } from '@/types/itemSchema';
+import type { Spell, SpellFormData } from '@/types/spellSchema';
 
 export type NoteData = {
   id: number;
@@ -188,4 +189,28 @@ export const apiService = {
     await api.delete(`/item/${itemId}`);
   },
 
+  createSpell: async (data: SpellFormData) => {
+    await api.post(`/spell`, data);
+  },
+
+  getSpell: async (spellId: number) => {
+    const response = await api.get(`/spell/${spellId}`);
+    return response.data;
+  },
+
+  getUserSpells: async (userId: number) => {
+    const response = await api.get(`/spell/user/${userId}`);
+    return response.data; // array of spell objects
+  },
+
+  updateSpell: async (
+    spellId: number,
+    data: Partial<Spell>
+  ) => {
+    await api.patch(`/spell/${spellId}`, data);
+  },
+
+  deleteSpell: async (spellId: number) => {
+    await api.delete(`/spell/${spellId}`);
+  },
 };
