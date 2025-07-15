@@ -1,8 +1,8 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { apiService } from "@/services/apiservice";
 import { useState, useEffect } from "react";
 import { EntityList } from "./EntityList";
 import { ItemList } from "./ItemList";
+import { SpellList } from "./SpellList";
 
 const CharacterInsertion = () => {
   const [userId, setUserId] = useState<number | null>(null);
@@ -32,9 +32,11 @@ const CharacterInsertion = () => {
         </div>
 
         {/* Column 3: Spells */}
-        <div className="flex flex-col h-full bg-white rounded-xl shadow p-4">
-          <h2 className="text-lg font-semibold mb-2">Spells</h2>
-          <ScrollArea className="flex-1 overflow-auto"></ScrollArea>
+        <div className="flex flex-col h-full bg-white rounded-xl shadow p-4 overflow-hidden">
+          <h2 className="text-lg font-semibold mb-2">Items</h2>
+          <div className="flex-1 overflow-hidden">
+            <SpellList userId={userId} />
+          </div>
         </div>
       </div>
     </div>
