@@ -75,7 +75,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
         const id = Number(idStr);
         if (isNaN(id)) throw new Error(`Invalid itemId: ${itemId}`);
 
-        const item = await apiService.getItem({ itemId: id });
+        const item = await apiService.getFolderItem({ itemId: id });
 
         console.log("Fetched item:", item);
         return item;
@@ -94,7 +94,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
         } else if (type === "folder") {
           // Must fetch the folder item to get its refId
           try {
-            const item = await apiService.getItem({ itemId: id });
+            const item = await apiService.getFolderItem({ itemId: id });
             folderId = item.refId; // real folder ID
           } catch (err) {
             console.error(`Failed to fetch item for folder-${id}:`, err);
@@ -170,7 +170,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
         console.log("itemId:", sourceData.id);
         console.log("toFolderId:", newFolderId);
 
-        await apiService.moveItem({
+        await apiService.moveFolderItem({
           itemId: sourceData.id,
           toFolderId: newFolderId,
           newPosition: 0,

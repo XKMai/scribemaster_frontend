@@ -64,8 +64,8 @@ const ItemCreationForm = () => {
       console.log(
         `button pressed, data submitted: /n ${JSON.stringify(data, null, 2)}`
       );
-
-      await api.post("/item", data);
+      await apiService.createItem(data);
+      //await api.post("/item", data);
 
       alert("Item created successfully!");
     } catch (err) {
