@@ -18,7 +18,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import api from "@/lib/axiosConfig";
 import { apiService } from "@/services/apiservice";
 import {
   SelectTrigger,
@@ -27,6 +26,7 @@ import {
   SelectItem,
 } from "@radix-ui/react-select";
 import { Select } from "@/components/ui/select";
+import { useNavigate } from "react-router";
 
 const ItemCreationForm = () => {
   const [characteristicInput, setCharacteristicInput] = useState({
@@ -59,15 +59,17 @@ const ItemCreationForm = () => {
     });
   }, []);
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data: ItemFormData) => {
     try {
       console.log(
         `button pressed, data submitted: /n ${JSON.stringify(data, null, 2)}`
       );
       await apiService.createItem(data);
-      //await api.post("/item", data);
 
       alert("Item created successfully!");
+      navigate("/characterinsertion");
     } catch (err) {
       console.error(err);
       alert("Something went wrong.");

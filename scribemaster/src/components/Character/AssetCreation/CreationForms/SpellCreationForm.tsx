@@ -25,6 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { apiService } from "@/services/apiservice";
+import { useNavigate } from "react-router";
 
 const schools = [
   "Abjuration",
@@ -59,6 +60,8 @@ const SpellCreationForm = () => {
     defaultValues: SpellDefaultValues,
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data: SpellFormData) => {
     try {
       const userdata = await apiService.getCookie();
@@ -72,10 +75,10 @@ const SpellCreationForm = () => {
       console.log(
         `button pressed, data submitted: /n ${JSON.stringify(payload, null, 2)}`
       );
-      //await api.post("/spell", payload);
       await apiService.createSpell(payload);
 
       alert("spell created successfully");
+      navigate("/characterinsertion");
     } catch (error: any) {
       alert("something went wrong!!!");
     }

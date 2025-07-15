@@ -26,6 +26,7 @@ import {
   EntitySchema,
   EntityDefaultValues,
 } from "@/types/characterSchema";
+import { useNavigate } from "react-router";
 
 type SaveKey = keyof EntityFormData["savingThrows"];
 type SkillKey = keyof EntityFormData["skills"];
@@ -36,6 +37,8 @@ const CharacterCreationForm = () => {
     resolver: zodResolver(EntitySchema),
     defaultValues: EntityDefaultValues,
   });
+
+  const navigate = useNavigate();
 
   const onSubmit = async (data: EntityFormData) => {
     try {
@@ -53,6 +56,7 @@ const CharacterCreationForm = () => {
       await apiService.createEntity(payload);
 
       alert("character created successfully");
+      navigate("/characterinsertion");
     } catch (error: any) {
       alert("something went wrong!!!");
     }

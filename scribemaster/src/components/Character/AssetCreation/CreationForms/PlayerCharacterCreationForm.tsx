@@ -27,6 +27,7 @@ import {
   PlayerSchema,
   PlayerCharacterDefaultValues,
 } from "@/types/playerCharacterSchema";
+import { useNavigate } from "react-router";
 
 type SaveKey = keyof PlayerCharacterFormData["savingThrows"];
 type SkillKey = keyof PlayerCharacterFormData["skills"];
@@ -38,6 +39,8 @@ const PlayerCharacterCreationForm = () => {
     resolver: zodResolver(PlayerSchema),
     defaultValues: PlayerCharacterDefaultValues,
   });
+
+  const navigate = useNavigate();
 
   const onSubmit = async (data: PlayerCharacterFormData) => {
     try {
@@ -55,6 +58,7 @@ const PlayerCharacterCreationForm = () => {
       await api.post("/entity", payload);
 
       alert("character created successfully");
+      navigate("/characterinsertion");
     } catch (error: any) {
       alert("something went wrong!!!");
     }
