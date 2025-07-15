@@ -2,6 +2,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { apiService } from "@/services/apiservice";
 import { useState, useEffect } from "react";
 import { EntityList } from "./EntityList";
+import { ItemList } from "./ItemList";
 
 const CharacterInsertion = () => {
   const [userId, setUserId] = useState<number | null>(null);
@@ -23,9 +24,11 @@ const CharacterInsertion = () => {
         </div>
 
         {/* Column 2: Items */}
-        <div className="flex flex-col h-full bg-white rounded-xl shadow p-4">
+        <div className="flex flex-col h-full bg-white rounded-xl shadow p-4 overflow-hidden">
           <h2 className="text-lg font-semibold mb-2">Items</h2>
-          <ScrollArea className="flex-1 overflow-auto"></ScrollArea>
+          <div className="flex-1 overflow-hidden">
+            <ItemList userId={userId} />
+          </div>
         </div>
 
         {/* Column 3: Spells */}
