@@ -180,7 +180,7 @@ export const apiService = {
 
   updateItem: async (
     itemId: number,
-    data: Partial<Pick<ItemFormData, "type" | "description" | "characteristics" | "settings">>
+    data: Partial<Pick<ItemFormData, "name"|"type" | "description" | "characteristics" | "settings">>
   ) => {
     await api.patch(`/item/${itemId}`, data);
   },
