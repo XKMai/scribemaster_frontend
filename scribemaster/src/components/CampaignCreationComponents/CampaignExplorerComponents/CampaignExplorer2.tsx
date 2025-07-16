@@ -1,5 +1,11 @@
 import { cn } from "@/lib/utils";
-import { isEntity, isFolder, isNote, type Item } from "@/types/TreeTypes";
+import {
+  isEntity,
+  isFolder,
+  isItem,
+  isNote,
+  type Item,
+} from "@/types/TreeTypes";
 import {
   selectionFeature,
   hotkeysCoreFeature,
@@ -15,8 +21,15 @@ import { NoteContextMenu2 } from "../ContextMenus/NoteContextMenu2";
 import { FolderContextMenu2 } from "../ContextMenus/FolderContextMenu2";
 import { EmptyContextMenu2 } from "../ContextMenus/EmptyContextMenu2";
 import { CampaignHeader } from "./CampaignHeader";
-import { PersonStanding, FolderOpen, Folder, NotepadText } from "lucide-react";
+import {
+  PersonStanding,
+  FolderOpen,
+  Folder,
+  NotepadText,
+  Package,
+} from "lucide-react";
 import { EntityContextMenu } from "../ContextMenus/EntityContextMenu";
+import { ItemContextMenu } from "../ContextMenus/ItemContextMenu";
 
 interface CampaignExplorer2Props {
   campaignId: number;
@@ -240,6 +253,8 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
                         )
                       ) : isEntity(item) ? (
                         <PersonStanding size={18} />
+                      ) : isItem(item) ? (
+                        <Package size={18} />
                       ) : (
                         <NotepadText size={18} />
                       )}
@@ -277,6 +292,16 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
                   >
                     {node}
                   </EntityContextMenu>
+                );
+              }
+              if (isItem(item)) {
+                return (
+                  <ItemContextMenu
+                    key={itemInstance.getId()}
+                    itemInstance={itemInstance}
+                  >
+                    {node}
+                  </ItemContextMenu>
                 );
               }
 
