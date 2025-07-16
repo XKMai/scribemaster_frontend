@@ -4,6 +4,7 @@ import {
   isFolder,
   isItem,
   isNote,
+  isSpell,
   type Item,
 } from "@/types/TreeTypes";
 import {
@@ -27,9 +28,11 @@ import {
   Folder,
   NotepadText,
   Package,
+  Sparkles,
 } from "lucide-react";
 import { EntityContextMenu } from "../ContextMenus/EntityContextMenu";
 import { ItemContextMenu } from "../ContextMenus/ItemContextMenu";
+import { SpellContextMenu } from "../ContextMenus/SpellContextMenu";
 
 interface CampaignExplorer2Props {
   campaignId: number;
@@ -255,6 +258,8 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
                         <PersonStanding size={18} />
                       ) : isItem(item) ? (
                         <Package size={18} />
+                      ) : isSpell(item) ? (
+                        <Sparkles size={18} />
                       ) : (
                         <NotepadText size={18} />
                       )}
@@ -302,6 +307,16 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
                   >
                     {node}
                   </ItemContextMenu>
+                );
+              }
+              if (isSpell(item)) {
+                return (
+                  <SpellContextMenu
+                    itemInstance={itemInstance}
+                    key={itemInstance.getId()}
+                  >
+                    {node}
+                  </SpellContextMenu>
                 );
               }
 
