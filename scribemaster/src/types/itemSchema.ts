@@ -12,6 +12,8 @@ export const ItemSchema = z.object({
 
 export type ItemFormData = z.infer<typeof ItemSchema>;
 
+export type ItemObject = ItemFormData & {id: number}
+
 export const ItemDefaultValues: ItemFormData = {
   name: "Le Blade",
   type: "Weapon",
