@@ -4,11 +4,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { apiService } from "@/services/apiservice";
-import { isEntity, isItem, isNote, type Item } from "@/types/TreeTypes";
+import {
+  isEntity,
+  isItem,
+  isNote,
+  isSpell,
+  type Item,
+} from "@/types/TreeTypes";
 import type { ItemInstance } from "@headless-tree/core";
 import { Save } from "lucide-react";
 import { EntityViewerForm } from "./EntityViewer";
 import { ItemViewerForm } from "./ItemViewer";
+import { SpellViewerForm } from "./SpellViewer";
 //import type { ItemInstance } from "@headless-tree/react";
 
 interface ContentViewerProps {
@@ -79,6 +86,8 @@ export const ContentViewer = ({ itemInstance }: ContentViewerProps) => {
               <EntityViewerForm itemInstance={itemInstance} />
             ) : isItem(item) && itemInstance ? (
               <ItemViewerForm itemInstance={itemInstance} />
+            ) : isSpell(item) && itemInstance ? (
+              <SpellViewerForm itemInstance={itemInstance} />
             ) : (
               <pre className="text-sm text-muted-foreground">
                 Unsupported content type.
