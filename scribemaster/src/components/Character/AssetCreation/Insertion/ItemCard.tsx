@@ -10,17 +10,10 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import type { ItemObject } from "@/types/itemSchema";
 
 interface ItemCardProps {
-  item: {
-    id: number;
-    name: string;
-    type: string;
-    description: string;
-    characteristics: Record<string, any>;
-    settings?: Record<string, any>;
-    createdBy: number;
-  };
+  item: ItemObject;
   availableFolders: { id: number; name: string }[];
   onDelete: (id: number) => void;
 }
