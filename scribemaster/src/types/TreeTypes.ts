@@ -1,4 +1,5 @@
 import type { Entity, EntitySummary } from "./characterSchema";
+import type { ItemObject } from "./itemSchema";
 import type { PlayerCharacter } from "./playerCharacterSchema";
 
 export type NoteData = {
@@ -20,7 +21,7 @@ export type FolderData = {
 export type Item = {
   id: number;
   folderId: number; // what folder this item is in
-  type: "note" | "folder" | "entity" | "player";
+  type: "note" | "folder" | "entity" | "player" | "item";
   refId: number; // what item this is referencing
   position: number;
   data: any;
@@ -36,3 +37,6 @@ export const isEntity = (
   item: Item
 ): item is Item & { data: Entity | PlayerCharacter | EntitySummary  } =>
   item.type === "entity" || item.type === "player";
+
+  export const isItem = (item: Item): item is Item & { data: ItemObject } =>
+  item.type === "item";
