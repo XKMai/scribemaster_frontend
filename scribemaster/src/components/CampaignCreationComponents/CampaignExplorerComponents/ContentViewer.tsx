@@ -59,6 +59,8 @@ export const ContentViewer = ({ itemInstance }: ContentViewerProps) => {
               <Input value={title} onChange={(e) => setTitle(e.target.value)} />
             ) : isEntity(item) ? (
               <CardTitle>{item.data.name}</CardTitle>
+            ) : isSpell(item) ? (
+              <CardTitle>{item.data.name}</CardTitle>
             ) : (
               <CardTitle>Unsupported item</CardTitle>
             )
