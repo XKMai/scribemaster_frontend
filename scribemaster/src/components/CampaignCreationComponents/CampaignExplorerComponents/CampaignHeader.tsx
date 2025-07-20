@@ -31,8 +31,7 @@ interface CampaignHeaderProps {
 export const CampaignHeader = ({
   campaignId,
   campaignName,
-}: //onRename,
-CampaignHeaderProps) => {
+}: CampaignHeaderProps) => {
   const navigate = useNavigate();
   const [renameOpen, setRenameOpen] = useState(false);
   const [newName, setNewName] = useState(campaignName);
@@ -54,7 +53,6 @@ CampaignHeaderProps) => {
   const handleRename = async () => {
     try {
       await apiService.updateFolder(campaignId, { name: newName });
-      //onRename?.(newName); // trigger parent update
       setRenameOpen(false);
     } catch (err) {
       console.error("Rename failed:", err);

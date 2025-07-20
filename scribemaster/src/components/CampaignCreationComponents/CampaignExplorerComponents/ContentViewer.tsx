@@ -16,7 +16,6 @@ import { Save } from "lucide-react";
 import { EntityViewerForm } from "./EntityViewer";
 import { ItemViewerForm } from "./ItemViewer";
 import { SpellViewerForm } from "./SpellViewer";
-//import type { ItemInstance } from "@headless-tree/react";
 
 interface ContentViewerProps {
   itemInstance: ItemInstance<Item> | null;
@@ -46,7 +45,6 @@ export const ContentViewer = ({ itemInstance }: ContentViewerProps) => {
       itemInstance.invalidateItemData();
     } catch (err) {
       console.error("Failed to update note:", err);
-      alert("Failed to save changes.");
     }
   };
 

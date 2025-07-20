@@ -86,10 +86,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
         const [, idStr] = itemId.split("-");
         const id = Number(idStr);
         if (isNaN(id)) throw new Error(`Invalid itemId: ${itemId}`);
-
         const item = await apiService.getFolderItem({ itemId: id });
-
-        console.log("Fetched item:", item);
         return item;
       },
 
@@ -101,15 +98,13 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
         let folderId: number;
 
         if (type === "campaign") {
-          // Directly use the campaign ID (acts as a root folder)
-          folderId = id;
+          folderId = id; // directly use the campaign id (acts as a root folder)
         } else if (type === "folder") {
-          // Must fetch the folder item to get its refId
           try {
             const item = await apiService.getFolderItem({ itemId: id });
-            folderId = item.refId; // real folder ID
+            folderId = item.refId; // real folder id
           } catch (err) {
-            console.error(`Failed to fetch item for folder-${id}:`, err);
+            console.error(`Failed to fetch items for folder-${id}:`, err);
             return [];
           }
         } else {
@@ -117,7 +112,6 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
           return [];
         }
 
-        // Now use the resolved folderId to fetch its children
         const folderData = await apiService.getFolder(folderId);
 
         if (!folderData.items || folderData.items.length === 0) {
@@ -156,7 +150,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
 
       let newFolderId: number;
 
-      const targetId = targetItem.getId(); // e.g., "campaign-123" or "folder-456"
+      const targetId = targetItem.getId();
       const [targetType, targetRawId] = targetId.split("-");
       const parsedId = Number(targetRawId);
 
@@ -166,7 +160,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
       }
 
       if (targetType === "campaign") {
-        // Special handling for root folder
+        // special handling for root folder
         newFolderId = parsedId;
       } else {
         const targetData = targetItem.getItemData();
@@ -178,17 +172,12 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
       }
 
       try {
-        console.log("source item:", JSON.stringify(sourceData, null, 2));
-        console.log("itemId:", sourceData.id);
-        console.log("toFolderId:", newFolderId);
-
         await apiService.moveFolderItem({
           itemId: sourceData.id,
           toFolderId: newFolderId,
           newPosition: 0,
         });
 
-        // Refresh parent and target folder
         source.getParent()?.invalidateChildrenIds();
         targetItem.invalidateChildrenIds();
       } catch (err) {
