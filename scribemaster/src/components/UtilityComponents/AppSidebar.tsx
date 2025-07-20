@@ -27,6 +27,8 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import LogoutButton from "../LoginComponents/LogoutButton";
+import { apiService } from "@/services/apiservice";
+import { useEffect, useState } from "react";
 
 // Menu items.
 const items = [
@@ -63,6 +65,12 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const [userName, setUserName] = useState<number | null>(null);
+
+  useEffect(() => {
+    apiService.getCookie().then((res) => setUserName(res.user.name));
+  }, []);
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -90,7 +98,8 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> Username
+                  <User2 />
+                  {userName}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -98,9 +107,6 @@ export function AppSidebar() {
                 side="top"
                 className="w-[--radix-popper-anchor-width]"
               >
-                <DropdownMenuItem>
-                  <span>Account</span>
-                </DropdownMenuItem>
                 <DropdownMenuItem>
                   <span>
                     <LogoutButton />
