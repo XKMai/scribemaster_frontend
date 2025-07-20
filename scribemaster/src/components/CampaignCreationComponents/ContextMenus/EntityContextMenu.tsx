@@ -30,21 +30,21 @@ export const EntityContextMenu = ({
       itemInstance.invalidateItemData();
       setIsRenaming(false);
     } catch {
-      alert("Failed to rename folder");
+      alert("Failed to rename entity");
     }
   };
 
   const deleteEntity = async () => {
     const confirmed = window.confirm(
-      `Delete folder "${entity.data.name}"? This cannot be undone.`
+      `Delete "${entity.data.name}"? This cannot be undone.`
     );
     if (!confirmed) return;
     try {
-      await apiService.deleteFolder(entity.refId);
+      await apiService.deleteEntity(entity.refId);
       const parent = itemInstance.getParent();
       parent?.invalidateChildrenIds();
     } catch {
-      alert("Failed to delete folder");
+      alert("Failed to delete entity");
     }
   };
 
