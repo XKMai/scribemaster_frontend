@@ -67,15 +67,10 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
       const item = itemInstance.getItemData();
       if (!item) return "Loading...";
 
-      // return isNote(item)
-      //   ? item.data.title
-      //   : isFolder(item) || isEntity(item)
-      //   ? item.data.name
-      //   : "Unnamed";
-
       if (isNote(item)) return item.data.title;
       if (isFolder(item)) return item.data.name;
       if (isEntity(item)) return item.data.name;
+      if (isSpell(item)) return item.data.name;
       return "Unnamed";
     },
 
