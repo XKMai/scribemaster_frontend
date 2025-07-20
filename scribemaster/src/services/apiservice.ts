@@ -63,6 +63,12 @@ export type AddEntityToFolderRequest = {
     position?: number;
 }
 
+export type AddExistingItemRequest = {
+  folderId: number;
+  refId: number;
+  type: "note" | "folder" | "item" | "entity" | "player" | "spell";
+};
+
 
 
 export const apiService = {
@@ -109,6 +115,12 @@ export const apiService = {
     const response = await api.get(`/folder/item/${data.itemId}`);
     return response.data;
   },
+
+  addExistingItemToFolder: async ({ folderId, refId, type }: AddExistingItemRequest) => {
+  const response = await api.post(`folder/${folderId}/${refId}`, { type });
+  return response.data;
+},
+
 
   // note calls
   createNote: async (data: CreateNoteRequest) => {
