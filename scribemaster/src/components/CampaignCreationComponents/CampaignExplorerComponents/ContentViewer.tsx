@@ -61,6 +61,8 @@ export const ContentViewer = ({ itemInstance }: ContentViewerProps) => {
               <CardTitle>{item.data.name}</CardTitle>
             ) : isSpell(item) ? (
               <CardTitle>{item.data.name}</CardTitle>
+            ) : isItem(item) ? (
+              <CardTitle>{item.data.name}</CardTitle>
             ) : (
               <CardTitle>Unsupported item</CardTitle>
             )
