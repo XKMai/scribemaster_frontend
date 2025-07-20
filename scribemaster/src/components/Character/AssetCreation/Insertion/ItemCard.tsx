@@ -29,8 +29,12 @@ export const ItemCard = ({
   };
 
   const handleAddToFolder = async (folderId: number) => {
-    // await apiService.addItemToFolder({ itemId: item.id, folderId });
-    alert(`Pretend we added item ${item.id} to folder ${folderId}`);
+    await apiService.addExistingItemToFolder({
+      folderId,
+      refId: item.id,
+      type: "item",
+    });
+    alert(`Added item ${item.id} to folder ${folderId}`);
   };
 
   return (
