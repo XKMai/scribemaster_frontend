@@ -47,7 +47,12 @@ export const EntityCard = ({
 
   const handleAddToFolder = async (folderId: number) => {
     try {
-      await apiService.addEntityToFolder({ entityId, folderId });
+      //await apiService.addEntityToFolder({ entityId, folderId });
+      await apiService.addExistingItemToFolder({
+        folderId,
+        refId: entityId,
+        type: "entity",
+      });
       alert("Added to folder!");
     } catch (err) {
       console.error("Failed to add to folder:", err);
