@@ -71,6 +71,7 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
       if (isFolder(item)) return item.data.name;
       if (isEntity(item)) return item.data.name;
       if (isSpell(item)) return item.data.name;
+      if (isItem(item)) return item.data.name;
       return "Unnamed";
     },
 
