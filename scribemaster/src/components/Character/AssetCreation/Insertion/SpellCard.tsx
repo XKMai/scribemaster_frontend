@@ -30,8 +30,12 @@ export const SpellCard = ({
   };
 
   const handleAddToFolder = async (folderId: number) => {
-    // await apiService.addSpellToFolder({ spellId: spell.id, folderId });
-    alert(`Pretend we added spell ${spell.id} to folder ${folderId}`);
+    await apiService.addExistingItemToFolder({
+      folderId,
+      refId: spell.id,
+      type: "spell",
+    });
+    alert(`Added spell ${spell.id} to folder ${folderId}`);
   };
 
   return (
