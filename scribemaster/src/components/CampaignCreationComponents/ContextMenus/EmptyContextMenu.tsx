@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import { apiService } from "@/services/apiservice";
 import type { Item } from "@/services/apiservice";
 import * as ContextMenu from "@radix-ui/react-context-menu";
-
 
 interface EmptyContextMenuProps {
   createdBy: number;
@@ -13,14 +12,19 @@ interface EmptyContextMenuProps {
   children: React.ReactNode;
 }
 
-const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: EmptyContextMenuProps) => {
-
+const EmptyContextMenu = ({
+  createdBy,
+  campaignId,
+  onItemAdded,
+  children,
+}: EmptyContextMenuProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [creatingType, setCreatingType] = useState<"note" | "folder" | null>(null);
+  const [creatingType, setCreatingType] = useState<"note" | "folder" | null>(
+    null
+  );
   const [newName, setNewName] = useState("");
 
   const handleContextMenu = (e: React.MouseEvent) => {
-
     if ((e.target as HTMLElement).closest(".tree-item")) return;
 
     e.preventDefault();
@@ -29,8 +33,7 @@ const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: Empt
   };
 
   useEffect(() => {
-    const handleClick = () => 
-    window.addEventListener("click", handleClick);
+    const handleClick = () => window.addEventListener("click", handleClick);
     return () => window.removeEventListener("click", handleClick);
   }, []);
 
@@ -79,14 +82,16 @@ const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: Empt
   };
 
   return (
-    <div onContextMenu={handleContextMenu} ref={containerRef} className="w-full h-full">
-       <ContextMenu.Root>
+    <div
+      onContextMenu={handleContextMenu}
+      ref={containerRef}
+      className="w-full h-full"
+    >
+      <ContextMenu.Root>
         <ContextMenu.Trigger asChild>
           <div className="w-full h-full">{children}</div>
         </ContextMenu.Trigger>
-        <ContextMenu.Content
-          className="z-50 min-w-[200px] bg-white border rounded shadow-md p-2 space-y-2"
-        >
+        <ContextMenu.Content className="z-50 min-w-[200px] bg-white border rounded shadow-md p-2 space-y-2">
           {!creatingType ? (
             <>
               <ContextMenu.Item
@@ -94,7 +99,7 @@ const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: Empt
                 onSelect={(e) => {
                   e.preventDefault();
                   setCreatingType("note");
-              }}
+                }}
               >
                 📄 New Note
               </ContextMenu.Item>
@@ -121,8 +126,16 @@ const EmptyContextMenu = ({ createdBy, campaignId, onItemAdded, children }: Empt
                 autoFocus
               />
               <div className="flex justify-end space-x-2">
-                <Button size="sm" variant="outline" onClick={() => setCreatingType(null)}>Cancel</Button>
-                <Button size="sm" onClick={createItem}>Create</Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setCreatingType(null)}
+                >
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={createItem}>
+                  Create
+                </Button>
               </div>
             </>
           )}

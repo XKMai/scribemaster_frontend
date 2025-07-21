@@ -1,4 +1,4 @@
-import type { EntitySummary } from "@/components/Character/AssetCreation/characterSchema";
+import type { EntitySummary } from "@/types/characterSchema";
 import { EntityCard } from "@/components/CombatEncounterComponents/EntityCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";

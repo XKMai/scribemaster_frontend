@@ -1,9 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  EntitySchema,
-  type EntityFormData,
-  EntityDefaultValues,
-} from "./characterSchema";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -25,8 +20,13 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { apiService } from "@/services/apiservice";
-import api from "@/lib/axiosConfig";
 import { useState } from "react";
+import {
+  type EntityFormData,
+  EntitySchema,
+  EntityDefaultValues,
+} from "@/types/characterSchema";
+import { useNavigate } from "react-router";
 
 type SaveKey = keyof EntityFormData["savingThrows"];
 type SkillKey = keyof EntityFormData["skills"];
@@ -37,6 +37,8 @@ const CharacterCreationForm = () => {
     resolver: zodResolver(EntitySchema),
     defaultValues: EntityDefaultValues,
   });
+
+  const navigate = useNavigate();
 
   const onSubmit = async (data: EntityFormData) => {
     try {
@@ -51,9 +53,10 @@ const CharacterCreationForm = () => {
       console.log(
         `button pressed, data submitted: /n ${JSON.stringify(payload, null, 2)}`
       );
-      await api.post("/entity", payload);
+      await apiService.createEntity(payload);
 
       alert("character created successfully");
+      navigate("/characterinsertion");
     } catch (error: any) {
       alert("something went wrong!!!");
     }

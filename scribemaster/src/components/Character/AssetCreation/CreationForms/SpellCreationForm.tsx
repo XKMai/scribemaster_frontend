@@ -1,6 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SpellSchema, type Spell, SpellDefaultValues } from "./spellSchema";
+import {
+  SpellSchema,
+  type SpellFormData,
+  SpellDefaultValues,
+} from "../../../../types/spellSchema";
 import {
   Form,
   FormField,
@@ -21,7 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { apiService } from "@/services/apiservice";
-import api from "@/lib/axiosConfig";
+import { useNavigate } from "react-router";
 
 const schools = [
   "Abjuration",
@@ -51,12 +55,14 @@ const classes = [
 ] as const;
 
 const SpellCreationForm = () => {
-  const form = useForm<Spell>({
+  const form = useForm<SpellFormData>({
     resolver: zodResolver(SpellSchema),
     defaultValues: SpellDefaultValues,
   });
 
-  const onSubmit = async (data: Spell) => {
+  const navigate = useNavigate();
+
+  const onSubmit = async (data: SpellFormData) => {
     try {
       const userdata = await apiService.getCookie();
       const userId = userdata.user.id;
@@ -69,9 +75,10 @@ const SpellCreationForm = () => {
       console.log(
         `button pressed, data submitted: /n ${JSON.stringify(payload, null, 2)}`
       );
-      await api.post("/spell", payload);
+      await apiService.createSpell(payload);
 
       alert("spell created successfully");
+      navigate("/characterinsertion");
     } catch (error: any) {
       alert("something went wrong!!!");
     }

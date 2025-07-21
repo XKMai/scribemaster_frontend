@@ -1,107 +1,117 @@
 import { useState } from "react";
-import { Button } from "../ui/button";
-import type { Item } from "../../services/apiservice";
-import { apiService } from "../../services/apiservice";
-import { Input } from "../ui/input";
+import { Button } from "../../ui/button";
+import type { Item } from "../../../services/apiservice";
+import { apiService } from "../../../services/apiservice";
+import { Input } from "../../ui/input";
 import { ContextMenu } from "radix-ui";
 
 interface FolderContextMenuProps {
   folder: Item;
-  onItemAdded: (updatedFolder: Item, action: "added" | "deleted" | "renamed") => void;
+  onItemAdded: (
+    updatedFolder: Item,
+    action: "added" | "deleted" | "renamed"
+  ) => void;
   children: React.ReactNode;
 }
 
-const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuProps) => {
+const FolderContextMenu = ({
+  folder,
+  onItemAdded,
+  children,
+}: FolderContextMenuProps) => {
+  const [creatingType, setCreatingType] = useState<"note" | "folder" | null>(
+    null
+  );
+  const [newName, setNewName] = useState("");
 
-    const [creatingType, setCreatingType] = useState<"note" | "folder" | null>(null);
-    const [newName, setNewName] = useState("");
+  const [renaming, setRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState(folder.data.name || "");
 
-    const [renaming, setRenaming] = useState(false);
-    const [renameValue, setRenameValue] = useState(folder.data.name || "");
+  const createItem = async () => {
+    const userdata = await apiService.getCookie();
+    const userId = userdata.user.id;
 
-    const createItem = async () => {
-      const userdata = await apiService.getCookie();
-      const userId = userdata.user.id;
+    if (!newName.trim()) return;
 
-      if (!newName.trim()) return;
+    if (creatingType === "note") {
+      const newNote = await apiService.createNote({
+        title: newName,
+        content: "",
+        createdBy: userId,
+        folderId: folder.refId,
+      });
 
-      if (creatingType === "note") {
-          const newNote = await apiService.createNote({
-          title: newName,
-          content: "",
-          createdBy: userId,
-          folderId: folder.refId,
-          });
-          
-          folder.data.items = folder.data.items || [];
-          const newItem: Item = {
-          folderId: newNote.id,
-          type: "note",
-          refId: folder.data.id,
-          position: folder.data.items.length,
-          data: newNote,
-          }
-          folder.data.items.push(newItem);
+      folder.data.items = folder.data.items || [];
+      const newItem: Item = {
+        folderId: newNote.id,
+        type: "note",
+        refId: folder.data.id,
+        position: folder.data.items.length,
+        data: newNote,
+      };
+      folder.data.items.push(newItem);
 
-          onItemAdded(newItem, "added");
-          console.log("note created")
-      }
+      onItemAdded(newItem, "added");
+      console.log("note created");
+    }
 
-      if (creatingType === "folder") {
-          const newFolder = await apiService.createFolder({
-          name: newName,
-          createdBy: userId,
-          folderId: folder.refId,
-          });
+    if (creatingType === "folder") {
+      const newFolder = await apiService.createFolder({
+        name: newName,
+        createdBy: userId,
+        folderId: folder.refId,
+      });
 
-          folder.data.items = folder.data.items || [];
-          folder.data.items = [...(folder.data.items || []), {
+      folder.data.items = folder.data.items || [];
+      folder.data.items = [
+        ...(folder.data.items || []),
+        {
           id: newFolder.id,
           type: "folder",
           refId: newFolder.id,
           position: folder.data.items?.length || 0,
           data: newFolder,
-        }];
+        },
+      ];
 
-        onItemAdded(folder, "added");
+      onItemAdded(folder, "added");
+    }
+    setNewName("");
+    setCreatingType(null);
+  };
 
-      }
-      setNewName("");
-      setCreatingType(null);
-    };
+  const renameFolder = async () => {
+    if (!renameValue.trim()) return;
+    try {
+      const updatedFolder = await apiService.updateFolder(folder.refId, {
+        name: renameValue,
+      });
+      folder.data.name = updatedFolder.name;
+      onItemAdded(folder, "renamed");
+      setRenaming(false);
+    } catch (error) {
+      console.error("Failed to rename folder:", error);
+      alert("Failed to rename folder.");
+    }
+  };
 
-    const renameFolder = async () => {
-        if (!renameValue.trim()) return;
-        try {
-            const updatedFolder = await apiService.updateFolder(folder.refId, { name: renameValue });
-            folder.data.name = updatedFolder.name;
-            onItemAdded(folder, "renamed");
-            setRenaming(false);
-        } catch (error) {
-            console.error("Failed to rename folder:", error);
-            alert("Failed to rename folder.");
-        }
-    };
+  const deleteFolder = async () => {
+    console.log("delete pressed");
+    const confirmed = window.confirm(
+      `Are you sure you want to delete the folder "${folder.data.name}"? This cannot be undone.`
+    );
+    if (!confirmed) return;
 
-    const deleteFolder = async () => {
-      console.log("delete pressed")
-      const confirmed = window.confirm(`Are you sure you want to delete the folder "${folder.data.name}"? This cannot be undone.`);
-      if (!confirmed) return;
-
-      try {
+    try {
       await apiService.deleteFolder(folder.refId);
       onItemAdded(folder, "deleted");
-      } catch (err) {
+    } catch (err) {
       console.error("Failed to delete folder:", err);
       alert("Failed to delete folder.");
-      }
     }
+  };
 
-    
-
-
-    return (
-
+  return (
     <ContextMenu.Root>
       <ContextMenu.Trigger asChild>{children}</ContextMenu.Trigger>
 
@@ -160,7 +170,11 @@ const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuP
               autoFocus
             />
             <div className="flex justify-end space-x-2 pt-1">
-              <Button size="sm" variant="outline" onClick={() => setCreatingType(null)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setCreatingType(null)}
+              >
                 Cancel
               </Button>
               <Button size="sm" onClick={createItem}>
@@ -185,7 +199,11 @@ const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuP
               autoFocus
             />
             <div className="flex justify-end space-x-2 pt-1">
-              <Button size="sm" variant="outline" onClick={() => setRenaming(false)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setRenaming(false)}
+              >
                 Cancel
               </Button>
               <Button size="sm" onClick={renameFolder}>
@@ -196,8 +214,7 @@ const FolderContextMenu = ({ folder, onItemAdded, children }: FolderContextMenuP
         )}
       </ContextMenu.Content>
     </ContextMenu.Root>
-  
   );
-}
+};
 
-export default FolderContextMenu
+export default FolderContextMenu;
