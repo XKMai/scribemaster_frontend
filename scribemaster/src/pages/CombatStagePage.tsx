@@ -4,31 +4,47 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
 import { DiceBoard } from "@/components/UtilityComponents/DiceBoard";
+import { useSocket } from "@/components/sockets/useSocket";
+import { useCombatStore } from "@/components/CombatEncounterComponents/combatStore";
+import { useNavigate, useParams } from "react-router";
+import { Button } from "@/components/ui/button";
+import { useRef } from "react";
 
 const CombatStagePage = () => {
-  const sampleEntity: EntitySummary = {
-    id: 1,
-    name: "Tharion the Brave",
-    hp: 42,
-    maxhp: 60,
-    ac: 17,
-    stats: {
-      strength: 16,
-      dexterity: 14,
-      constitution: 15,
-      intelligence: 10,
-      wisdom: 12,
-      charisma: 13,
+  const { roomId } = useParams<{ roomId: string }>();
+  const navigate = useNavigate();
+  const entities = useCombatStore((state) => state.entities);
+  const setEntities = useCombatStore((state) => state.setEntities);
+  const updateEntity = useCombatStore((state) => state.updateEntity);
+
+  const socketRef = useRef<ReturnType<typeof useSocket> | null>(null);
+  socketRef.current = useSocket(roomId ?? "", {
+    onEntityUpdate: updateEntity,
+    onRoomData: ({ entities }) => {
+      console.log("🧠 Received roomData:", entities);
+      setEntities(entities);
     },
-    speed: 30,
-    passivePerception: 14,
-    spellcasting: {
-      spellcastingAbility: "Charisma",
-      spellSaveDC: 13,
-      spellAttackBonus: 5,
-    },
-    type: "friendly",
+  });
+
+  const { emit } = socketRef.current;
+
+  const leaveSession = () => {
+    console.log("🚪 Leaving session...");
+    socketRef.current?.socket.disconnect();
+
+    navigate("/combatlobby");
   };
+
+  const addTestEntity = () => {
+    if (roomId) {
+      console.log("🛠 Emitting addEntity for room:", roomId, "entityId: 10");
+      emit("addEntity", { roomName: roomId, entityId: 10 });
+    }
+  };
+
+  const leftSide = (entities ?? []).filter((e) => e.type === "friendly");
+  const rightSide = (entities ?? []).filter((e) => e.type === "enemy");
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -39,36 +55,45 @@ const CombatStagePage = () => {
           {/* Left Column */}
           <Card className="flex flex-col w-[400px] h-full overflow-hidden">
             <CardContent className="flex flex-col space-y-4 h-full overflow-y-auto p-4">
-              {/* <Card>
-                <CardContent className="p-4">Left side combatant</CardContent>
-              </Card> */}
-              <EntityCard entity={sampleEntity} />
-              {/* Add more cards here */}
+              {leftSide.map((entity) => (
+                <EntityCard key={entity.id} entity={entity} />
+              ))}
             </CardContent>
           </Card>
 
           {/* Middle Dice Roller */}
           <div className="flex items-start justify-center w-full pt-4">
             <DiceBoard />
+            <Button onClick={addTestEntity} className="mt-4">
+              + Add Test Entity
+            </Button>
           </div>
 
           {/* Right Column */}
           <Card className="flex flex-col w-[400px] h-full overflow-hidden">
             <CardContent className="flex flex-col space-y-4 h-full overflow-y-auto p-4">
-              <Card>
-                <CardContent className="p-4">Right side combatant</CardContent>
-              </Card>
-              {/* Add more cards here */}
+              {rightSide.map((entity) => (
+                <EntityCard key={entity.id} entity={entity} />
+              ))}
             </CardContent>
           </Card>
         </div>
 
         {/* Bottom: Command Card */}
-        <Card className="w-full max-w-[764px] mx-auto mt-4">
-          <CardContent className="p-4 text-center">
-            Command bar content
-          </CardContent>
-        </Card>
+        <div className="flex justify-between items-end w-full max-w-[764px] mx-auto mt-4 mb-4">
+          <Card className="flex-1">
+            <CardContent className="p-4 text-center">
+              Command bar content
+            </CardContent>
+          </Card>
+          <Button
+            variant="destructive"
+            className="ml-4 self-end"
+            onClick={leaveSession}
+          >
+            Leave Session
+          </Button>
+        </div>
       </div>
     </SidebarProvider>
   );

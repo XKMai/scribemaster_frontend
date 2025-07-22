@@ -39,7 +39,7 @@ function App() {
               path="/characterinsertion"
               element={<CharacterInsertionPage />}
             />
-            <Route path="/combat" element={<CombatStagePage />} />
+            <Route path="/combat/:roomId" element={<CombatStagePage />} />
             <Route path="/combatlobby" element={<CombatLobbyPage />} />
           </Route>
         </Routes>
