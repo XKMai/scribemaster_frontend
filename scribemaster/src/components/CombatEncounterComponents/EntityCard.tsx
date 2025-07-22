@@ -43,18 +43,22 @@ export const EntityCard: React.FC<SummaryCardProps> = ({ entity }) => {
           <span className="font-medium">Passive Perception:</span>{" "}
           {entity.passivePerception}
         </div>
-        <div>
-          <span className="font-medium">Spellcasting:</span>{" "}
-          {entity.spellcasting.spellcastingAbility}
-        </div>
-        <div>
-          <span className="font-medium">Spell Save DC:</span>{" "}
-          {entity.spellcasting.spellSaveDC}
-        </div>
-        <div>
-          <span className="font-medium">Spell Attack:</span>{" "}
-          {entity.spellcasting.spellAttackBonus}
-        </div>
+        {entity.spellcasting && (
+          <>
+            <div>
+              <span className="font-medium">Spellcasting:</span>{" "}
+              {entity.spellcasting.spellcastingAbility}
+            </div>
+            <div>
+              <span className="font-medium">Spell Save DC:</span>{" "}
+              {entity.spellcasting.spellSaveDC}
+            </div>
+            <div>
+              <span className="font-medium">Spell Attack:</span>{" "}
+              {entity.spellcasting.spellAttackBonus}
+            </div>
+          </>
+        )}
         <div>
           <span className="font-medium">Type:</span> {entity.type}
         </div>
