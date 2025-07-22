@@ -10,6 +10,7 @@ import CampaignExplorerPage from "./pages/CampaignExplorerPage";
 import CharacterCreationPage from "./pages/CharacterCreationPage";
 import CombatStagePage from "./pages/CombatStagePage";
 import CharacterInsertionPage from "./pages/CharacterInsertionPage";
+import CombatLobbyPage from "./pages/CombatLobbyPage";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
               element={<CharacterInsertionPage />}
             />
             <Route path="/combat" element={<CombatStagePage />} />
+            <Route path="/combatlobby" element={<CombatLobbyPage />} />
           </Route>
         </Routes>
       </main>
