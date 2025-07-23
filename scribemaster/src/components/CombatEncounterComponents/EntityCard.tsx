@@ -92,14 +92,15 @@ export const EntityCard: React.FC<SummaryCardProps> = ({ entity }) => {
                   HP: {entity.hp} / {entity.maxhp}
                 </div>
               )}
-
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => setEditMode(!editMode)}
-              >
-                <PencilIcon className="w-4 h-4 text-red-600" />
-              </Button>
+              {!editMode && (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setEditMode(!editMode)}
+                >
+                  <PencilIcon className="w-4 h-4 text-red-600" />
+                </Button>
+              )}
             </div>
             <div className="grid grid-cols-3 gap-1 text-xs">
               {Object.entries(entity.stats).map(([stat, value]) => (
