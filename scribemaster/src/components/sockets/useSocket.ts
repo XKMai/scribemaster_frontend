@@ -10,6 +10,7 @@ type ServerToClientEvents = {
 type ClientToServerEvents = {
   joinRoom: (roomId: string) => void;
   addEntity: (payload: { roomName: string; entityId: number }) => void;
+  removeEntity: (payload: { roomName: string; itemId: number }) => void;
 };
 
 export const useSocket = (
