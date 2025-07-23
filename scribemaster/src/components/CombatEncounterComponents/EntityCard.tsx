@@ -7,15 +7,31 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { EntitySummary } from "../../types/characterSchema";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { PencilIcon } from "lucide-react";
+import { PencilIcon, Trash2Icon } from "lucide-react";
 import { apiService } from "@/services/apiservice";
 import { useCombatStore } from "./combatStore";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import type { useSocket } from "../sockets/useSocket";
 
 type SummaryCardProps = {
   entity: EntitySummary;
+  roomId: string;
+  emit: ReturnType<typeof useSocket>["emit"];
 };
 
-export const EntityCard: React.FC<SummaryCardProps> = ({ entity }) => {
+export const EntityCard: React.FC<SummaryCardProps> = ({
+  entity,
+  roomId,
+  emit,
+}) => {
   const [editMode, setEditMode] = useState(false);
   const [hpData, setHpData] = useState({
     hp: entity.hp,
@@ -100,6 +116,38 @@ export const EntityCard: React.FC<SummaryCardProps> = ({ entity }) => {
                 >
                   <PencilIcon className="w-4 h-4 text-red-600" />
                 </Button>
+              )}
+              {!editMode && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Trash2Icon className="w-4 h-4 text-destructive" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-sm">
+                    <DialogHeader>
+                      <DialogTitle>Remove Entity</DialogTitle>
+                      <DialogDescription>
+                        Are you sure you want to remove{" "}
+                        <strong>{entity.name}</strong> from this encounter?
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button variant="secondary">Cancel</Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() =>
+                          emit("removeEntity", {
+                            roomName: roomId,
+                            itemId: entity.id,
+                          })
+                        }
+                      >
+                        Remove
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               )}
             </div>
             <div className="grid grid-cols-3 gap-1 text-xs">
