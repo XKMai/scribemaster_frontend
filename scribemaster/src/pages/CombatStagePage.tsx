@@ -1,5 +1,5 @@
 import { EntityCard } from "@/components/CombatEncounterComponents/EntityCard";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
 import { DiceBoard } from "@/components/UtilityComponents/DiceBoard";
@@ -9,6 +9,7 @@ import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import { apiService } from "@/services/apiservice";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CombatStagePage = () => {
   const { roomId } = useParams<{ roomId: string }>();
@@ -92,6 +93,13 @@ const CombatStagePage = () => {
               >
                 + Add Test Entity
               </Button>
+              <Button
+                variant="destructive"
+                className="ml-4 self-end"
+                onClick={leaveSession}
+              >
+                Leave Session
+              </Button>
             </div>
           </div>
 
@@ -107,18 +115,22 @@ const CombatStagePage = () => {
 
         {/* Bottom: Command Card */}
         <div className="flex justify-between items-end w-full max-w-[764px] mx-auto mt-4 mb-4">
-          <Card className="flex-1">
-            <CardContent className="p-4 text-center">
-              Command bar content
+          <Card className="flex-1 h-60 overflow-hidden">
+            <CardTitle>
+              <div className="text-sm font-semibold text-center">
+                Combat Log
+              </div>
+            </CardTitle>
+            <CardContent className="h-full flex flex-col border-red-500 mb-1">
+              <ScrollArea className="h-full overflow-y-auto ">
+                <div className="space-y-1 text-sm text-muted-foreground">
+                  {useCombatStore((s) => s.logs).map((log, index) => (
+                    <div key={index}>{log}</div>
+                  ))}
+                </div>
+              </ScrollArea>
             </CardContent>
           </Card>
-          <Button
-            variant="destructive"
-            className="ml-4 self-end"
-            onClick={leaveSession}
-          >
-            Leave Session
-          </Button>
         </div>
       </div>
     </SidebarProvider>
