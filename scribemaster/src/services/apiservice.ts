@@ -179,7 +179,7 @@ export const apiService = {
   },
 
   getCampaignEntities: async (folderId: number) => {
-    const response = await api.get(`/campaign/${folderId}/entities`);
+    const response = await api.get(`/entity/campaign/${folderId}/entities`);
     return response.data; // returns array of entity ids and names linked to campaign
   },
   
