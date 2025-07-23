@@ -53,14 +53,9 @@ const CombatStagePage = () => {
     navigate("/combatlobby");
   };
 
-  const addTestEntity = () => {
-    if (roomId) {
-      console.log("🛠 Emitting addEntity for room:", roomId, "entityId: 10");
-      emit("addEntity", { roomName: roomId, entityId: 10 });
-    }
-  };
-
-  const leftSide = (entities ?? []).filter((e) => e.type === "friendly");
+  const leftSide = (entities ?? []).filter(
+    (e) => e.type === "friendly" || e.type === "player" || e.type === "neutral"
+  );
   const rightSide = (entities ?? []).filter((e) => e.type === "enemy");
 
   return (
@@ -74,7 +69,12 @@ const CombatStagePage = () => {
           <Card className="flex flex-col w-[400px] h-full overflow-hidden">
             <CardContent className="flex flex-col space-y-4 h-full overflow-y-auto p-4">
               {leftSide.map((entity) => (
-                <EntityCard key={entity.id} entity={entity} />
+                <EntityCard
+                  key={entity.id}
+                  entity={entity}
+                  roomId={roomId!}
+                  emit={emit}
+                />
               ))}
             </CardContent>
           </Card>
@@ -85,13 +85,6 @@ const CombatStagePage = () => {
             <div className="flex flex-col items-center space-y-2">
               <Button onClick={addUserEntitiesToRoom} className="m-1">
                 + Add My Entities
-              </Button>
-              <Button
-                onClick={addTestEntity}
-                className="m-1"
-                disabled={userId === null}
-              >
-                + Add Test Entity
               </Button>
               <Button
                 variant="destructive"
@@ -107,7 +100,12 @@ const CombatStagePage = () => {
           <Card className="flex flex-col w-[400px] h-full overflow-hidden">
             <CardContent className="flex flex-col space-y-4 h-full overflow-y-auto p-4">
               {rightSide.map((entity) => (
-                <EntityCard key={entity.id} entity={entity} />
+                <EntityCard
+                  key={entity.id}
+                  entity={entity}
+                  roomId={roomId!}
+                  emit={emit}
+                />
               ))}
             </CardContent>
           </Card>
