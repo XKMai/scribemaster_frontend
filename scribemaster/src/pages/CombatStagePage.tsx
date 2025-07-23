@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import { apiService } from "@/services/apiservice";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { CampaignEntityAdder } from "@/components/CombatEncounterComponents/CampaignEntityAdder";
 
 const CombatStagePage = () => {
   const { roomId } = useParams<{ roomId: string }>();
@@ -82,6 +83,7 @@ const CombatStagePage = () => {
           {/* Middle Dice Roller */}
           <div className="flex items-start justify-center w-full pt-4">
             <DiceBoard />
+            <CampaignEntityAdder roomId={roomId!} emit={emit} />
             <div className="flex flex-col items-center space-y-2">
               <Button onClick={addUserEntitiesToRoom} className="m-1">
                 + Add My Entities
