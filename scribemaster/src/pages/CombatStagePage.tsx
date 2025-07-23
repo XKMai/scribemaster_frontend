@@ -113,7 +113,7 @@ const CombatStagePage = () => {
           </Card>
         </div>
 
-        {/* Bottom: Command Card */}
+        {/* Bottom: Combat Log Card */}
         <div className="flex justify-between items-end w-full max-w-[764px] mx-auto mt-4 mb-4">
           <Card className="flex-1 h-60 overflow-hidden">
             <CardTitle>
@@ -121,9 +121,9 @@ const CombatStagePage = () => {
                 Combat Log
               </div>
             </CardTitle>
-            <CardContent className="h-full flex flex-col border-red-500 mb-1">
-              <ScrollArea className="h-full overflow-y-auto ">
-                <div className="space-y-1 text-sm text-muted-foreground">
+            <CardContent className="h-full px-3 pb-6 flex flex-col">
+              <ScrollArea className="h-full border border-border rounded-md px-2 py-2 pb-1">
+                <div className="space-y-1 text-sm text-muted-foreground pb-2">
                   {useCombatStore((s) => s.logs).map((log, index) => (
                     <div key={index}>{log}</div>
                   ))}
