@@ -177,6 +177,11 @@ export const apiService = {
     const response = await api.get(`/entity/user/${userId}`);
     return response.data; // returns array of entity ids linked to user 
   },
+
+  getCampaignEntities: async (folderId: number) => {
+    const response = await api.get(`/campaign/${folderId}/entities`);
+    return response.data; // returns array of entity ids and names linked to campaign
+  },
   
   //item object calls
   createItem: async (data: ItemFormData) => {
