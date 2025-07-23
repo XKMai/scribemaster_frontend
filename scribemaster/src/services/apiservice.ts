@@ -162,9 +162,12 @@ export const apiService = {
     await api.delete(`/entity/${entityId}`);
   },
 
-  updateEntity: async (entityId: number, data: PlayerCharacterFormData | EntityFormData) => {
-    await api.patch(`/entity/${entityId}`, data);
-  },
+  updateEntity: async (
+  entityId: number,
+  data: Partial<PlayerCharacterFormData> | Partial<EntityFormData>
+) => {
+  await api.patch(`/entity/${entityId}`, data);
+},
 
   addEntityToFolder: async (data: AddEntityToFolderRequest) => {
     await api.post(`/entity/folder`, data);
