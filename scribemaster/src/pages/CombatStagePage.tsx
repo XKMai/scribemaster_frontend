@@ -1,4 +1,3 @@
-import type { EntitySummary } from "@/types/characterSchema";
 import { EntityCard } from "@/components/CombatEncounterComponents/EntityCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -8,7 +7,8 @@ import { useSocket } from "@/components/sockets/useSocket";
 import { useCombatStore } from "@/components/CombatEncounterComponents/combatStore";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { apiService } from "@/services/apiservice";
 
 const CombatStagePage = () => {
   const { roomId } = useParams<{ roomId: string }>();
@@ -16,6 +16,10 @@ const CombatStagePage = () => {
   const entities = useCombatStore((state) => state.entities);
   const setEntities = useCombatStore((state) => state.setEntities);
   const updateEntity = useCombatStore((state) => state.updateEntity);
+  const [userId, setUserId] = useState<number | null>(null);
+  useEffect(() => {
+    apiService.getCookie().then((res) => setUserId(res.user.id));
+  }, []);
 
   const socketRef = useRef<ReturnType<typeof useSocket> | null>(null);
   socketRef.current = useSocket(roomId ?? "", {
@@ -25,6 +29,19 @@ const CombatStagePage = () => {
       setEntities(entities);
     },
   });
+
+  const addUserEntitiesToRoom = async () => {
+    if (!roomId || userId === null) return;
+    try {
+      const entityIds: number[] = await apiService.getEntityIds(userId);
+      console.log("📤 Adding user's entities:", entityIds);
+      for (const entityId of entityIds) {
+        emit("addEntity", { roomName: roomId, entityId });
+      }
+    } catch (err) {
+      console.error("Failed to fetch or add user entities", err);
+    }
+  };
 
   const { emit } = socketRef.current;
 
@@ -64,9 +81,18 @@ const CombatStagePage = () => {
           {/* Middle Dice Roller */}
           <div className="flex items-start justify-center w-full pt-4">
             <DiceBoard />
-            <Button onClick={addTestEntity} className="mt-4">
-              + Add Test Entity
-            </Button>
+            <div className="flex flex-col items-center space-y-2">
+              <Button onClick={addUserEntitiesToRoom} className="m-1">
+                + Add My Entities
+              </Button>
+              <Button
+                onClick={addTestEntity}
+                className="m-1"
+                disabled={userId === null}
+              >
+                + Add Test Entity
+              </Button>
+            </div>
           </div>
 
           {/* Right Column */}
