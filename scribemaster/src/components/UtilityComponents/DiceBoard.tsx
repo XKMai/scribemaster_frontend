@@ -1,10 +1,13 @@
 import DiceRoller from "./DiceRoller";
-import { Card, CardContent } from "../ui/card";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 export const DiceBoard = () => {
   return (
     <Card className="w-fit h-fit p-2">
-      <CardContent className="flex flex-row gap-2 flex-wrap">
+      <CardHeader className="text-center text-sm font-semibold">
+        DiceBoard
+      </CardHeader>
+      <CardContent className="grid grid-cols-3 gap-2">
         <DiceRoller maxNumber={4} />
         <DiceRoller maxNumber={6} />
         <DiceRoller maxNumber={8} />
