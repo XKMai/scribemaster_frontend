@@ -7,12 +7,10 @@ import { useSocket } from "@/components/sockets/useSocket";
 import { useCombatStore } from "@/components/CombatEncounterComponents/combatStore";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
-import { useEffect, useRef, useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useRef, useState } from "react";
 import { CampaignEntityAdder } from "@/components/CombatEncounterComponents/CampaignEntityAdder";
 import { EntityCombatViewer } from "@/components/CombatEncounterComponents/EntityCombatViewer";
-import { Input } from "@/components/ui/input";
-import { apiService } from "@/services/apiservice";
+import { ChatBox } from "@/components/CombatEncounterComponents/ChatBox";
 
 const CombatStagePage = () => {
   const { roomId } = useParams<{ roomId: string }>();
@@ -21,12 +19,6 @@ const CombatStagePage = () => {
   const setEntities = useCombatStore((state) => state.setEntities);
   const updateEntity = useCombatStore((state) => state.updateEntity);
   const [selectedEntityId, setSelectedEntityId] = useState<number | null>(null);
-  const [chatInput, setChatInput] = useState("");
-  const [userName, setUserName] = useState<string | null>(null);
-
-  useEffect(() => {
-    apiService.getCookie().then((res) => setUserName(res.user.name));
-  }, []);
 
   const socketRef = useRef<ReturnType<typeof useSocket> | null>(null);
   socketRef.current = useSocket(roomId ?? "", {
@@ -118,45 +110,7 @@ const CombatStagePage = () => {
               </div>
             </CardTitle>
             <CardContent className="h-full px-3 pb-1 flex flex-col">
-              <ScrollArea className="flex-1 border border-border rounded-md px-2 py-2 pb-1">
-                <div className="space-y-1 text-sm text-muted-foreground pb-2">
-                  {useCombatStore((s) => s.logs).map((log, index) => (
-                    <div key={index}>
-                      • <strong>{log.sender}:</strong> {log.message}{" "}
-                      <span className="text-xs text-muted-foreground">
-                        ({new Date(log.timestamp).toLocaleTimeString()})
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (!chatInput.trim()) return;
-
-                  useCombatStore.getState().addLog(
-                    {
-                      sender: userName ?? "You",
-                      message: chatInput,
-                      timestamp: Date.now(),
-                    },
-                    true // emit to room
-                  );
-
-                  setChatInput("");
-                }}
-                className="flex gap-2 mt-2"
-              >
-                <Input
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  placeholder="Send a message..."
-                  className="flex-1"
-                />
-                <Button type="submit">Send</Button>
-              </form>
+              <ChatBox />
             </CardContent>
           </Card>
 
