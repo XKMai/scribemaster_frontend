@@ -101,7 +101,7 @@ export const EntityCombatViewer = ({ entityId }: Props) => {
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="flex-1 overflow-y-auto space-y-4">
+        <CardContent className="flex-1 overflow-y-auto space-y-4 border border-border rounded-md m-2 pt-3 pb-3">
           {entityData ? (
             <Form {...form}>
               <form
