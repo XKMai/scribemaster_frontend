@@ -59,13 +59,6 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                         hp: hpData.hp,
                         maxhp: hpData.maxhp,
                       };
-
-                      emit("updateEntity", {
-                        roomName: roomId,
-                        entityId: entity.id,
-                        updatedData: patch,
-                      });
-
                       updateEntityInStore({ ...entity, ...patch });
 
                       setEditMode(false);
