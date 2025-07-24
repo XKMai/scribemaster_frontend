@@ -25,12 +25,14 @@ type SummaryCardProps = {
   entity: EntitySummary;
   roomId: string;
   emit: ReturnType<typeof useSocket>["emit"];
+  onView?: () => void;
 };
 
 export const EntityCard: React.FC<SummaryCardProps> = ({
   entity,
   roomId,
   emit,
+  onView,
 }) => {
   const [editMode, setEditMode] = useState(false);
   const [hpData, setHpData] = useState({
@@ -149,6 +151,9 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                   </DialogContent>
                 </Dialog>
               )}
+              <Button variant="ghost" onClick={onView}>
+                View
+              </Button>
             </div>
             <div className="grid grid-cols-3 gap-1 text-xs">
               {Object.entries(entity.stats).map(([stat, value]) => (

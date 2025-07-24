@@ -7,10 +7,10 @@ import { useSocket } from "@/components/sockets/useSocket";
 import { useCombatStore } from "@/components/CombatEncounterComponents/combatStore";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
-import { useEffect, useRef, useState } from "react";
-import { apiService } from "@/services/apiservice";
+import { useRef, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CampaignEntityAdder } from "@/components/CombatEncounterComponents/CampaignEntityAdder";
+import { EntityCombatViewer } from "@/components/CombatEncounterComponents/EntityCombatViewer";
 
 const CombatStagePage = () => {
   const { roomId } = useParams<{ roomId: string }>();
@@ -18,10 +18,7 @@ const CombatStagePage = () => {
   const entities = useCombatStore((state) => state.entities);
   const setEntities = useCombatStore((state) => state.setEntities);
   const updateEntity = useCombatStore((state) => state.updateEntity);
-  const [userId, setUserId] = useState<number | null>(null);
-  useEffect(() => {
-    apiService.getCookie().then((res) => setUserId(res.user.id));
-  }, []);
+  const [selectedEntityId, setSelectedEntityId] = useState<number | null>(null);
 
   const socketRef = useRef<ReturnType<typeof useSocket> | null>(null);
   socketRef.current = useSocket(roomId ?? "", {
@@ -31,19 +28,6 @@ const CombatStagePage = () => {
       setEntities(entities);
     },
   });
-
-  const addUserEntitiesToRoom = async () => {
-    if (!roomId || userId === null) return;
-    try {
-      const entityIds: number[] = await apiService.getEntityIds(userId);
-      console.log("📤 Adding user's entities:", entityIds);
-      for (const entityId of entityIds) {
-        emit("addEntity", { roomName: roomId, entityId });
-      }
-    } catch (err) {
-      console.error("Failed to fetch or add user entities", err);
-    }
-  };
 
   const { emit } = socketRef.current;
 
@@ -64,7 +48,7 @@ const CombatStagePage = () => {
       <AppSidebar />
       <SidebarTrigger />
       <div className="relative flex flex-col h-screen w-full px-4 bg-muted overflow-hidden">
-        {/* Top: Left & Right Columns */}
+        {/* Main Body: Three Columns */}
         <div className="flex justify-between gap-8 flex-1 overflow-hidden">
           {/* Left Column */}
           <Card className="flex flex-col w-[400px] h-full overflow-hidden">
@@ -75,27 +59,22 @@ const CombatStagePage = () => {
                   entity={entity}
                   roomId={roomId!}
                   emit={emit}
+                  onView={() => setSelectedEntityId(entity.id)}
                 />
               ))}
             </CardContent>
           </Card>
 
-          {/* Middle Dice Roller */}
-          <div className="flex items-start justify-center w-full pt-4">
-            <DiceBoard />
+          {/* Center Column: Viewer + Adder */}
+          <div className="flex flex-col w-full max-w-[600px] h-full space-y-4 overflow-y-auto pt-4 items-center">
             <CampaignEntityAdder roomId={roomId!} emit={emit} />
-            <div className="flex flex-col items-center space-y-2">
-              <Button onClick={addUserEntitiesToRoom} className="m-1">
-                + Add My Entities
-              </Button>
-              <Button
-                variant="destructive"
-                className="ml-4 self-end"
-                onClick={leaveSession}
-              >
-                Leave Session
-              </Button>
-            </div>
+            {selectedEntityId ? (
+              <EntityCombatViewer entityId={selectedEntityId} />
+            ) : (
+              <Card className="w-full p-4 text-center text-muted-foreground text-sm">
+                Select an entity to view details
+              </Card>
+            )}
           </div>
 
           {/* Right Column */}
@@ -107,15 +86,20 @@ const CombatStagePage = () => {
                   entity={entity}
                   roomId={roomId!}
                   emit={emit}
+                  onView={() => setSelectedEntityId(entity.id)}
                 />
               ))}
             </CardContent>
           </Card>
         </div>
 
-        {/* Bottom: Combat Log Card */}
-        <div className="flex justify-between items-end w-full max-w-[764px] mx-auto mt-4 mb-4">
-          <Card className="flex-1 h-60 overflow-hidden">
+        {/* Bottom Row: Combat Log (centered) + Leave Button (right) */}
+        <div className="flex justify-between items-end w-full mt-4 mb-4 px-2">
+          {/* Spacer for left alignment balance */}
+          <div className="w-[200px]" />
+
+          {/* Centered Combat Log */}
+          <Card className="h-60 w-full max-w-[764px] mx-auto">
             <CardTitle>
               <div className="text-sm font-semibold text-center">
                 Combat Log
@@ -131,6 +115,21 @@ const CombatStagePage = () => {
               </ScrollArea>
             </CardContent>
           </Card>
+
+          {/* Right-aligned Leave Button */}
+          <div className="w-[200px] flex justify-end">
+            <Button
+              variant="destructive"
+              className="self-end"
+              onClick={leaveSession}
+            >
+              Leave Session
+            </Button>
+          </div>
+        </div>
+
+        <div className="absolute bottom-4 left-4">
+          <DiceBoard />
         </div>
       </div>
     </SidebarProvider>
