@@ -69,6 +69,11 @@ export const useSocket = (
     };
 
     const handleRoomData = (data: { entityIds: number[]; entities: EntitySummary[] }) => {
+
+       if ( !data || !Array.isArray(data.entities)) {
+          console.log(`New room created, name: ${data}`);
+          return;
+        }
       console.log("📥 Received roomData:", data.entities.length, "entities");
       onRoomData(data);
     };
@@ -97,7 +102,7 @@ export const useSocket = (
 
     return () => {
         socket.off("connect", handleConnect);
-        socket.off("entityUpdated");
+        socket.off("entityUpdated", handleEntityUpdated);
         socket.off("roomData", onRoomData);
         //socket.off("chatMessage");
 
