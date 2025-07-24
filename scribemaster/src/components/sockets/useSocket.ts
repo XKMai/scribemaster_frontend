@@ -43,7 +43,11 @@ export const useSocket = (
 ) => {
   const socketRef = useRef<Socket<ServerToClientEvents, ClientToServerEvents> | null>(null);
 
-    // only create socket once
+   
+
+  useEffect(() => {
+
+     // only create socket once
    if (!socketRef.current) { 
     socketRef.current = io("http://localhost:5000", {
       withCredentials: true,
@@ -51,11 +55,7 @@ export const useSocket = (
     console.log("🔌 Connecting to socket server...");
   }
 
-  useEffect(() => {
     const socket = socketRef.current!;
-
-    
-    socketRef.current = socket;
 
     const handleConnect = () => {
       console.log("✅ Socket connected:", socket.id);
@@ -63,15 +63,31 @@ export const useSocket = (
       console.log("📡 Emitting joinRoom:", roomId);
     };
 
-    socket.on("connect", handleConnect);
-    socket.on("entityUpdated", ({ entityId, updatedEntity }) => {
+    const handleEntityUpdated = ({ entityId, updatedEntity }: { entityId: number; updatedEntity: EntitySummary }) => {
+      console.log("📥 Received entityUpdated:", updatedEntity.name);
       onEntityUpdated(updatedEntity);
-    });
+    };
 
-    socket.on("roomData", onRoomData);
-    socket.on("chatMessage", ({ sender, message, timestamp }) => {
+    const handleRoomData = (data: { entityIds: number[]; entities: EntitySummary[] }) => {
+      console.log("📥 Received roomData:", data.entities.length, "entities");
+      onRoomData(data);
+    };
+
+    const handleChatMessage = ({ sender, message, timestamp }: { sender: string; message: string; timestamp: number }) => {
+      console.log("📥 Received chatMessage from server:", { sender, message });
       useCombatStore.getState().addLog({ sender, message, timestamp });
-    });
+    };
+
+    socket.off("connect");
+    socket.off("entityUpdated");
+    socket.off("roomData");
+    //socket.off("chatMessage");
+
+    socket.on("connect", handleConnect);
+    socket.on("entityUpdated", handleEntityUpdated);
+    socket.on("roomData", handleRoomData);
+    //socket.on("chatMessage", handleChatMessage);
+
 
 
     // If already connected, manually join
@@ -83,11 +99,11 @@ export const useSocket = (
         socket.off("connect", handleConnect);
         socket.off("entityUpdated");
         socket.off("roomData", onRoomData);
-        socket.off("chatMessage");
+        //socket.off("chatMessage");
 
         //socket.disconnect();
     };
-  }, []);
+  }, [roomId, onEntityUpdated, onRoomData]);
 
   return {
     emit: <K extends keyof ClientToServerEvents>(

@@ -7,7 +7,7 @@ import { useSocket } from "@/components/sockets/useSocket";
 import { useCombatStore } from "@/components/CombatEncounterComponents/combatStore";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CampaignEntityAdder } from "@/components/CombatEncounterComponents/CampaignEntityAdder";
 import { EntityCombatViewer } from "@/components/CombatEncounterComponents/EntityCombatViewer";
 import { ChatBox } from "@/components/CombatEncounterComponents/ChatBox";
@@ -29,11 +29,25 @@ const CombatStagePage = () => {
     },
   });
 
-  const { emit } = socketRef.current;
+  const { emit, socket } = socketRef.current;
+
+  useEffect(() => {
+    if (socket && roomId) {
+      console.log("🔌 Setting socket and roomId in combat store:", {
+        socket: !!socket,
+        roomId,
+      });
+      useCombatStore.getState().setSocket(socket);
+      useCombatStore.getState().setRoomId(roomId);
+    }
+  }, [socket, roomId]);
 
   const leaveSession = () => {
     console.log("🚪 Leaving session...");
-    socketRef.current?.socket.disconnect();
+    if (socketRef.current?.socket) socketRef.current?.socket.disconnect();
+
+    useCombatStore.getState().setSocket(null);
+    useCombatStore.getState().setRoomId(null);
 
     navigate("/combatlobby");
   };

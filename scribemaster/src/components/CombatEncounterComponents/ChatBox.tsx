@@ -10,7 +10,36 @@ export const ChatBox = () => {
   const [chatInput, setChatInput] = useState("");
   const [userName, setUserName] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const socket = useCombatStore((s) => s.socket);
+  const roomId = useCombatStore((s) => s.roomId);
   const logs = useCombatStore((s) => s.logs);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleIncomingMessage = ({
+      sender,
+      message,
+      timestamp,
+    }: {
+      sender: string;
+      message: string;
+      timestamp: number;
+    }) => {
+      console.log("📥 ChatBox received chatMessage:", {
+        sender,
+        message,
+        timestamp,
+      });
+      useCombatStore.getState().addLog({ sender, message, timestamp });
+    };
+
+    socket.on("chatMessage", handleIncomingMessage);
+
+    return () => {
+      socket.off("chatMessage", handleIncomingMessage);
+    };
+  }, [socket]);
 
   useEffect(() => {
     apiService.getCookie().then((res) => setUserName(res.user.name));
@@ -20,8 +49,6 @@ export const ChatBox = () => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [logs]);
-
-  // Auto-scroll to bottom on new messages
 
   return (
     <Card className="h-60 w-full max-w-[764px] mx-auto">
@@ -47,16 +74,38 @@ export const ChatBox = () => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (!chatInput.trim()) return;
+            //if (!chatInput.trim() || !socket || !roomId) return;
 
-            useCombatStore.getState().addLog(
-              {
-                sender: userName ?? "You",
-                message: chatInput,
-                timestamp: Date.now(),
-              },
-              true // emit to room
-            );
+            console.log("Form submitted");
+            console.log("chatInput:", chatInput);
+            console.log("socket:", socket);
+            console.log("roomId:", roomId);
+            console.log("userName:", userName);
+
+            if (!chatInput.trim()) {
+              console.log("❌ Empty chat input");
+              return;
+            }
+
+            if (!socket) {
+              console.log("❌ No socket connection");
+              return;
+            }
+
+            if (!roomId) {
+              console.log("❌ No room ID");
+              return;
+            }
+
+            const messagePayload = {
+              roomName: roomId,
+              sender: userName ?? "You",
+              message: chatInput,
+            };
+
+            console.log("📤 Emitting chatMessage:", messagePayload);
+
+            socket.emit("chatMessage", messagePayload);
 
             setChatInput("");
           }}

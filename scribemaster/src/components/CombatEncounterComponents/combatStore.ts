@@ -20,7 +20,7 @@ type CombatState = {
   socket: ReturnType<typeof useSocket>["socket"] | null;
   roomId: string | null;
   setSocket: (socket: CombatState["socket"]) => void;
-  setRoomId: (roomId: string) => void;
+  setRoomId: (roomId: string | null) => void;
 };
 
 export const useCombatStore = create<CombatState>((set, get) => ({
@@ -28,11 +28,21 @@ export const useCombatStore = create<CombatState>((set, get) => ({
   setEntities: (entities) => set({ entities }),
 
   updateEntity: (updated) => {
+      console.log("🔄 updateEntity called for:", updated.name, "ID:", updated.id);
+
   const prev = get().entities.find((e) => e.id === updated.id);
   const logEntries: string[] = [];
 
   if (prev) {
     if (updated.hp !== prev.hp) {
+
+      console.log("📊 Comparing:", { 
+        prevHP: prev.hp, 
+        newHP: updated.hp,
+        prevMaxHP: prev.maxhp,
+        newMaxHP: updated.maxhp 
+      });
+
       const diff = updated.hp - prev.hp;
       const change = diff > 0 ? `gained ${diff}` : `lost ${Math.abs(diff)}`;
       logEntries.push(`${updated.name} ${change} HP.`);
@@ -55,6 +65,9 @@ export const useCombatStore = create<CombatState>((set, get) => ({
     }
   }
 
+    console.log("📝 Generated log entries:", logEntries);
+
+
   // Emit logs if any
   const emit = get().socket;
   const roomId = get().roomId;
@@ -69,31 +82,11 @@ export const useCombatStore = create<CombatState>((set, get) => ({
     });
   }
 
-  // Set both logs and updated entity state in a single `set` call
-    set((state) => ({
-  logs: [
-    ...state.logs,
-    ...logEntries.map((message) => ({
-      sender: "System",
-      message,
-      timestamp: Date.now(),
-    })),
-  ],
-  entities: state.entities.map((e) =>
-    e.id === updated.id ? updated : e
-  ),
-}));
-
-// Emit log entries to other clients
-if (emit && roomId && logEntries.length > 0) {
-  logEntries.forEach((message) => {
-    emit.emit("chatMessage", {
-      roomName: roomId,
-      message,
-      sender: "System",
-    });
-  });
-}
+  set((state) => ({
+    entities: state.entities.map((e) =>
+      e.id === updated.id ? updated : e
+    ),
+  }));
 
   },
 
