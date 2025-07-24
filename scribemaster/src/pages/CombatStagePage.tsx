@@ -22,7 +22,7 @@ const CombatStagePage = () => {
 
   const socketRef = useRef<ReturnType<typeof useSocket> | null>(null);
   socketRef.current = useSocket(roomId ?? "", {
-    onEntityUpdate: updateEntity,
+    onEntityUpdated: updateEntity,
     onRoomData: ({ entities }) => {
       console.log("🧠 Received roomData:", entities);
       setEntities(entities);

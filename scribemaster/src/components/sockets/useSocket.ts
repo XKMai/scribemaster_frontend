@@ -1,25 +1,31 @@
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import type { EntitySummary } from "@/types/characterSchema";
+import type { PlayerCharacter } from "@/types/playerCharacterSchema";
 
 type ServerToClientEvents = {
-  entity_update: (entity: EntitySummary) => void;
   roomData: (payload: { entityIds: number[]; entities: EntitySummary[] }) => void;
+  entityUpdated: (payload: { entityId: number; updatedEntity: EntitySummary }) => void;
 };
 
 type ClientToServerEvents = {
   joinRoom: (roomId: string) => void;
   addEntity: (payload: { roomName: string; entityId: number }) => void;
   removeEntity: (payload: { roomName: string; itemId: number }) => void;
+  updateEntity: (payload: {
+    roomName: string;
+    entityId: number;
+    updatedData: Partial<PlayerCharacter>;
+  }) => void
 };
 
 export const useSocket = (
   roomId: string,
   {
-    onEntityUpdate,
+    onEntityUpdated,
     onRoomData,
   }: {
-    onEntityUpdate: (entity: EntitySummary) => void;
+    onEntityUpdated: (entity: EntitySummary) => void;
     onRoomData: (payload: { entityIds: number[]; entities: EntitySummary[] }) => void;
   }
 ) => {
@@ -46,7 +52,10 @@ export const useSocket = (
     };
 
     socket.on("connect", handleConnect);
-    socket.on("entity_update", onEntityUpdate);
+    socket.on("entityUpdated", ({ entityId, updatedEntity }) => {
+      onEntityUpdated(updatedEntity);
+    });
+
     socket.on("roomData", onRoomData);
 
     // If already connected, manually join
@@ -56,7 +65,7 @@ export const useSocket = (
 
     return () => {
         socket.off("connect", handleConnect);
-        socket.off("entity_update", onEntityUpdate);
+        socket.off("entityUpdated");
         socket.off("roomData", onRoomData);
         //socket.disconnect();
     };
