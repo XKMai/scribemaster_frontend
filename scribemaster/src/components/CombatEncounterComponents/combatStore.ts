@@ -32,6 +32,10 @@ export const useCombatStore = create<CombatState>((set, get) => ({
         const change = diff > 0 ? `increased max HP by ${diff}` : `reduced max HP by ${Math.abs(diff)}`;
         logEntries.push(`• ${updated.name} ${change}.`);
       }
+
+      if (updated.speed !== prev.speed) {
+        logEntries.push(`• ${updated.name} speed changed from ${prev.speed} to ${updated.speed}.`);
+      }
         
       }
 
