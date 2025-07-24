@@ -1,5 +1,5 @@
 import { EntityCard } from "@/components/CombatEncounterComponents/EntityCard";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
 import { DiceBoard } from "@/components/UtilityComponents/DiceBoard";
@@ -103,16 +103,7 @@ const CombatStagePage = () => {
           <div className="w-[200px]" />
 
           {/* Centered Combat Log */}
-          <Card className="h-60 w-full max-w-[764px] mx-auto">
-            <CardTitle>
-              <div className="text-sm font-semibold text-center">
-                Combat Log
-              </div>
-            </CardTitle>
-            <CardContent className="h-full px-3 pb-1 flex flex-col">
-              <ChatBox />
-            </CardContent>
-          </Card>
+          <ChatBox />
 
           {/* Right-aligned Leave Button */}
           <div className="w-[200px] flex justify-end">
