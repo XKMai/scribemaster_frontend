@@ -7,8 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { EntitySummary } from "../../types/characterSchema";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { PencilIcon, Trash2Icon } from "lucide-react";
-import { apiService } from "@/services/apiservice";
+import { Eye, PencilIcon, Trash2Icon } from "lucide-react";
 import { useCombatStore } from "./combatStore";
 import {
   Dialog,
@@ -60,7 +59,12 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                         hp: hpData.hp,
                         maxhp: hpData.maxhp,
                       };
-                      await apiService.updateEntity(entity.id, patch);
+
+                      emit("updateEntity", {
+                        roomName: roomId,
+                        entityId: entity.id,
+                        updatedData: patch,
+                      });
 
                       updateEntityInStore({ ...entity, ...patch });
 
@@ -116,7 +120,7 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                   variant="ghost"
                   onClick={() => setEditMode(!editMode)}
                 >
-                  <PencilIcon className="w-4 h-4 text-red-600" />
+                  <PencilIcon className="w-4 h-4" />
                 </Button>
               )}
               {!editMode && (
@@ -151,8 +155,8 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                   </DialogContent>
                 </Dialog>
               )}
-              <Button variant="ghost" onClick={onView}>
-                View
+              <Button variant="ghost" size="icon" onClick={onView}>
+                <Eye />
               </Button>
             </div>
             <div className="grid grid-cols-3 gap-1 text-xs">
