@@ -69,7 +69,11 @@ const CombatStagePage = () => {
           <div className="flex flex-col w-full max-w-[600px] h-full space-y-4 overflow-y-auto pt-4 items-center">
             <CampaignEntityAdder roomId={roomId!} emit={emit} />
             {selectedEntityId ? (
-              <EntityCombatViewer entityId={selectedEntityId} />
+              <EntityCombatViewer
+                entityId={selectedEntityId}
+                emit={emit}
+                roomId={roomId!}
+              />
             ) : (
               <Card className="w-full p-4 text-center text-muted-foreground text-sm">
                 Select an entity to view details

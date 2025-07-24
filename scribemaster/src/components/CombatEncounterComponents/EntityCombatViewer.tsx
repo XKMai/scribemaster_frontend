@@ -27,15 +27,18 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "../ui/separator";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import type { useSocket } from "../sockets/useSocket";
 
 interface Props {
   entityId: number;
+  emit: ReturnType<typeof useSocket>["emit"];
+  roomId: string;
 }
 
 type SaveKey = keyof PlayerCharacterFormData["savingThrows"];
 type SkillKey = keyof PlayerCharacterFormData["skills"];
 
-export const EntityCombatViewer = ({ entityId }: Props) => {
+export const EntityCombatViewer = ({ entityId, emit, roomId }: Props) => {
   const [attackInput, setAttackInput] = useState({ name: "", details: "" });
 
   const [entityData, setEntityData] = useState<any>(null);
@@ -76,8 +79,12 @@ export const EntityCombatViewer = ({ entityId }: Props) => {
   const onSubmit = async (data: any) => {
     try {
       console.log("Submitting form with data:", data);
-      await apiService.updateEntity(entityData.id, data);
-      alert("Entity updated.");
+      emit("updateEntity", {
+        roomName: roomId,
+        entityId: entityData.id,
+        updatedData: data,
+      });
+      alert("Entity update sent.");
     } catch (err) {
       console.error("Update failed", err);
       alert("Failed to update entity.");
