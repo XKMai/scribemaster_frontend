@@ -2,10 +2,16 @@ import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import type { EntitySummary } from "@/types/characterSchema";
 import type { PlayerCharacter } from "@/types/playerCharacterSchema";
+import { useCombatStore } from "../CombatEncounterComponents/combatStore";
 
 type ServerToClientEvents = {
   roomData: (payload: { entityIds: number[]; entities: EntitySummary[] }) => void;
   entityUpdated: (payload: { entityId: number; updatedEntity: EntitySummary }) => void;
+  chatMessage: (payload: {
+    sender: string;
+    message: string;
+    timestamp: number;
+  }) => void;
 };
 
 type ClientToServerEvents = {
@@ -17,6 +23,12 @@ type ClientToServerEvents = {
     entityId: number;
     updatedData: Partial<PlayerCharacter>;
   }) => void
+  chatMessage: (payload: {
+    roomName: string;
+    sender: string;
+    message: string;
+  }) => void;
+
 };
 
 export const useSocket = (
@@ -57,6 +69,10 @@ export const useSocket = (
     });
 
     socket.on("roomData", onRoomData);
+    socket.on("chatMessage", ({ sender, message, timestamp }) => {
+      useCombatStore.getState().addLog({ sender, message, timestamp });
+    });
+
 
     // If already connected, manually join
     if (socket.connected) {
@@ -67,6 +83,8 @@ export const useSocket = (
         socket.off("connect", handleConnect);
         socket.off("entityUpdated");
         socket.off("roomData", onRoomData);
+        socket.off("chatMessage");
+
         //socket.disconnect();
     };
   }, []);

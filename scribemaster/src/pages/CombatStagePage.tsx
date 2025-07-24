@@ -113,7 +113,12 @@ const CombatStagePage = () => {
               <ScrollArea className="h-full border border-border rounded-md px-2 py-2 pb-1">
                 <div className="space-y-1 text-sm text-muted-foreground pb-2">
                   {useCombatStore((s) => s.logs).map((log, index) => (
-                    <div key={index}>{log}</div>
+                    <div key={index}>
+                      • <strong>{log.sender}:</strong> {log.message}{" "}
+                      <span className="text-xs text-muted-foreground">
+                        ({new Date(log.timestamp).toLocaleTimeString()})
+                      </span>
+                    </div>
                   ))}
                 </div>
               </ScrollArea>
