@@ -28,6 +28,7 @@ import {
 import { Separator } from "../ui/separator";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import type { useSocket } from "../sockets/useSocket";
+import { X } from "lucide-react";
 
 interface Props {
   entityId: number;
@@ -94,21 +95,30 @@ export const EntityCombatViewer = ({ entityId, emit, roomId }: Props) => {
   if (!entityData) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground">
-        Loading entity...
+        No Entity Selected...
       </div>
     );
   }
 
   return (
-    <div className="flex-1 px-4 pt-4 overflow-hidden">
+    <div className="flex-1 px-4 overflow-hidden">
       <Card className="w-full h-full flex flex-col">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold">
-            {entityData?.name ?? "Select an entity"}
-          </CardTitle>
+          <div className="flex justify-between items-center w-full">
+            <CardTitle className="text-lg font-semibold">
+              {entityData?.name ?? "Select an entity"}
+            </CardTitle>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => setEntityData(null)}
+            >
+              <X />
+            </Button>
+          </div>
         </CardHeader>
 
-        <CardContent className="flex-1 overflow-y-auto space-y-4 border border-border rounded-md m-2 pt-3 pb-3">
+        <CardContent className="flex-1 overflow-y-auto border border-border rounded-md m-2 pt-3 pb-3">
           {entityData ? (
             <Form {...form}>
               <form
