@@ -57,14 +57,22 @@ export const ChatBox = () => {
       </CardTitle>
       <CardContent className="h-4/5 px-3 pb-1 flex flex-col">
         <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full border border-border rounded-md px-2 pb-1">
-            <div className="space-y-1 text-sm text-muted-foreground">
+          <ScrollArea className="h-full border border-border rounded-md px-2 pb-1 pt-2">
+            <div className="space-y-1 text-sm">
               {useCombatStore((s) => s.logs).map((log, index) => (
-                <div key={index}>
-                  • <strong>{log.sender}:</strong> {log.message}{" "}
-                  <span className="text-xs text-muted-foreground">
-                    ({new Date(log.timestamp).toLocaleTimeString()})
+                <div key={index} className="flex items-start gap-2 text-sm">
+                  <span className="text-muted-foreground min-w-[30px]">
+                    (
+                    {new Date(log.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    )
                   </span>
+                  <div>
+                    <span className="font-semibold">{log.sender}:</span>{" "}
+                    <span>{log.message}</span>
+                  </div>
                 </div>
               ))}
             </div>
