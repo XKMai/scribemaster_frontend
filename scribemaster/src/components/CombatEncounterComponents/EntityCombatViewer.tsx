@@ -34,14 +34,19 @@ interface Props {
   entityId: number;
   emit: ReturnType<typeof useSocket>["emit"];
   roomId: string;
+  setEntityId: (id: number | null) => void;
 }
 
 type SaveKey = keyof PlayerCharacterFormData["savingThrows"];
 type SkillKey = keyof PlayerCharacterFormData["skills"];
 
-export const EntityCombatViewer = ({ entityId, emit, roomId }: Props) => {
+export const EntityCombatViewer = ({
+  entityId,
+  emit,
+  roomId,
+  setEntityId,
+}: Props) => {
   const [attackInput, setAttackInput] = useState({ name: "", details: "" });
-
   const [entityData, setEntityData] = useState<any>(null);
 
   useEffect(() => {
@@ -62,8 +67,6 @@ export const EntityCombatViewer = ({ entityId, emit, roomId }: Props) => {
 
   useEffect(() => {
     if (entityData) {
-      console.log("entityData reset:", entityData);
-
       const sanitized = {
         ...entityData,
         ...(entityData.playerCharacter ?? {}),
@@ -111,7 +114,7 @@ export const EntityCombatViewer = ({ entityId, emit, roomId }: Props) => {
             <Button
               size="icon"
               variant="ghost"
-              onClick={() => setEntityData(null)}
+              onClick={() => setEntityId(null)}
             >
               <X />
             </Button>

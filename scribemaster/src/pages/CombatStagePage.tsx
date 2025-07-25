@@ -84,6 +84,7 @@ const CombatStagePage = () => {
                 entityId={selectedEntityId}
                 emit={emit}
                 roomId={roomId!}
+                setEntityId={setSelectedEntityId}
               />
             ) : (
               <Card className="w-full p-4 text-center text-muted-foreground text-sm">
