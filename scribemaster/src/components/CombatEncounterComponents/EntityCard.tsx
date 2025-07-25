@@ -119,6 +119,7 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                       type="submit"
                       size="icon"
                       disabled={loading}
+                      variant="ghost"
                       className="h-6 px-2"
                     >
                       {loading ? "..." : <SaveIcon />}
