@@ -7,7 +7,7 @@ import { useSocket } from "@/components/sockets/useSocket";
 import { useCombatStore } from "@/components/CombatEncounterComponents/combatStore";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { CampaignEntityAdder } from "@/components/CombatEncounterComponents/CampaignEntityAdder";
 import { EntityCombatViewer } from "@/components/CombatEncounterComponents/EntityCombatViewer";
 import { ChatBox } from "@/components/CombatEncounterComponents/ChatBox";

@@ -8,7 +8,6 @@ import type { EntitySummary } from "../../types/characterSchema";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Eye, PencilIcon, Trash2Icon } from "lucide-react";
-import { useCombatStore } from "./combatStore";
 import {
   Dialog,
   DialogContent,
@@ -39,7 +38,6 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
     maxhp: entity.maxhp,
   });
   const [loading, setLoading] = useState(false);
-  const updateEntityInStore = useCombatStore((state) => state.updateEntity);
 
   return (
     <HoverCard>
@@ -55,11 +53,14 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                     e.preventDefault();
                     setLoading(true);
                     try {
-                      const patch = {
-                        hp: hpData.hp,
-                        maxhp: hpData.maxhp,
-                      };
-                      updateEntityInStore({ ...entity, ...patch });
+                      emit("updateEntity", {
+                        roomName: roomId,
+                        entityId: entity.id,
+                        updatedData: {
+                          hp: hpData.hp,
+                          maxhp: hpData.maxhp,
+                        },
+                      });
 
                       setEditMode(false);
                     } catch (err) {
@@ -138,7 +139,7 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                         onClick={() =>
                           emit("removeEntity", {
                             roomName: roomId,
-                            itemId: entity.id,
+                            entityId: entity.id,
                           })
                         }
                       >

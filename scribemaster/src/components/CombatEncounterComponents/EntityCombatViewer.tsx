@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EntitySchema, type EntitySummary } from "@/types/characterSchema";
+import { EntitySchema } from "@/types/characterSchema";
 import {
   PlayerSchema,
   type PlayerCharacterFormData,
@@ -28,7 +28,6 @@ import {
 import { Separator } from "../ui/separator";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import type { useSocket } from "../sockets/useSocket";
-import { useCombatStore } from "./combatStore";
 
 interface Props {
   entityId: number;
@@ -77,29 +76,15 @@ export const EntityCombatViewer = ({ entityId, emit, roomId }: Props) => {
     }
   }, [entityData]);
 
-  const updateEntityInStore = useCombatStore((state) => state.updateEntity);
-
   const onSubmit = async (data: any) => {
     try {
       console.log("Submitting form with data:", data);
 
-      await apiService.updateEntity(entityData.id, data);
-
-      const patch: EntitySummary = {
-        id: entityData.id,
-        name: data.name,
-        hp: data.hp,
-        maxhp: data.maxhp,
-        ac: data.ac,
-        stats: data.stats,
-        speed: data.speed,
-        passivePerception: data.passivePerception,
-        spellcasting: data.spellcasting,
-        type: data.type,
-      };
-      console.log(`patch:`, patch);
-
-      updateEntityInStore(patch);
+      emit("updateEntity", {
+        roomName: roomId,
+        entityId: entityId,
+        updatedData: data,
+      });
     } catch (err) {
       console.error("Update failed", err);
       alert("Failed to update entity.");
