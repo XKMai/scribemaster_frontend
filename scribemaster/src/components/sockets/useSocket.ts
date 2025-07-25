@@ -51,30 +51,23 @@ export const useSocket = (
     socketRef.current = io("http://localhost:5000", {
       withCredentials: true,
     });
-    console.log("🔌 Connecting to socket server...");
   }
 
     const socket = socketRef.current!;
 
     const handleConnect = () => {
-      console.log("✅ Socket connected:", socket.id);
       socket.emit("joinRoom", roomId);
-      console.log("📡 Emitting joinRoom:", roomId);
     };
 
     const handleEntityUpdated = ({ updatedEntity }: { updatedEntity: EntitySummary }) => {
-      console.log("📥 Received entityUpdated:", updatedEntity.name);
-      console.log("Entity id updated:" )
       onEntityUpdated(updatedEntity);
     };
 
     const handleRoomData = (data: { entityIds: number[]; entities: EntitySummary[] }) => {
 
        if ( !data || !Array.isArray(data.entities)) {
-          console.log(`New room created, name: ${data}`);
           return;
         }
-      console.log("📥 Received roomData:", data.entities.length, "entities");
       onRoomData(data);
     };
 

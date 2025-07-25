@@ -82,12 +82,6 @@ export const ChatBox = () => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-
-            console.log("Form submitted");
-            console.log("chatInput:", chatInput);
-            console.log("socket:", socket);
-            console.log("roomId:", roomId);
-            console.log("userName:", userName);
             if (!chatInput.trim() || !socket || !roomId) return;
 
             const messagePayload = {
@@ -95,9 +89,6 @@ export const ChatBox = () => {
               sender: userName ?? "You",
               message: chatInput,
             };
-
-            console.log("📤 Emitting chatMessage:", messagePayload);
-
             socket.emit("chatMessage", messagePayload);
 
             setChatInput("");

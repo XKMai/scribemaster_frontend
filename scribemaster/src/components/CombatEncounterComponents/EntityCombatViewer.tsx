@@ -52,7 +52,6 @@ export const EntityCombatViewer = ({
   useEffect(() => {
     const fetchEntity = async () => {
       const data = await apiService.getEntity(entityId);
-      console.log(data);
       setEntityData(data);
     };
     fetchEntity();
@@ -82,15 +81,12 @@ export const EntityCombatViewer = ({
 
   const onSubmit = async (data: any) => {
     try {
-      console.log("Submitting form with data:", data);
-
       emit("updateEntity", {
         roomName: roomId,
         entityId: entityId,
         updatedData: data,
       });
     } catch (err) {
-      console.error("Update failed", err);
       alert("Failed to update entity.");
     }
   };

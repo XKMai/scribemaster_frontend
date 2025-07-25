@@ -28,7 +28,6 @@ export const useCombatStore = create<CombatState>((set, get) => ({
   setEntities: (entities) => set({ entities }),
 
   updateEntity: (updated) => {
-    console.log("🔄 updateEntity called for:", updated.name, "ID:", updated.id);
     set((state) => ({
       entities: state.entities.map((e) =>
         e.id === updated.id ? updated : e

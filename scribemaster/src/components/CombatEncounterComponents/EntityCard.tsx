@@ -70,7 +70,6 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                       });
                       setEditMode(false);
                     } catch (err) {
-                      console.error("Failed to update HP:", err);
                       alert("Failed to update HP");
                     } finally {
                       setLoading(false);

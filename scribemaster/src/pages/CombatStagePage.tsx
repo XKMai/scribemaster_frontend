@@ -23,24 +23,18 @@ const CombatStagePage = () => {
   const { emit, socket } = useSocket(roomId ?? "", {
     onEntityUpdated: updateEntity,
     onRoomData: ({ entities }) => {
-      console.log("🧠 Received roomData:", entities);
       setEntities(entities);
     },
   });
 
   useEffect(() => {
     if (socket && roomId) {
-      console.log("🔌 Setting socket and roomId in combat store:", {
-        socket: !!socket,
-        roomId,
-      });
       useCombatStore.getState().setSocket(socket);
       useCombatStore.getState().setRoomId(roomId);
     }
   }, [socket, roomId]);
 
   const leaveSession = () => {
-    console.log("🚪 Leaving session...");
     socket?.disconnect();
 
     useCombatStore.getState().setSocket(null);
