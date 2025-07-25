@@ -100,6 +100,7 @@ export type EntitySummary = Pick<
   | "name"
   | "hp"
   | "maxhp"
+  | "temphp"
   | "ac"
   | "stats"
   | "speed"
