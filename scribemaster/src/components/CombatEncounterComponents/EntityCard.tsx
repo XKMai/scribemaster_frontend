@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { EntitySummary } from "../../types/characterSchema";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { Eye, PencilIcon, Trash2Icon } from "lucide-react";
+import { Eye, PencilIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -113,20 +113,20 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                     />
                     <Button
                       type="submit"
-                      size="sm"
+                      size="icon"
                       disabled={loading}
                       className="h-6 px-2"
                     >
-                      {loading ? "..." : "Save"}
+                      {loading ? "..." : <SaveIcon />}
                     </Button>
                   </div>
                 </form>
               ) : (
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm">
                   HP: {entity.hp} / {entity.maxhp}
-                  {entity.temphp > 0 && (
+                  {entity.temphp !== 0 && entity.temphp !== null && (
                     <span className="ml-2 text-blue-500">
-                      (+{entity.temphp} temp)
+                      (Temp HP: {entity.temphp})
                     </span>
                   )}
                 </div>
