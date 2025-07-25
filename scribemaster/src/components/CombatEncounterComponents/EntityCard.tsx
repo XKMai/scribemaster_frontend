@@ -36,6 +36,7 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
   const [hpData, setHpData] = useState({
     hp: entity.hp,
     maxhp: entity.maxhp,
+    temphp: entity.temphp,
   });
   const [loading, setLoading] = useState(false);
 
@@ -48,7 +49,7 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
             <div className="flex justify-between">
               {editMode ? (
                 <form
-                  className="flex gap-2 items-center"
+                  className="flex flex-col gap-2"
                   onSubmit={async (e) => {
                     e.preventDefault();
                     setLoading(true);
@@ -59,9 +60,9 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                         updatedData: {
                           hp: hpData.hp,
                           maxhp: hpData.maxhp,
+                          temphp: hpData.temphp,
                         },
                       });
-
                       setEditMode(false);
                     } catch (err) {
                       console.error("Failed to update HP:", err);
@@ -71,41 +72,63 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
                     }
                   }}
                 >
-                  <input
-                    type="number"
-                    className="w-12 text-sm px-1 py-0.5 border rounded"
-                    defaultValue={entity.hp}
-                    onChange={(e) =>
-                      setHpData((prev) => ({
-                        ...prev,
-                        hp: parseInt(e.target.value) || 0,
-                      }))
-                    }
-                  />
-                  /
-                  <input
-                    type="number"
-                    className="w-12 text-sm px-1 py-0.5 border rounded"
-                    defaultValue={entity.maxhp}
-                    onChange={(e) =>
-                      setHpData((prev) => ({
-                        ...prev,
-                        maxhp: parseInt(e.target.value) || 0,
-                      }))
-                    }
-                  />
-                  <Button
-                    type="submit"
-                    size="sm"
-                    disabled={loading}
-                    className="h-6 px-2"
-                  >
-                    {loading ? "..." : "Save"}
-                  </Button>
+                  <div className="flex gap-2 items-center">
+                    <label className="text-sm">HP:</label>
+                    <input
+                      type="number"
+                      className="w-12 text-sm px-1 py-0.5 border rounded"
+                      defaultValue={entity.hp}
+                      onChange={(e) =>
+                        setHpData((prev) => ({
+                          ...prev,
+                          hp: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                    />
+                    /
+                    <input
+                      type="number"
+                      className="w-12 text-sm px-1 py-0.5 border rounded"
+                      defaultValue={entity.maxhp}
+                      onChange={(e) =>
+                        setHpData((prev) => ({
+                          ...prev,
+                          maxhp: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <label className="text-sm">Temp HP:</label>
+                    <input
+                      type="number"
+                      className="w-16 text-sm px-1 py-0.5 border rounded"
+                      defaultValue={entity.temphp}
+                      onChange={(e) =>
+                        setHpData((prev) => ({
+                          ...prev,
+                          temphp: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                    />
+                    <Button
+                      type="submit"
+                      size="sm"
+                      disabled={loading}
+                      className="h-6 px-2"
+                    >
+                      {loading ? "..." : "Save"}
+                    </Button>
+                  </div>
                 </form>
               ) : (
                 <div className="text-sm text-muted-foreground">
                   HP: {entity.hp} / {entity.maxhp}
+                  {entity.temphp > 0 && (
+                    <span className="ml-2 text-blue-500">
+                      (+{entity.temphp} temp)
+                    </span>
+                  )}
                 </div>
               )}
               {!editMode && (
