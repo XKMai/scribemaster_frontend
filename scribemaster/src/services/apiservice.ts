@@ -162,9 +162,12 @@ export const apiService = {
     await api.delete(`/entity/${entityId}`);
   },
 
-  updateEntity: async (entityId: number, data: PlayerCharacterFormData | EntityFormData) => {
-    await api.patch(`/entity/${entityId}`, data);
-  },
+  updateEntity: async (
+  entityId: number,
+  data: Partial<PlayerCharacterFormData> | Partial<EntityFormData>
+) => {
+  await api.patch(`/entity/${entityId}`, data);
+},
 
   addEntityToFolder: async (data: AddEntityToFolderRequest) => {
     await api.post(`/entity/folder`, data);
@@ -173,6 +176,11 @@ export const apiService = {
   getEntityIds: async (userId: number) => {
     const response = await api.get(`/entity/user/${userId}`);
     return response.data; // returns array of entity ids linked to user 
+  },
+
+  getCampaignEntities: async (folderId: number) => {
+    const response = await api.get(`/entity/campaign/${folderId}/entities`);
+    return response.data; // returns array of entity ids and names linked to campaign
   },
   
   //item object calls

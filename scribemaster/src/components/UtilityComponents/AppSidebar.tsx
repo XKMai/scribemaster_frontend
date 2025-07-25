@@ -54,7 +54,7 @@ const items = [
   },
   {
     title: "Combat Encounter",
-    url: "/combat",
+    url: "/combatlobby",
     icon: Swords,
   },
   {

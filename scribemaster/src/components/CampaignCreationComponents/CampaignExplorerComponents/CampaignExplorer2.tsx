@@ -82,7 +82,6 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
 
     dataLoader: {
       getItem: async (itemId) => {
-        console.log(itemId);
         const [, idStr] = itemId.split("-");
         const id = Number(idStr);
         if (isNaN(id)) throw new Error(`Invalid itemId: ${itemId}`);
@@ -136,7 +135,6 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
               : [...prev, id] // expand
         );
       } else {
-        console.log("Clicked item:", itemInstance.getItemName());
         setSelectedItemInstance(itemInstance);
       }
     },
