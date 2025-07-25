@@ -74,28 +74,13 @@ export const ChatBox = () => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            //if (!chatInput.trim() || !socket || !roomId) return;
 
             console.log("Form submitted");
             console.log("chatInput:", chatInput);
             console.log("socket:", socket);
             console.log("roomId:", roomId);
             console.log("userName:", userName);
-
-            if (!chatInput.trim()) {
-              console.log("❌ Empty chat input");
-              return;
-            }
-
-            if (!socket) {
-              console.log("❌ No socket connection");
-              return;
-            }
-
-            if (!roomId) {
-              console.log("❌ No room ID");
-              return;
-            }
+            if (!chatInput.trim() || !socket || !roomId) return;
 
             const messagePayload = {
               roomName: roomId,
