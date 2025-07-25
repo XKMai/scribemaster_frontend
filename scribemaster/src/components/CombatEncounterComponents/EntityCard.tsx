@@ -43,7 +43,12 @@ export const EntityCard: React.FC<SummaryCardProps> = ({
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Card className="w-full shadow-md transition-all cursor-pointer">
+        <Card
+          className="w-full shadow-md transition-all cursor-pointer"
+          onClick={() => {
+            if (!editMode && onView) onView();
+          }}
+        >
           <CardContent className="p-4 space-y-2">
             <div className="text-xl font-semibold">{entity.name}</div>
             <div className="flex justify-between">
