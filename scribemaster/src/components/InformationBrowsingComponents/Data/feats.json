@@ -2169,18 +2169,6 @@
         "campaign": [
           "Dragonlance"
         ],
-        "level": {
-          "level": 1,
-          "class": {
-            "name": "Wizard",
-            "visible": true
-          }
-        }
-      },
-      {
-        "campaign": [
-          "Dragonlance"
-        ],
         "background": [
           {
             "name": "Mage of High Sorcery",
