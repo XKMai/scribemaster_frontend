@@ -7,6 +7,7 @@ import {
   MapPlus,
   VenetianMask,
   Swords,
+  Library,
 } from "lucide-react";
 
 import {
@@ -56,6 +57,11 @@ const items = [
     title: "Combat Encounter",
     url: "/combatlobby",
     icon: Swords,
+  },
+  {
+    title: "Information Browsing",
+    url: "/information",
+    icon: Library,
   },
   {
     title: "Settings",
