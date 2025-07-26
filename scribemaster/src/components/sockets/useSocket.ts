@@ -4,7 +4,10 @@ import type { EntitySummary } from "@/types/characterSchema";
 import type { PlayerCharacter } from "@/types/playerCharacterSchema";
 
 type ServerToClientEvents = {
-  roomData: (payload: { entityIds: number[]; entities: EntitySummary[] }) => void;
+  roomData: (payload: {
+    entityIds: number[];
+    entities: EntitySummary[];
+  }) => void;
   entityUpdated: (payload: { updatedEntity: EntitySummary }) => void;
   chatMessage: (payload: {
     sender: string;
@@ -21,13 +24,12 @@ type ClientToServerEvents = {
     roomName: string;
     entityId: number;
     updatedData: Partial<PlayerCharacter>;
-  }) => void
+  }) => void;
   chatMessage: (payload: {
     roomName: string;
     sender: string;
     message: string;
   }) => void;
-
 };
 
 export const useSocket = (
@@ -37,21 +39,28 @@ export const useSocket = (
     onRoomData,
   }: {
     onEntityUpdated: (entity: EntitySummary) => void;
-    onRoomData: (payload: { entityIds: number[]; entities: EntitySummary[] }) => void;
+    onRoomData: (payload: {
+      entityIds: number[];
+      entities: EntitySummary[];
+    }) => void;
   }
 ) => {
-  const socketRef = useRef<Socket<ServerToClientEvents, ClientToServerEvents> | null>(null);
-
-   
+  const socketRef = useRef<Socket<
+    ServerToClientEvents,
+    ClientToServerEvents
+  > | null>(null);
 
   useEffect(() => {
-
-     // only create socket once
-   if (!socketRef.current) { 
-    socketRef.current = io("http://localhost:5000", {
-      withCredentials: true,
-    });
-  }
+    // only create socket once
+    if (!socketRef.current) {
+      socketRef.current = io(
+        import.meta.env.VITE_API_URL ||
+          "http://scribemaster-frontend-alb-469534981.ap-southeast-1.elb.amazonaws.com/api",
+        {
+          withCredentials: true,
+        }
+      );
+    }
 
     const socket = socketRef.current!;
 
@@ -59,15 +68,21 @@ export const useSocket = (
       socket.emit("joinRoom", roomId);
     };
 
-    const handleEntityUpdated = ({ updatedEntity }: { updatedEntity: EntitySummary }) => {
+    const handleEntityUpdated = ({
+      updatedEntity,
+    }: {
+      updatedEntity: EntitySummary;
+    }) => {
       onEntityUpdated(updatedEntity);
     };
 
-    const handleRoomData = (data: { entityIds: number[]; entities: EntitySummary[] }) => {
-
-       if ( !data || !Array.isArray(data.entities)) {
-          return;
-        }
+    const handleRoomData = (data: {
+      entityIds: number[];
+      entities: EntitySummary[];
+    }) => {
+      if (!data || !Array.isArray(data.entities)) {
+        return;
+      }
       onRoomData(data);
     };
 
@@ -75,26 +90,24 @@ export const useSocket = (
     socket.off("entityUpdated", handleEntityUpdated);
     socket.off("roomData", handleRoomData);
 
-
     socket.on("connect", handleConnect);
     socket.on("entityUpdated", handleEntityUpdated);
     socket.on("roomData", handleRoomData);
 
-
     return () => {
-        socket.off("connect", handleConnect);
-        socket.off("entityUpdated", handleEntityUpdated);
-        socket.off("roomData", onRoomData);
-        //socket.off("chatMessage");
+      socket.off("connect", handleConnect);
+      socket.off("entityUpdated", handleEntityUpdated);
+      socket.off("roomData", onRoomData);
+      //socket.off("chatMessage");
 
-        //socket.disconnect();
+      //socket.disconnect();
     };
   }, [roomId, onEntityUpdated, onRoomData]);
 
   return {
     emit: <K extends keyof ClientToServerEvents>(
       event: K,
-      ...args: Parameters<ClientToServerEvents[K]> 
+      ...args: Parameters<ClientToServerEvents[K]>
     ) => {
       socketRef.current?.emit(event, ...args);
     },
