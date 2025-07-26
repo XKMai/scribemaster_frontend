@@ -91,7 +91,10 @@ export function AppSidebar() {
               <Library />
             </Button>
           </SheetTrigger>
-          <SheetContent>
+          <SheetContent
+            side="right"
+            className="max-w-none w-[95vw] sm:w-[80vw] md:w-[70vw] lg:!w-[50vw] xl:!w-[50vw]"
+          >
             <InformationBrowser />
           </SheetContent>
         </Sheet>
