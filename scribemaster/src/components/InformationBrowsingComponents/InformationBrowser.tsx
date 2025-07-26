@@ -361,6 +361,62 @@ const getSchoolName = (school: string) => {
   return schools[school] || school;
 };
 
+const StartingProficiencies = ({
+  startingProficiencies,
+}: {
+  startingProficiencies?: any;
+}) => {
+  if (!startingProficiencies) return null;
+
+  // Helper to render array entries, handling strings and objects with 'proficiency' etc
+  const renderProficiencyItem = (item: any, index: number) => {
+    if (typeof item === "string") return <span key={index}>{item}</span>;
+    if (typeof item === "object" && item.proficiency)
+      return (
+        <span key={index}>
+          {item.proficiency} {item.optional ? "(optional)" : ""}
+        </span>
+      );
+    if (typeof item === "object" && item.choose) {
+      return (
+        <div key={index} className="pl-4">
+          Choose {item.choose.count} from: {item.choose.from.join(", ")}
+        </div>
+      );
+    }
+    // fallback stringify
+    return <span key={index}>{JSON.stringify(item)}</span>;
+  };
+
+  return (
+    <Accordion type="multiple" className="space-y-2 mt-2">
+      {Object.entries(startingProficiencies).map(([category, values]) => (
+        <AccordionItem key={category} value={category}>
+          <AccordionTrigger className="font-semibold text-sm text-primary capitalize">
+            {category}
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-wrap gap-1 text-sm text-muted-foreground">
+              {Array.isArray(values) && values.length > 0 ? (
+                values.map((val, idx) => (
+                  <div
+                    key={idx}
+                    className="border border-border rounded px-2 py-1"
+                  >
+                    {renderProficiencyItem(val, idx)}
+                  </div>
+                ))
+              ) : (
+                <div className="italic text-xs">No data</div>
+              )}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
+  );
+};
+
 // Component for displaying class features table
 const ClassTable = ({ classTableGroups }: { classTableGroups: any[] }) => {
   if (!classTableGroups || classTableGroups.length === 0) return null;
@@ -869,6 +925,12 @@ const ItemCard = ({ item, type }: { item: any; type: string }) => {
                     .join(", ")}
                 </div>
               </div>
+            )}
+
+            {item.startingProficiencies && (
+              <StartingProficiencies
+                startingProficiencies={item.startingProficiencies}
+              />
             )}
 
             {item.multiclassing?.requirements && (
