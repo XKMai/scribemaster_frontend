@@ -7,6 +7,7 @@ import {
   MapPlus,
   VenetianMask,
   Swords,
+  Library,
 } from "lucide-react";
 
 import {
@@ -16,6 +17,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -29,6 +31,9 @@ import {
 import LogoutButton from "../LoginComponents/LogoutButton";
 import { apiService } from "@/services/apiservice";
 import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import InformationBrowser from "../InformationBrowsingComponents/InformationBrowser";
 
 // Menu items.
 const items = [
@@ -58,6 +63,11 @@ const items = [
     icon: Swords,
   },
   {
+    title: "Information Browsing",
+    url: "/information",
+    icon: Library,
+  },
+  {
     title: "Settings",
     url: "#",
     icon: Settings,
@@ -73,9 +83,25 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
+      <SidebarHeader className="flex flex-row justify-between">
+        <SidebarGroupLabel>ScribeMaster</SidebarGroupLabel>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button size="icon" variant="ghost">
+              <Library />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            className="max-w-none w-[95vw] sm:w-[80vw] md:w-[70vw] lg:!w-[50vw] xl:!w-[50vw]"
+          >
+            <InformationBrowser />
+          </SheetContent>
+        </Sheet>
+      </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>ScribeMaster</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
