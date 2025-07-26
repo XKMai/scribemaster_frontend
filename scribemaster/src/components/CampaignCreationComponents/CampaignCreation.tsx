@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/form";
 import api from "@/lib/axiosConfig";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import { apiService } from "@/services/apiservice";
 import { Card, CardContent, CardTitle } from "../ui/card";
 
@@ -29,8 +28,6 @@ const CampaignCreation = () => {
     },
   });
 
-  const navigate = useNavigate();
-
   const onSubmit = async (data: LoginSchema) => {
     try {
       const userdata = await apiService.getCookie();
@@ -45,7 +42,7 @@ const CampaignCreation = () => {
 
       // open alert to inform user of successful campaign creation, give button to redirect to campaign reader
       alert("campaign created successfully");
-      navigate("/campaignreader");
+      window.location.href = "/home";
     } catch (error: any) {
       alert("something went wrong!!!");
     }
