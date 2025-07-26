@@ -890,7 +890,8 @@ const ItemCard = ({ item, type }: { item: any; type: string }) => {
           <div>
             <CardTitle className="text-lg">{item.name}</CardTitle>
             <CardDescription>
-              {item.source} • Page {item.page}
+              {item.source}
+              {item.page && ` • Page ${item.page}`}
               {item.srd && (
                 <Badge variant="secondary" className="ml-2 text-xs">
                   SRD
