@@ -371,13 +371,18 @@ const StartingProficiencies = ({
 
   // Helper to render array entries, handling strings and objects with 'proficiency' etc
   const renderProficiencyItem = (item: any, index: number) => {
-    if (typeof item === "string") return <span key={index}>{item}</span>;
-    if (typeof item === "object" && item.proficiency)
+    if (typeof item === "string") {
+      return <span key={index}>{item}</span>;
+    }
+
+    if (typeof item === "object" && item.proficiency) {
       return (
         <span key={index}>
           {item.proficiency} {item.optional ? "(optional)" : ""}
         </span>
       );
+    }
+
     if (typeof item === "object" && item.choose) {
       return (
         <div key={index} className="pl-4">
@@ -385,13 +390,22 @@ const StartingProficiencies = ({
         </div>
       );
     }
-    // fallback stringify
+
+    if (
+      typeof item === "object" &&
+      !Array.isArray(item) &&
+      Object.values(item).every((v) => v === true || v === 1)
+    ) {
+      const keys = Object.keys(item);
+      return <span key={index}>{keys.join(", ")}</span>;
+    }
+
+    // fallback
     return <span key={index}>{JSON.stringify(item)}</span>;
   };
 
   return (
     <div>
-      {/* Outer toggle button to collapse/expand the whole accordion */}
       <button
         className="mb-2 text-sm font-semibold text-primary underline"
         onClick={() => setOpen(!open)}
