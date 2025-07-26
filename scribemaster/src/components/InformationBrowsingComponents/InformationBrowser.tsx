@@ -524,7 +524,6 @@ export const Subclass = ({ subclasses }: { subclasses: Subclass[] }) => {
   );
 };
 
-// Component for displaying class features table
 const ClassTable = ({ classTableGroups }: { classTableGroups: any[] }) => {
   if (!classTableGroups || classTableGroups.length === 0) return null;
 
@@ -552,40 +551,43 @@ const ClassTable = ({ classTableGroups }: { classTableGroups: any[] }) => {
   return (
     <div className="space-y-4">
       {classTableGroups.map((group, groupIndex) => (
-        <div key={groupIndex} className="overflow-x-auto">
-          <table className="w-full text-xs border-collapse border border-border">
-            <thead>
-              <tr className="bg-muted">
-                <th className="border border-border p-1 text-left">Level</th>
-                {group.colLabels.map((label: string, index: number) => (
-                  <th
-                    key={index}
-                    className="border border-border p-1 text-center"
-                  >
-                    {label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {group.rows.map((row: any[], rowIndex: number) => (
-                <tr key={rowIndex}>
-                  <td className="border border-border p-1 font-medium">
-                    {rowIndex + 1}
-                  </td>
-                  {row.map((cell, cellIndex) => (
-                    <td
-                      key={cellIndex}
+        <>
+          <strong className="text-sm">Class Table:</strong>
+          <div key={groupIndex} className="overflow-x-auto">
+            <table className="w-full text-xs border-collapse border border-border">
+              <thead>
+                <tr className="bg-muted">
+                  <th className="border border-border p-1 text-left">Level</th>
+                  {group.colLabels.map((label: string, index: number) => (
+                    <th
+                      key={index}
                       className="border border-border p-1 text-center"
                     >
-                      {renderClassTableCell(cell)}
-                    </td>
+                      {label}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {group.rows.map((row: any[], rowIndex: number) => (
+                  <tr key={rowIndex}>
+                    <td className="border border-border p-1 font-medium">
+                      {rowIndex + 1}
+                    </td>
+                    {row.map((cell, cellIndex) => (
+                      <td
+                        key={cellIndex}
+                        className="border border-border p-1 text-center"
+                      >
+                        {renderClassTableCell(cell)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       ))}
     </div>
   );
@@ -1034,17 +1036,13 @@ const ItemCard = ({ item, type }: { item: any; type: string }) => {
             <Subclass subclasses={item.subclasses} />
 
             {item.classTableGroups && (
-              <div>
-                <strong className="text-sm">Class Table:</strong>
-                <div className="mt-2">
-                  <ClassTable classTableGroups={item.classTableGroups} />
-                </div>
+              <div className="mt-2">
+                <ClassTable classTableGroups={item.classTableGroups} />
               </div>
             )}
 
             {item.features && item.features.length > 0 && (
               <div className="mt-4">
-                <strong className="text-sm">Class Features:</strong>
                 <ClassFeatures features={item.features} />
               </div>
             )}
