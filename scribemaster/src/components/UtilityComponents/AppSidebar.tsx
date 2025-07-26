@@ -17,6 +17,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -30,6 +31,7 @@ import {
 import LogoutButton from "../LoginComponents/LogoutButton";
 import { apiService } from "@/services/apiservice";
 import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
 
 // Menu items.
 const items = [
@@ -79,9 +81,14 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
+      <SidebarHeader className="flex flex-row justify-between">
+        <SidebarGroupLabel>ScribeMaster</SidebarGroupLabel>
+        <Button size="icon" variant="ghost">
+          <Library />
+        </Button>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>ScribeMaster</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
