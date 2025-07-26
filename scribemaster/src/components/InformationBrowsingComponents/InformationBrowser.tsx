@@ -425,6 +425,41 @@ const ClassTable = ({ classTableGroups }: { classTableGroups: any[] }) => {
   );
 };
 
+const ClassFeatures = ({ features }: { features: any[] }) => {
+  if (!features || features.length === 0) return null;
+
+  // Group features by level
+  const grouped = features.reduce((acc: Record<number, any[]>, feature) => {
+    if (!acc[feature.level]) acc[feature.level] = [];
+    acc[feature.level].push(feature);
+    return acc;
+  }, {});
+
+  return (
+    <div className="space-y-4 mt-4">
+      {Object.entries(grouped)
+        .sort((a, b) => Number(a[0]) - Number(b[0]))
+        .map(([level, featuresAtLevel]) => (
+          <div key={level}>
+            <h3 className="font-semibold text-sm text-primary mb-1">
+              Level {level}
+            </h3>
+            <div className="space-y-2">
+              {featuresAtLevel.map((feat, index) => (
+                <div key={index} className="border border-border rounded p-3">
+                  <div className="font-medium text-sm">{feat.name}</div>
+                  <div className="text-xs text-muted-foreground whitespace-pre-wrap">
+                    {feat.description}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+    </div>
+  );
+};
+
 // Component for displaying prerequisites
 const renderPrerequisite = (prereq: any): string => {
   if (prereq.other) return prereq.other;
@@ -512,7 +547,7 @@ const Prerequisites = ({ prerequisites }: { prerequisites: any[] }) => {
     <div>
       <strong className="text-sm">Prerequisites:</strong>
       <div className="text-sm text-muted-foreground mt-1">
-        {prerequisites.map((p, i) => renderPrerequisite(p)).join(" or ")}
+        {prerequisites.map((p) => renderPrerequisite(p)).join(" or ")}
       </div>
     </div>
   );
@@ -839,6 +874,13 @@ const ItemCard = ({ item, type }: { item: any; type: string }) => {
                 <div className="mt-2">
                   <ClassTable classTableGroups={item.classTableGroups} />
                 </div>
+              </div>
+            )}
+
+            {item.features && item.features.length > 0 && (
+              <div className="mt-4">
+                <strong className="text-sm">Features:</strong>
+                <ClassFeatures features={item.features} />
               </div>
             )}
           </>
