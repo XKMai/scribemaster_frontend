@@ -1,7 +1,6 @@
 import {
   ChevronUp,
   Home,
-  Scroll,
   Settings,
   User2,
   MapPlus,
@@ -51,11 +50,6 @@ const items = [
     title: "Character Creation",
     url: "/charactercreation",
     icon: VenetianMask,
-  },
-  {
-    title: "Campaign Reader",
-    url: "/campaignreader",
-    icon: Scroll,
   },
   {
     title: "Combat Encounter",
