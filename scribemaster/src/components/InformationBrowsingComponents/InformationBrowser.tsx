@@ -25,6 +25,12 @@ import races from "./Data/races.json";
 import feats from "./Data/feats.json";
 import spells from "./Data/spells.json";
 import classes from "./Data/classes.json";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
 
 const mockData = {
   backgrounds: backgrounds,
@@ -384,9 +390,6 @@ const ClassTable = ({ classTableGroups }: { classTableGroups: any[] }) => {
     <div className="space-y-4">
       {classTableGroups.map((group, groupIndex) => (
         <div key={groupIndex} className="overflow-x-auto">
-          <div className="text-sm font-semibold mb-2">
-            {group.title || "Class Features"}
-          </div>
           <table className="w-full text-xs border-collapse border border-border">
             <thead>
               <tr className="bg-muted">
@@ -426,6 +429,8 @@ const ClassTable = ({ classTableGroups }: { classTableGroups: any[] }) => {
 };
 
 const ClassFeatures = ({ features }: { features: any[] }) => {
+  const [open, setOpen] = useState(false);
+
   if (!features || features.length === 0) return null;
 
   // Group features by level
@@ -436,26 +441,50 @@ const ClassFeatures = ({ features }: { features: any[] }) => {
   }, {});
 
   return (
-    <div className="space-y-4 mt-4">
-      {Object.entries(grouped)
-        .sort((a, b) => Number(a[0]) - Number(b[0]))
-        .map(([level, featuresAtLevel]) => (
-          <div key={level}>
-            <h3 className="font-semibold text-sm text-primary mb-1">
-              Level {level}
-            </h3>
-            <div className="space-y-2">
-              {featuresAtLevel.map((feat, index) => (
-                <div key={index} className="border border-border rounded p-3">
-                  <div className="font-medium text-sm">{feat.name}</div>
-                  <div className="text-xs text-muted-foreground whitespace-pre-wrap">
-                    {feat.description}
+    <div>
+      {/* Outer toggle button to collapse/expand the whole accordion */}
+      <button
+        className="mb-2 text-sm font-semibold text-primary underline"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls="class-features-accordion"
+      >
+        {open ? "Hide Class Features" : "Show Class Features"}
+      </button>
+
+      {/* Conditionally render the accordion */}
+      {open && (
+        <Accordion
+          type="multiple"
+          id="class-features-accordion"
+          className="space-y-2"
+        >
+          {Object.entries(grouped)
+            .sort((a, b) => Number(a[0]) - Number(b[0]))
+            .map(([level, featuresAtLevel]) => (
+              <AccordionItem value={`level-${level}`} key={level}>
+                <AccordionTrigger className="text-primary font-semibold text-sm">
+                  Level {level}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    {featuresAtLevel.map((feat, index) => (
+                      <div
+                        key={index}
+                        className="border border-border rounded p-3"
+                      >
+                        <div className="font-medium text-sm">{feat.name}</div>
+                        <div className="text-xs text-muted-foreground whitespace-pre-wrap">
+                          {feat.description}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+        </Accordion>
+      )}
     </div>
   );
 };
@@ -879,7 +908,7 @@ const ItemCard = ({ item, type }: { item: any; type: string }) => {
 
             {item.features && item.features.length > 0 && (
               <div className="mt-4">
-                <strong className="text-sm">Features:</strong>
+                <strong className="text-sm">Class Features:</strong>
                 <ClassFeatures features={item.features} />
               </div>
             )}
