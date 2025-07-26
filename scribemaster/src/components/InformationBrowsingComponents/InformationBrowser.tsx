@@ -430,6 +430,99 @@ const StartingProficiencies = ({
     </div>
   );
 };
+type SubclassFeature = {
+  name: string;
+  level: number;
+  description: string;
+};
+
+type Subclass = {
+  name: string;
+  shortName?: string;
+  source?: string;
+  page?: number;
+  edition?: string;
+  features: SubclassFeature[];
+};
+export const Subclass = ({ subclasses }: { subclasses: Subclass[] }) => {
+  const [openSubclass, setOpenSubclass] = useState<string | null>(null);
+
+  if (!subclasses || subclasses.length === 0) return null;
+
+  const handleToggle = (name: string) => {
+    setOpenSubclass((prev) => (prev === name ? null : name));
+  };
+
+  return (
+    <div className="space-y-2 mt-4">
+      <strong className="text-sm">Subclasses:</strong>
+      <div className="flex flex-wrap gap-2">
+        {subclasses.map((subclass, index) => (
+          <Badge
+            key={index}
+            variant={openSubclass === subclass.name ? "default" : "secondary"}
+            className="cursor-pointer text-xs"
+            onClick={() => handleToggle(subclass.name)}
+          >
+            {subclass.name}
+          </Badge>
+        ))}
+      </div>
+
+      {subclasses.map((subclass, index) => {
+        if (openSubclass !== subclass.name) return null;
+
+        // Group features by level
+        const grouped = subclass.features.reduce(
+          (acc: Record<number, SubclassFeature[]>, feature) => {
+            if (!acc[feature.level]) acc[feature.level] = [];
+            acc[feature.level].push(feature);
+            return acc;
+          },
+          {}
+        );
+
+        return (
+          <div
+            key={`details-${index}`}
+            className="mt-4 p-4 border rounded bg-muted/30"
+          >
+            <div className="mb-2">
+              <h4 className="font-semibold text-base">{subclass.name}</h4>
+              <p className="text-sm text-muted-foreground">
+                {subclass.source && `Source: ${subclass.source}`}{" "}
+                {subclass.page && `(pg. ${subclass.page})`}
+              </p>
+            </div>
+            <Accordion type="multiple" className="space-y-2">
+              {Object.entries(grouped)
+                .sort((a, b) => Number(a[0]) - Number(b[0]))
+                .map(([level, feats]) => (
+                  <AccordionItem key={level} value={`level-${level}`}>
+                    <AccordionTrigger className="text-sm font-medium text-primary">
+                      Level {level}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-3">
+                        {feats.map((feat, i) => (
+                          <div key={i} className="text-sm">
+                            <div className="font-semibold">{feat.name}</div>
+                            <div className="text-muted-foreground whitespace-pre-wrap text-xs">
+                              {feat.description}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+            </Accordion>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 // Component for displaying class features table
 const ClassTable = ({ classTableGroups }: { classTableGroups: any[] }) => {
@@ -938,18 +1031,7 @@ const ItemCard = ({ item, type }: { item: any; type: string }) => {
               </div>
             )}
 
-            {item.subclasses && item.subclasses.length > 0 && (
-              <div>
-                <strong className="text-sm">Subclasses:</strong>
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {item.subclasses.map((subclass: any, index: number) => (
-                    <Badge key={index} variant="secondary" className="text-xs">
-                      {subclass.name}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
+            <Subclass subclasses={item.subclasses} />
 
             {item.classTableGroups && (
               <div>
