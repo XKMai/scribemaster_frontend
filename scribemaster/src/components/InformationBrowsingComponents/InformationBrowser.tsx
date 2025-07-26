@@ -366,6 +366,7 @@ const StartingProficiencies = ({
 }: {
   startingProficiencies?: any;
 }) => {
+  const [open, setOpen] = useState(false);
   if (!startingProficiencies) return null;
 
   // Helper to render array entries, handling strings and objects with 'proficiency' etc
@@ -389,31 +390,44 @@ const StartingProficiencies = ({
   };
 
   return (
-    <Accordion type="multiple" className="space-y-2 mt-2">
-      {Object.entries(startingProficiencies).map(([category, values]) => (
-        <AccordionItem key={category} value={category}>
-          <AccordionTrigger className="font-semibold text-sm text-primary capitalize">
-            {category}
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-wrap gap-1 text-sm text-muted-foreground">
-              {Array.isArray(values) && values.length > 0 ? (
-                values.map((val, idx) => (
-                  <div
-                    key={idx}
-                    className="border border-border rounded px-2 py-1"
-                  >
-                    {renderProficiencyItem(val, idx)}
-                  </div>
-                ))
-              ) : (
-                <div className="italic text-xs">No data</div>
-              )}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      ))}
-    </Accordion>
+    <div>
+      {/* Outer toggle button to collapse/expand the whole accordion */}
+      <button
+        className="mb-2 text-sm font-semibold text-primary underline"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls="starting-proficiencies-accordion"
+      >
+        {open ? "Hide Starting Proficiencies" : "Show Starting Proficiencies"}
+      </button>
+      {open && (
+        <Accordion type="multiple" className="space-y-2 mt-2">
+          {Object.entries(startingProficiencies).map(([category, values]) => (
+            <AccordionItem key={category} value={category}>
+              <AccordionTrigger className="font-semibold text-sm text-primary capitalize">
+                {category}
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="flex flex-wrap gap-1 text-sm text-muted-foreground">
+                  {Array.isArray(values) && values.length > 0 ? (
+                    values.map((val, idx) => (
+                      <div
+                        key={idx}
+                        className="border border-border rounded px-2 py-1"
+                      >
+                        {renderProficiencyItem(val, idx)}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="italic text-xs">No data</div>
+                  )}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      )}
+    </div>
   );
 };
 
@@ -901,28 +915,6 @@ const ItemCard = ({ item, type }: { item: any; type: string }) => {
                       {prof.toUpperCase()}
                     </Badge>
                   ))}
-                </div>
-              </div>
-            )}
-
-            {item.startingProficiencies?.armor && (
-              <div>
-                <strong className="text-sm">Armor:</strong>
-                <div className="text-sm text-muted-foreground">
-                  {item.startingProficiencies.armor.join(", ")}
-                </div>
-              </div>
-            )}
-
-            {item.startingProficiencies?.weapons && (
-              <div>
-                <strong className="text-sm">Weapons:</strong>
-                <div className="text-sm text-muted-foreground">
-                  {item.startingProficiencies.weapons
-                    .map((weapon: any) =>
-                      typeof weapon === "string" ? weapon : weapon.proficiency
-                    )
-                    .join(", ")}
                 </div>
               </div>
             )}
