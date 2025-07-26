@@ -1176,7 +1176,7 @@ const ItemCard = ({ item, type }: { item: any; type: string }) => {
                   <strong className="text-sm">Languages:</strong>
                   <div className="text-sm text-muted-foreground">
                     {item.languageProficiencies
-                      .map((lang: any, index: number) => {
+                      .map((lang: any) => {
                         if (lang.anyStandard)
                           return `${lang.anyStandard} of your choice`;
                         return Object.keys(lang)
