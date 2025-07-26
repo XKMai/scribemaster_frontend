@@ -32,6 +32,8 @@ import LogoutButton from "../LoginComponents/LogoutButton";
 import { apiService } from "@/services/apiservice";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import InformationBrowser from "../InformationBrowsingComponents/InformationBrowser";
 
 // Menu items.
 const items = [
@@ -83,10 +85,18 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="flex flex-row justify-between">
         <SidebarGroupLabel>ScribeMaster</SidebarGroupLabel>
-        <Button size="icon" variant="ghost">
-          <Library />
-        </Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button size="icon" variant="ghost">
+              <Library />
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <InformationBrowser />
+          </SheetContent>
+        </Sheet>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
