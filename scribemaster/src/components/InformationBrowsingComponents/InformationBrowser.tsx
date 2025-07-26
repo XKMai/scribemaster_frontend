@@ -430,6 +430,51 @@ const StartingProficiencies = ({
     </div>
   );
 };
+
+const StartingEquipment = ({ equipment }: { equipment: any }) => {
+  const [open, setOpen] = useState(false);
+
+  if (!equipment) return null;
+
+  return (
+    <div className="mt-4">
+      <button
+        className="mb-2 text-sm font-semibold text-primary underline"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls="starting-equipment"
+      >
+        {open ? "Hide Starting Equipment" : "Show Starting Equipment"}
+      </button>
+
+      {open && (
+        <div id="starting-equipment" className="space-y-2 text-sm">
+          {equipment.additionalFromBackground && (
+            <div>Includes equipment from background.</div>
+          )}
+
+          {equipment.goldAlternative && (
+            <div>
+              <strong>Gold Alternative:</strong> {equipment.goldAlternative} gp
+            </div>
+          )}
+
+          {equipment.default && equipment.default.length > 0 && (
+            <div>
+              <strong>Default Equipment:</strong>
+              <ul className="list-disc list-inside mt-1 space-y-1">
+                {equipment.default.map((line: string, idx: number) => (
+                  <li key={idx}>{line}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 type SubclassFeature = {
   name: string;
   level: number;
@@ -1019,6 +1064,10 @@ const ItemCard = ({ item, type }: { item: any; type: string }) => {
               <StartingProficiencies
                 startingProficiencies={item.startingProficiencies}
               />
+            )}
+
+            {item.startingEquipment && (
+              <StartingEquipment equipment={item.startingEquipment} />
             )}
 
             {item.multiclassing?.requirements && (
