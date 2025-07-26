@@ -426,6 +426,85 @@ const ClassTable = ({ classTableGroups }: { classTableGroups: any[] }) => {
 };
 
 // Component for displaying prerequisites
+const renderPrerequisite = (prereq: any): string => {
+  if (prereq.other) return prereq.other;
+
+  const parts: string[] = [];
+
+  for (const [key, value] of Object.entries(prereq)) {
+    switch (key) {
+      case "level":
+        if (typeof value === "number") {
+          parts.push(`Level ${value}`);
+        } else if (
+          typeof value === "object" &&
+          value !== null &&
+          "level" in value &&
+          typeof (value as any).level === "number"
+        ) {
+          const className =
+            typeof (value as any).class === "object" &&
+            (value as any).class?.name
+              ? (value as any).class.name
+              : "";
+          parts.push(`Level ${(value as any).level} ${className}`.trim());
+        }
+        break;
+
+      case "ability":
+        if (Array.isArray(value)) {
+          value.forEach((abilityObj) => {
+            for (const [stat, score] of Object.entries(abilityObj)) {
+              parts.push(`${stat.toUpperCase()} ${score}`);
+            }
+          });
+        }
+        break;
+
+      case "background":
+        if (Array.isArray(value)) {
+          const names = value.map((b) => b.displayEntry ?? b.name).join(", ");
+          parts.push(`Background: ${names}`);
+        }
+        break;
+
+      case "campaign":
+        if (Array.isArray(value)) {
+          parts.push(`Campaign: ${value.join(", ")}`);
+        }
+        break;
+
+      case "feat":
+        if (Array.isArray(value)) {
+          parts.push(`Feat: ${value.join(", ")}`);
+        }
+        break;
+
+      case "proficiency":
+        if (Array.isArray(value)) {
+          value.forEach((prof) => {
+            for (const [type, detail] of Object.entries(prof)) {
+              parts.push(`Proficiency: ${detail} ${type}`);
+            }
+          });
+        }
+        break;
+
+      case "feature":
+        if (Array.isArray(value)) {
+          parts.push(`Feature: ${value.join(", ")}`);
+        }
+        break;
+
+      default:
+        parts.push(`${key.toUpperCase()}: ${JSON.stringify(value)}`);
+        break;
+    }
+  }
+
+  return parts.join(", ");
+};
+
 const Prerequisites = ({ prerequisites }: { prerequisites: any[] }) => {
   if (!prerequisites || prerequisites.length === 0) return null;
 
@@ -433,18 +512,12 @@ const Prerequisites = ({ prerequisites }: { prerequisites: any[] }) => {
     <div>
       <strong className="text-sm">Prerequisites:</strong>
       <div className="text-sm text-muted-foreground mt-1">
-        {prerequisites
-          .map((prereq, index) => {
-            if (prereq.other) return prereq.other;
-            return Object.entries(prereq)
-              .map(([key, value]) => `${key.toUpperCase()} ${value}`)
-              .join(", ");
-          })
-          .join(", ")}
+        {prerequisites.map((p, i) => renderPrerequisite(p)).join(" or ")}
       </div>
     </div>
   );
 };
+
 const AbilityBonuses = ({ bonuses }: { bonuses: any[] }) => {
   if (!bonuses || bonuses.length === 0) return null;
 
