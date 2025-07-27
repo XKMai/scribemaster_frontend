@@ -33,7 +33,7 @@ const CharacterCreationPage = () => {
           </h1>
           <div className="grid grid-cols-2 gap-4">
             <Card
-              className="cursor-pointer hover:shadow-xl transition duration-200 p-6 text-center w-60 h-35"
+              className="cursor-pointer hover:shadow-xl transition duration-200 p-6 text-center w-60 h-35 bg-primary"
               onClick={() => setChoice("player")}
             >
               <CardContent className="flex flex-col items-center gap-4">
@@ -42,7 +42,7 @@ const CharacterCreationPage = () => {
               </CardContent>
             </Card>
             <Card
-              className="cursor-pointer hover:shadow-xl transition duration-200 p-6 text-center w-60 h-35"
+              className="cursor-pointer hover:shadow-xl transition duration-200 p-6 text-center w-60 h-35 bg-primary"
               onClick={() => setChoice("general")}
             >
               <CardContent className="flex flex-col items-center gap-4">
@@ -51,7 +51,7 @@ const CharacterCreationPage = () => {
               </CardContent>
             </Card>
             <Card
-              className="cursor-pointer hover:shadow-xl transition duration-200 p-6 text-center w-60 h-35"
+              className="cursor-pointer hover:shadow-xl transition duration-200 p-6 text-center w-60 h-35 bg-primary"
               onClick={() => setChoice("spell")}
             >
               <CardContent className="flex flex-col items-center gap-4">
@@ -60,7 +60,7 @@ const CharacterCreationPage = () => {
               </CardContent>
             </Card>
             <Card
-              className="cursor-pointer hover:shadow-xl transition duration-200 p-6 text-center w-60 h-35"
+              className="cursor-pointer hover:shadow-xl transition duration-200 p-6 text-center w-60 h-35 bg-primary"
               onClick={() => setChoice("item")}
             >
               <CardContent className="flex flex-col items-center gap-4">
@@ -70,7 +70,10 @@ const CharacterCreationPage = () => {
             </Card>
           </div>
           <div className="p-5">
-            <Button onClick={() => navigate("/characterinsertion")}>
+            <Button
+              variant="secondary"
+              onClick={() => navigate("/characterinsertion")}
+            >
               Insert your current assets into your campaigns!
             </Button>
           </div>
