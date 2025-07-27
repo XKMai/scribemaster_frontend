@@ -223,10 +223,10 @@ export const CampaignExplorer2 = ({ campaignId }: CampaignExplorer2Props) => {
                     className={cn(
                       "flex items-center gap-2 px-2 py-1 rounded text-sm",
                       {
-                        "bg-blue-100 border border-blue-300":
+                        "bg-[#FCECC9] border border-[#D5BDAF]":
                           itemInstance.isSelected(),
-                        "ring-2 ring-blue-500": itemInstance.isFocused(),
-                        "font-semibold": itemInstance.isFolder(),
+                        "ring-2 ring-[#EAAE61]": itemInstance.isFocused(),
+                        "font-semibold text-[#4C3A2D]": itemInstance.isFolder(),
                       }
                     )}
                   >
