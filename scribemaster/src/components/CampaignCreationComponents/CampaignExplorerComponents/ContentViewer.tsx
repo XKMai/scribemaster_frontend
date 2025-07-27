@@ -49,7 +49,7 @@ export const ContentViewer = ({ itemInstance }: ContentViewerProps) => {
   };
 
   return (
-    <div className="w-full h-full p-4">
+    <div className="w-full h-full">
       <Card className="w-full h-full flex flex-col">
         <CardHeader>
           {item ? (
@@ -70,7 +70,7 @@ export const ContentViewer = ({ itemInstance }: ContentViewerProps) => {
         </CardHeader>
 
         {/* Scrollable content inside fixed height */}
-        <CardContent className="flex-1 overflow-y-auto overflow-x-hidden space-y-4">
+        <CardContent className="flex-1 overflow-y-auto overflow-x-hidden">
           {item ? (
             isNote(item) ? (
               <>
