@@ -78,7 +78,7 @@ const CampaignCreation = () => {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full h-full">
       <CardTitle className="mx-auto text-center text-lg">
         <h1>Join or Create a Campaign</h1>
       </CardTitle>
