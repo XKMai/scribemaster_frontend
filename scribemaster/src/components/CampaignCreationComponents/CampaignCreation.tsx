@@ -77,29 +77,9 @@ const CampaignCreation = () => {
     }
   };
 
-  // const onSubmit = async (data: CreateSchema) => {
-  //   try {
-  //     const userdata = await apiService.getCookie();
-  //     const userId = userdata.user.id;
-
-  //     const payload = {
-  //       ...data,
-  //       createdBy: userId,
-  //     };
-
-  //     await api.post("/campaign", payload);
-
-  //     // open alert to inform user of successful campaign creation, give button to redirect to campaign reader
-  //     alert("campaign created successfully");
-  //     window.location.href = "/home";
-  //   } catch (error: any) {
-  //     alert("something went wrong!!!");
-  //   }
-  // };
-
   return (
-    <Card className="w-full max-w-sm">
-      <CardTitle className="mx-auto mb-2 text-center text-lg">
+    <Card className="w-full">
+      <CardTitle className="mx-auto text-center text-lg">
         <h1>Join or Create a Campaign</h1>
       </CardTitle>
       <CardContent>
