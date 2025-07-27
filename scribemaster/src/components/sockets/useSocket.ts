@@ -54,10 +54,11 @@ export const useSocket = (
     // only create socket once
     if (!socketRef.current) {
       socketRef.current = io(
-        import.meta.env.VITE_API_URL ||
-          "http://scribemaster-frontend-alb-469534981.ap-southeast-1.elb.amazonaws.com/api",
+        import.meta.env.VITE_SOCKET_URL ||
+          "http://scribemaster-frontend-alb-469534981.ap-southeast-1.elb.amazonaws.com",
         {
           withCredentials: true,
+          transports: ["websocket"],
         }
       );
     }
