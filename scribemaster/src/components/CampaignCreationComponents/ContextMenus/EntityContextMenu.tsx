@@ -5,6 +5,7 @@ import { Input } from "../../ui/input";
 import { apiService } from "@/services/apiservice";
 import type { Item } from "@/types/TreeTypes";
 import type { ItemInstance } from "@headless-tree/core";
+import { PencilIcon, Trash } from "lucide-react";
 
 interface EntityContextMenuProps {
   itemInstance: ItemInstance<Item>;
@@ -51,7 +52,7 @@ export const EntityContextMenu = ({
   return (
     <ContextMenu.Root>
       <ContextMenu.Trigger asChild>{children}</ContextMenu.Trigger>
-      <ContextMenu.Content className="z-50 rounded bg-white shadow-md p-2 space-y-2 min-w-[200px]">
+      <ContextMenu.Content className="z-50 rounded shadow-md p-2 space-y-2 min-w-[150px] bg-muted">
         {!isRenaming && (
           <>
             <ContextMenu.Item
@@ -64,13 +65,19 @@ export const EntityContextMenu = ({
                 }, 0);
               }}
             >
-              ✏️ Rename
+              <div className="flex items-center gap-2">
+                <PencilIcon className="size-4" />
+                Rename
+              </div>
             </ContextMenu.Item>
             <ContextMenu.Item
               className="cursor-pointer px-2 py-1 text-sm text-red-600 hover:bg-red-100"
               onSelect={deleteEntity}
             >
-              🗑️ Delete
+              <div className="flex items-center gap-2">
+                <Trash className="size-4" />
+                Delete
+              </div>
             </ContextMenu.Item>
           </>
         )}
