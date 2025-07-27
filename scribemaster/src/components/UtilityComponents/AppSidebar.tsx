@@ -1,10 +1,9 @@
 import {
   ChevronUp,
   Home,
-  Settings,
   User2,
-  MapPlus,
   VenetianMask,
+  BookUser,
   Swords,
   Library,
 } from "lucide-react";
@@ -42,14 +41,14 @@ const items = [
     icon: Home,
   },
   {
-    title: "Campaign Creation",
-    url: "/campaigncreation",
-    icon: MapPlus,
-  },
-  {
     title: "Character Creation",
     url: "/charactercreation",
     icon: VenetianMask,
+  },
+  {
+    title: "Character Insertion",
+    url: "/characterinsertion",
+    icon: BookUser,
   },
   {
     title: "Combat Encounter",
@@ -60,11 +59,6 @@ const items = [
     title: "Information Browsing",
     url: "/information",
     icon: Library,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
   },
 ];
 
