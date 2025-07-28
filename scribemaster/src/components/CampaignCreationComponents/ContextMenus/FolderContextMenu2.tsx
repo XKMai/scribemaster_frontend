@@ -5,6 +5,7 @@ import { Input } from "../../ui/input";
 import { apiService } from "@/services/apiservice";
 import type { Item } from "@/types/TreeTypes";
 import type { ItemInstance } from "@headless-tree/core";
+import { Folder, NotepadText, PencilIcon, Trash } from "lucide-react";
 
 interface FolderContextMenuProps {
   itemInstance: ItemInstance<Item>;
@@ -84,7 +85,7 @@ export const FolderContextMenu2 = ({
   return (
     <ContextMenu.Root>
       <ContextMenu.Trigger asChild>{children}</ContextMenu.Trigger>
-      <ContextMenu.Content className="z-50 rounded bg-white shadow-md p-2 space-y-2 min-w-[200px]">
+      <ContextMenu.Content className="z-50 rounded shadow-md p-2 space-y-2 min-w-[150px] bg-muted">
         {!creatingType && !isRenaming && (
           <>
             <ContextMenu.Item
@@ -96,7 +97,10 @@ export const FolderContextMenu2 = ({
                 }, 0);
               }}
             >
-              📄 New Note
+              <div className="flex items-center gap-2">
+                <NotepadText className="size-4" />
+                New Note
+              </div>
             </ContextMenu.Item>
             <ContextMenu.Item
               className="cursor-pointer px-2 py-1 text-sm hover:bg-muted"
@@ -107,7 +111,10 @@ export const FolderContextMenu2 = ({
                 }, 0);
               }}
             >
-              📁 New Folder
+              <div className="flex items-center gap-2">
+                <Folder className="size-4" />
+                New Folder
+              </div>
             </ContextMenu.Item>
             <ContextMenu.Item
               className="cursor-pointer px-2 py-1 text-sm hover:bg-muted"
@@ -119,13 +126,19 @@ export const FolderContextMenu2 = ({
                 }, 0);
               }}
             >
-              ✏️ Rename
+              <div className="flex items-center gap-2">
+                <PencilIcon className="size-4" />
+                Rename
+              </div>
             </ContextMenu.Item>
             <ContextMenu.Item
               className="cursor-pointer px-2 py-1 text-sm text-red-600 hover:bg-red-100"
               onSelect={deleteFolder}
             >
-              🗑️ Delete
+              <div className="flex items-center gap-2">
+                <Trash className="size-4" />
+                Delete
+              </div>
             </ContextMenu.Item>
           </>
         )}

@@ -12,7 +12,9 @@ const CampaignExplorerPage = () => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarTrigger />
-      <CampaignExplorer2 campaignId={parseInt(campaignId)} />
+      <div className="flex h-screen w-full overflow-hidden">
+        <CampaignExplorer2 campaignId={parseInt(campaignId)} />
+      </div>
     </SidebarProvider>
   );
 };

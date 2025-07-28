@@ -1,9 +1,9 @@
 import CampaignCreation from "@/components/CampaignCreationComponents/CampaignCreation";
 import CampaignList from "@/components/HomeComponents/CampaignList";
-import { CharacterButton } from "@/components/HomeComponents/CharacterButton";
+import { NavigationCard } from "@/components/HomeComponents/NavigationCard";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
-import { Card } from "@/components/ui/card";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { BookUser, Library, Swords, VenetianMask } from "lucide-react";
 
 const HomePage = () => {
   return (
@@ -11,24 +11,57 @@ const HomePage = () => {
       <SidebarProvider>
         <AppSidebar />
         <SidebarTrigger />
-        <div className="flex flex-col h-screen w-full bg-muted p-6 overflow-hidden">
-          <h1 className="text-3xl font-bold mb-4">Welcome to Scribe Master!</h1>
-          <Card className="w-full h-1/2 p-4 overflow-hidden flex flex-col mb-4">
-            <CampaignList />
-          </Card>
-          <div className="flex flex-1 w-full gap-2">
-            <div className="w-full max-w-sm flex items-end">
+        <div className="flex flex-col h-screen w-full p-4 overflow-auto">
+          <h2 className="text-3xl text-center font-bold mb-4">
+            Welcome to Scribe Master!
+          </h2>
+
+          {/* Top Half */}
+          <div className="w-full h-1/2 mb-4">
+            <CampaignList />{" "}
+          </div>
+
+          {/* Bottom Half */}
+          <div className="flex flex-1 w-full gap-4">
+            {/* Bottom Left Half */}
+            <div className="w-1/2 h-full">
               <CampaignCreation />
             </div>
-            <div className="flex flex-col justify-end items-end gap-2 w-full">
-              <CharacterButton
-                label="Create Characters and Assets"
-                to="/charactercreation"
-              />
-              <CharacterButton
-                label="View Characters and Assets "
-                to="/characterinsertion"
-              />
+
+            {/* Bottom Right Half */}
+            <div className="w-1/2 h-full grid grid-cols-2 grid-rows-2 gap-2">
+              <div>
+                <NavigationCard
+                  label="Create Characters/Assets"
+                  to="/charactercreation"
+                  description="Build characters, spells and items for your campaigns"
+                  icon={VenetianMask}
+                />
+              </div>
+              <div>
+                <NavigationCard
+                  label="Insert Characters/Assets"
+                  to="/characterinsertion"
+                  description="Insert your creations into your campaigns"
+                  icon={BookUser}
+                />
+              </div>
+              <div>
+                <NavigationCard
+                  label="Combat Room"
+                  to="/combatlobby"
+                  description="Let your characters battle! Invite the party!"
+                  icon={Swords}
+                />
+              </div>
+              <div>
+                <NavigationCard
+                  label="Information Browsing"
+                  to="/information"
+                  description="Browse for detailed game information (toggle via sidebar)"
+                  icon={Library}
+                />
+              </div>
             </div>
           </div>
         </div>

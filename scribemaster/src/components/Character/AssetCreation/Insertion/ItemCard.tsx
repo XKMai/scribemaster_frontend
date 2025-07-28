@@ -63,9 +63,9 @@ export const ItemCard = ({
                 : String(value)}
             </div>
           ))}
-        <div className="pt-2">
+        <div className="pt-2 flex justify-items-center gap-2">
           <Label>
-            <FolderPlus className="w-4 h-4" />
+            <FolderPlus className="size-6" />
           </Label>
           <Select onValueChange={(value) => handleAddToFolder(Number(value))}>
             <SelectTrigger>

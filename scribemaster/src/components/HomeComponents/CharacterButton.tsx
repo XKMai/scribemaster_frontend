@@ -11,7 +11,7 @@ export const CharacterButton = ({ label, to }: CharacterButtonProps) => {
 
   return (
     <Button
-      className="w-full h-1/2"
+      className="w-full h-full"
       variant="outline"
       onClick={() => navigate(to)}
     >
