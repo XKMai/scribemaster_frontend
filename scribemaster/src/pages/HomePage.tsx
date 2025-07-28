@@ -30,7 +30,7 @@ const HomePage = () => {
 
             {/* Bottom Right Half */}
             <div className="w-1/2 h-full grid grid-cols-2 grid-rows-2 gap-2">
-              <div className="bg-yellow-200">
+              <div>
                 <NavigationCard
                   label="Create Characters/Assets"
                   to="/charactercreation"
@@ -38,7 +38,7 @@ const HomePage = () => {
                   icon={VenetianMask}
                 />
               </div>
-              <div className="bg-purple-200">
+              <div>
                 <NavigationCard
                   label="Insert Characters/Assets"
                   to="/characterinsertion"
@@ -46,7 +46,7 @@ const HomePage = () => {
                   icon={BookUser}
                 />
               </div>
-              <div className="bg-orange-200">
+              <div>
                 <NavigationCard
                   label="Combat Room"
                   to="/combatlobby"
@@ -54,7 +54,7 @@ const HomePage = () => {
                   icon={Swords}
                 />
               </div>
-              <div className="bg-pink-200">
+              <div>
                 <NavigationCard
                   label="Information Browsing"
                   to="/information"
