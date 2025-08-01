@@ -126,6 +126,9 @@ export function AppSidebar() {
                     <LogoutButton />
                   </span>
                 </DropdownMenuItem>
+                <DropdownMenuItem className="text-sm">
+                  User Settings
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
