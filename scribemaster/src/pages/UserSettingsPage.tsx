@@ -6,7 +6,13 @@ const UserSettingsPage = () => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarTrigger />
-      <div>UserSettingsPage</div>
+      <div>
+        <h1>Username</h1>
+        <p>email</p>
+        <p>password rest?</p>
+        <p>campaigns joined (list)</p>
+        <p>campaigns created (list) </p>
+      </div>
     </SidebarProvider>
   );
 };
