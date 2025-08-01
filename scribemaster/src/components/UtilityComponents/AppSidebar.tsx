@@ -127,7 +127,7 @@ export function AppSidebar() {
                   </span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-sm">
-                  User Settings
+                  <a href="/user">User Settings</a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
