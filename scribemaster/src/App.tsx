@@ -12,6 +12,7 @@ import CombatStagePage from "./pages/CombatStagePage";
 import CharacterInsertionPage from "./pages/CharacterInsertionPage";
 import CombatLobbyPage from "./pages/CombatLobbyPage";
 import { InformationBrowsingPage } from "./pages/InformationBrowsingPage";
+import UserSettingsPage from "./pages/UserSettingsPage";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/combat/:roomId" element={<CombatStagePage />} />
             <Route path="/combatlobby" element={<CombatLobbyPage />} />
             <Route path="/information" element={<InformationBrowsingPage />} />
+            <Route path="/user" element={<UserSettingsPage />} />
           </Route>
         </Routes>
       </main>
