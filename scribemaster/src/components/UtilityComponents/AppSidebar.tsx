@@ -32,6 +32,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import InformationBrowser from "../InformationBrowsingComponents/InformationBrowser";
+import { Link, useNavigate } from "react-router";
 
 // Menu items.
 const items = [
@@ -64,6 +65,7 @@ const items = [
 
 export function AppSidebar() {
   const [userName, setUserName] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     apiService.getCookie().then((res) => setUserName(res.user.name));
@@ -95,10 +97,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -126,8 +128,11 @@ export function AppSidebar() {
                     <LogoutButton />
                   </span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-sm">
-                  <a href="/user">User Settings</a>
+                <DropdownMenuItem
+                  className="text-sm"
+                  onClick={() => navigate("/user")}
+                >
+                  User Settings
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
