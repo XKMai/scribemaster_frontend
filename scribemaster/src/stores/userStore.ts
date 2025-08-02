@@ -11,6 +11,7 @@ type UserStore = {
     isLoading: boolean,
     initialiseUser: () => Promise<void>,
     setUser: (user: User | null) => void,
+    clearUser: () => void,
 }
 
 export const userStore = create<UserStore>((set) => ({
@@ -20,10 +21,9 @@ export const userStore = create<UserStore>((set) => ({
   initialiseUser: async () => {
     set({ isLoading: true });
     try {
-      const res = await apiService.getCookie();
-      if (!res.ok) throw new Error("Failed to fetch user");
-      const userData = await res.user();
-      set({ user: userData });
+      const userData = await apiService.getCookie();
+      console.log("User data:", userData)
+      set({ user: userData.user });
     } catch (err) {
       console.error("User init error:", err);
       set({ user: null });
@@ -33,4 +33,10 @@ export const userStore = create<UserStore>((set) => ({
   },
 
   setUser: (user) => set({ user }),
+  clearUser: () => set({ user: null }),
 }));
+
+//   if (!res.ok) throw new Error("Failed to fetch user");
+    //   const userData = res.user();
+    //   set({ user: userData });
+    //   console.log("User: ", userData)
