@@ -13,6 +13,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
 import api from "../../lib/axiosConfig";
+import { userStore } from "@/stores/userStore";
 
 // Zod Schema
 const loginSchema = z.object({
@@ -35,11 +36,15 @@ export default function LoginForm2() {
 
   const navigate = useNavigate();
 
+  const initialiseUser = userStore((state) => state.initialiseUser);
+
   const onSubmit = async (data: LoginSchema) => {
     try {
       await api.post("/login", data, {
         withCredentials: true,
       });
+
+      await initialiseUser();
 
       navigate("/home");
     } catch (error: any) {
