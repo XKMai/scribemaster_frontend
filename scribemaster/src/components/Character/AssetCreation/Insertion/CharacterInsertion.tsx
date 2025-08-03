@@ -1,15 +1,10 @@
-import { apiService } from "@/services/apiservice";
-import { useState, useEffect } from "react";
 import { EntityList } from "./EntityList";
 import { ItemList } from "./ItemList";
 import { SpellList } from "./SpellList";
+import { userStore } from "@/stores/userStore";
 
 const CharacterInsertion = () => {
-  const [userId, setUserId] = useState<number | null>(null);
-
-  useEffect(() => {
-    apiService.getCookie().then((res) => setUserId(res.user.id));
-  }, []);
+  const userId = userStore((state) => state.user?.id);
 
   if (!userId) return <div>Loading...</div>;
   return (
