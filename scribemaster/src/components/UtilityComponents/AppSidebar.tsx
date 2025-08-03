@@ -27,14 +27,12 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import LogoutButton from "../LoginComponents/LogoutButton";
-import { apiService } from "@/services/apiservice";
-import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import InformationBrowser from "../InformationBrowsingComponents/InformationBrowser";
 import { Link, useNavigate } from "react-router";
+import { userStore } from "@/stores/userStore";
 
-// Menu items.
 const items = [
   {
     title: "Home",
@@ -64,12 +62,8 @@ const items = [
 ];
 
 export function AppSidebar() {
-  const [userName, setUserName] = useState<number | null>(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    apiService.getCookie().then((res) => setUserName(res.user.name));
-  }, []);
+  const userName = userStore((state) => state.user?.name);
 
   return (
     <Sidebar>
