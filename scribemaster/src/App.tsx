@@ -12,7 +12,7 @@ import CombatStagePage from "./pages/CombatStagePage";
 import CharacterInsertionPage from "./pages/CharacterInsertionPage";
 import CombatLobbyPage from "./pages/CombatLobbyPage";
 import { InformationBrowsingPage } from "./pages/InformationBrowsingPage";
-import UserSettingsPage from "./pages/UserSettingsPage";
+import UserProfilePage from "./pages/UserProfilePage";
 import { useUserStore } from "./stores/userStore";
 import { useEffect } from "react";
 
@@ -53,7 +53,7 @@ function App() {
             <Route path="/combat/:roomId" element={<CombatStagePage />} />
             <Route path="/combatlobby" element={<CombatLobbyPage />} />
             <Route path="/information" element={<InformationBrowsingPage />} />
-            <Route path="/user" element={<UserSettingsPage />} />
+            <Route path="/user" element={<UserProfilePage />} />
           </Route>
         </Routes>
       </main>
