@@ -13,8 +13,17 @@ import CharacterInsertionPage from "./pages/CharacterInsertionPage";
 import CombatLobbyPage from "./pages/CombatLobbyPage";
 import { InformationBrowsingPage } from "./pages/InformationBrowsingPage";
 import UserSettingsPage from "./pages/UserSettingsPage";
+import { useUserStore } from "./stores/userStore";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    const { user, initialiseUser } = useUserStore.getState();
+    if (!user) {
+      initialiseUser();
+    }
+  }, []);
+
   return (
     <>
       <main className="flex flex-col items-center justify-center min-h-svh">
