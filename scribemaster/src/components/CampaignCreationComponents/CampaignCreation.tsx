@@ -43,6 +43,7 @@ const CampaignCreation = () => {
   });
 
   const userId = userStore((state) => state.user?.id);
+  const triggerRefresh = userStore((state) => state.triggerRefresh);
 
   const handleCreate = async (data: CreateSchema) => {
     try {
@@ -52,8 +53,8 @@ const CampaignCreation = () => {
       };
 
       await api.post("/campaign", payload);
+      triggerRefresh();
       alert("Campaign created successfully");
-      window.location.href = "/home";
     } catch (error) {
       alert("Failed to create campaign!");
     }
@@ -65,9 +66,8 @@ const CampaignCreation = () => {
         userId,
         folderId: data.folderId,
       });
-
+      triggerRefresh();
       alert("Joined campaign successfully");
-      window.location.href = "/home";
     } catch (error) {
       alert("Failed to join campaign!");
     }

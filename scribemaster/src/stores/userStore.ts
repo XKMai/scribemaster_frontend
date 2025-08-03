@@ -12,6 +12,8 @@ type UserStore = {
     initialiseUser: () => Promise<void>,
     setUser: (user: User | null) => void,
     clearUser: () => void,
+    refreshKey: number,
+    triggerRefresh: () => void,
 }
 
 export const userStore = create<UserStore>((set) => ({
@@ -34,6 +36,9 @@ export const userStore = create<UserStore>((set) => ({
 
   setUser: (user) => set({ user }),
   clearUser: () => set({ user: null }),
+
+  refreshKey: 0,
+  triggerRefresh: () => set((state) => ({ refreshKey: state.refreshKey + 1 })),
 }));
 
 //   if (!res.ok) throw new Error("Failed to fetch user");

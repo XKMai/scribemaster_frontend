@@ -41,11 +41,11 @@ const CampaignCarousel = () => {
   const [newName, setNewName] = useState("");
   const navigate = useNavigate();
   const userId = userStore((state) => state.user?.id);
+  const refreshKey = userStore((state) => state.refreshKey);
 
   useEffect(() => {
     const fetchCampaigns = async () => {
       try {
-        //const { user } = await apiService.getCookie();
         if (userId) {
           const data = await apiService.getCampaignList(userId);
           setCampaigns(data);
@@ -56,7 +56,7 @@ const CampaignCarousel = () => {
     };
 
     fetchCampaigns();
-  }, []);
+  }, [refreshKey]);
 
   const handleRename = async (id: number) => {
     try {
