@@ -64,6 +64,11 @@ const items = [
     url: "/information",
     icon: Library,
   },
+  {
+    title: "Login",
+    url: "/login",
+    icon: Library,
+  },
 ];
 
 export function AppSidebar() {
@@ -73,7 +78,9 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="flex flex-row justify-between">
-        <SidebarGroupLabel>ScribeMaster</SidebarGroupLabel>
+        <SidebarGroupLabel className="text-accent-foreground text-sm">
+          Scribe Master
+        </SidebarGroupLabel>
         <Sheet>
           <HoverCard>
             <HoverCardTrigger>
@@ -119,7 +126,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="border-3">
+                <SidebarMenuButton className="border-2 border-accent-foreground">
                   <User2 />
                   {userName}
                   <ChevronUp className="ml-auto" />
