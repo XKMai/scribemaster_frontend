@@ -17,7 +17,7 @@ const LogoutButton = () => {
   };
 
   return (
-    <Button variant="ghost" onClick={handleLogout}>
+    <Button variant="ghost" onClick={handleLogout} className="w-full text-left">
       Logout
     </Button>
   );
