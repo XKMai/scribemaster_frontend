@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/form";
 import api from "@/lib/axiosConfig";
 import { useForm } from "react-hook-form";
-import { apiService } from "@/services/apiservice";
 import { Card, CardContent, CardTitle } from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { userStore } from "@/stores/userStore";
 
 const createSchema = z.object({
   name: z.string().min(4, { message: "Campaign Name is required" }),
@@ -42,11 +42,10 @@ const CampaignCreation = () => {
     defaultValues: { folderId: 0 },
   });
 
+  const userId = userStore((state) => state.user?.id);
+
   const handleCreate = async (data: CreateSchema) => {
     try {
-      const userdata = await apiService.getCookie();
-      const userId = userdata.user.id;
-
       const payload = {
         ...data,
         createdBy: userId,
@@ -56,15 +55,12 @@ const CampaignCreation = () => {
       alert("Campaign created successfully");
       window.location.href = "/home";
     } catch (error) {
-      alert("Something went wrong!");
+      alert("Failed to create campaign!");
     }
   };
 
   const handleJoin = async (data: JoinSchema) => {
     try {
-      const userdata = await apiService.getCookie();
-      const userId = userdata.user.id;
-
       await api.post(`/campaign/join/${data.folderId}/${userId}`, {
         userId,
         folderId: data.folderId,
