@@ -40,8 +40,3 @@ export const useUserStore = create<UserStore>((set) => ({
   refreshKey: 0,
   triggerRefresh: () => set((state) => ({ refreshKey: state.refreshKey + 1 })),
 }));
-
-//   if (!res.ok) throw new Error("Failed to fetch user");
-    //   const userData = res.user();
-    //   set({ user: userData });
-    //   console.log("User: ", userData)
