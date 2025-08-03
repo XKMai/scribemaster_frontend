@@ -1,5 +1,6 @@
 import { apiService } from "@/services/apiservice";
 import { create } from "zustand"
+import  {persist } from "zustand/middleware"
 
 type User = {
     id: number,
@@ -16,27 +17,36 @@ type UserStore = {
     triggerRefresh: () => void,
 }
 
-export const useUserStore = create<UserStore>((set) => ({
-  user: null,
-  isLoading: false,
+export const useUserStore = create<UserStore>()(
+  persist(
+    (set) => ({
+      user: null,
+      isLoading: false,
 
-  initialiseUser: async () => {
-    set({ isLoading: true });
-    try {
-      const userData = await apiService.getCookie();
-      console.log("User data:", userData)
-      set({ user: userData.user });
-    } catch (err) {
-      console.error("User init error:", err);
-      set({ user: null });
-    } finally {
-      set({ isLoading: false });
+      initialiseUser: async () => {
+        set({ isLoading: true });
+        try {
+          const userData = await apiService.getCookie();
+          console.log("User data:", userData);
+          set({ user: userData.user });
+        } catch (err) {
+          console.error("User init error:", err);
+          set({ user: null });
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      setUser: (user) => set({ user }),
+      clearUser: () => set({ user: null }),
+
+      refreshKey: 0,
+      triggerRefresh: () =>
+        set((state) => ({ refreshKey: state.refreshKey + 1 })),
+    }),
+    {
+      name: "user-storage", 
+      partialize: (state) => ({ user: state.user }),
     }
-  },
-
-  setUser: (user) => set({ user }),
-  clearUser: () => set({ user: null }),
-
-  refreshKey: 0,
-  triggerRefresh: () => set((state) => ({ refreshKey: state.refreshKey + 1 })),
-}));
+  )
+);
