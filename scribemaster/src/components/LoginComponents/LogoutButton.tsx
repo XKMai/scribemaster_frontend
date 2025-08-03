@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import { Button } from "../ui/button";
 import api from "@/lib/axiosConfig";
+import { useUserStore } from "@/stores/userStore";
 
 const LogoutButton = () => {
   const navigate = useNavigate();
@@ -8,6 +9,7 @@ const LogoutButton = () => {
   const handleLogout = async () => {
     try {
       await api.get("/logout");
+      useUserStore.getState().clearUser();
       navigate("/login");
     } catch (error) {
       alert("Logout failed: " + error);
