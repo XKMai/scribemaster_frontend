@@ -32,6 +32,11 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import InformationBrowser from "../InformationBrowsingComponents/InformationBrowser";
 import { Link, useNavigate } from "react-router";
 import { useUserStore } from "@/stores/userStore";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
 
 const items = [
   {
@@ -70,11 +75,18 @@ export function AppSidebar() {
       <SidebarHeader className="flex flex-row justify-between">
         <SidebarGroupLabel>ScribeMaster</SidebarGroupLabel>
         <Sheet>
-          <SheetTrigger asChild>
-            <Button size="icon" variant="ghost">
-              <Library />
-            </Button>
-          </SheetTrigger>
+          <HoverCard>
+            <HoverCardTrigger>
+              <SheetTrigger asChild>
+                <Button size="icon" variant="ghost">
+                  <Library />
+                </Button>
+              </SheetTrigger>
+            </HoverCardTrigger>
+            <HoverCardContent className="text-xs w-fit" side="right">
+              Toggle Information Browser
+            </HoverCardContent>
+          </HoverCard>
           <SheetContent
             side="right"
             className="max-w-none w-[95vw] sm:w-[80vw] md:w-[70vw] lg:!w-[50vw] xl:!w-[50vw]"
@@ -107,7 +119,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
+                <SidebarMenuButton className="border-3">
                   <User2 />
                   {userName}
                   <ChevronUp className="ml-auto" />
@@ -115,18 +127,20 @@ export function AppSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 side="top"
-                className="w-[--radix-popper-anchor-width]"
+                className="w-(--radix-dropdown-menu-trigger-width)"
+                align="start"
               >
                 <DropdownMenuItem>
-                  <span>
-                    <LogoutButton />
-                  </span>
+                  <LogoutButton />
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="text-sm"
-                  onClick={() => navigate("/user")}
-                >
-                  User Settings
+                <DropdownMenuItem>
+                  <Button
+                    className="text-sm w-full"
+                    onClick={() => navigate("/user")}
+                    variant="ghost"
+                  >
+                    User Settings
+                  </Button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
