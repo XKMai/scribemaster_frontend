@@ -16,7 +16,7 @@ type UserStore = {
     triggerRefresh: () => void,
 }
 
-export const userStore = create<UserStore>((set) => ({
+export const useUserStore = create<UserStore>((set) => ({
   user: null,
   isLoading: false,
 

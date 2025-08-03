@@ -13,7 +13,7 @@ import api from "@/lib/axiosConfig";
 import { useForm } from "react-hook-form";
 import { Card, CardContent, CardTitle } from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { userStore } from "@/stores/userStore";
+import { useUserStore } from "@/stores/userStore";
 
 const createSchema = z.object({
   name: z.string().min(4, { message: "Campaign Name is required" }),
@@ -42,8 +42,8 @@ const CampaignCreation = () => {
     defaultValues: { folderId: 0 },
   });
 
-  const userId = userStore((state) => state.user?.id);
-  const triggerRefresh = userStore((state) => state.triggerRefresh);
+  const userId = useUserStore((state) => state.user?.id);
+  const triggerRefresh = useUserStore((state) => state.triggerRefresh);
 
   const handleCreate = async (data: CreateSchema) => {
     try {

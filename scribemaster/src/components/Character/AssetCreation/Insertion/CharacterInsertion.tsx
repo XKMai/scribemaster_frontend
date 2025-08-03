@@ -1,10 +1,10 @@
 import { EntityList } from "./EntityList";
 import { ItemList } from "./ItemList";
 import { SpellList } from "./SpellList";
-import { userStore } from "@/stores/userStore";
+import { useUserStore } from "@/stores/userStore";
 
 const CharacterInsertion = () => {
-  const userId = userStore((state) => state.user?.id);
+  const userId = useUserStore((state) => state.user?.id);
 
   if (!userId) return <div>Loading...</div>;
   return (

@@ -1,10 +1,10 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
-import { userStore } from "@/stores/userStore";
+import { useUserStore } from "@/stores/userStore";
 
 const UserSettingsPage = () => {
-  const initialiseUser = userStore((state) => state.initialiseUser);
-  const user = userStore((state) => state.user);
+  const initialiseUser = useUserStore((state) => state.initialiseUser);
+  const user = useUserStore((state) => state.user);
   return (
     <SidebarProvider>
       <AppSidebar />

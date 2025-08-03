@@ -31,7 +31,7 @@ import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import InformationBrowser from "../InformationBrowsingComponents/InformationBrowser";
 import { Link, useNavigate } from "react-router";
-import { userStore } from "@/stores/userStore";
+import { useUserStore } from "@/stores/userStore";
 
 const items = [
   {
@@ -63,7 +63,7 @@ const items = [
 
 export function AppSidebar() {
   const navigate = useNavigate();
-  const userName = userStore((state) => state.user?.name);
+  const userName = useUserStore((state) => state.user?.name);
 
   return (
     <Sidebar>

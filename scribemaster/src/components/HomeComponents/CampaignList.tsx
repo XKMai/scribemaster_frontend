@@ -31,7 +31,7 @@ import {
 } from "../ui/carousel";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
-import { userStore } from "@/stores/userStore";
+import { useUserStore } from "@/stores/userStore";
 
 const CampaignCarousel = () => {
   const [campaigns, setCampaigns] = useState<{ id: number; name: string }[]>(
@@ -40,8 +40,8 @@ const CampaignCarousel = () => {
   const [renamingId, setRenamingId] = useState<number | null>(null);
   const [newName, setNewName] = useState("");
   const navigate = useNavigate();
-  const userId = userStore((state) => state.user?.id);
-  const refreshKey = userStore((state) => state.refreshKey);
+  const userId = useUserStore((state) => state.user?.id);
+  const refreshKey = useUserStore((state) => state.refreshKey);
 
   useEffect(() => {
     const fetchCampaigns = async () => {
