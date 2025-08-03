@@ -15,9 +15,16 @@ import { useNavigate } from "react-router";
 import api from "../../lib/axiosConfig";
 import { useUserStore } from "@/stores/userStore";
 
-// Zod Schema
 const loginSchema = z.object({
-  name: z.string().min(2, { message: "Username is required" }),
+  name: z
+    .string()
+    .min(2)
+    .refine(
+      (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || val.length >= 2,
+      {
+        message: "Must be a valid email or username",
+      }
+    ),
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters" }),
@@ -63,7 +70,7 @@ export default function LoginForm2() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Username / Email</FormLabel>
               <FormControl>
                 <Input placeholder="name" {...field} />
               </FormControl>
