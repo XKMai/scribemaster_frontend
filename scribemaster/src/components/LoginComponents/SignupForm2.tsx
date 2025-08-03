@@ -14,11 +14,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
 import api from "@/lib/axiosConfig";
 
-// Zod schema with confirm password match
 const signupSchema = z
   .object({
     name: z.string().min(2, { message: "Username is required" }),
-    password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+    email: z.string().email({ message: "Valid email is required" }),
+    password: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters" }),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -33,6 +35,7 @@ export default function SignupForm2() {
     resolver: zodResolver(signupSchema),
     defaultValues: {
       name: "",
+      email: "",
       password: "",
       confirmPassword: "",
     },
@@ -41,22 +44,25 @@ export default function SignupForm2() {
   const navigate = useNavigate();
 
   const onSubmit = async (data: SignupSchema) => {
-  try {
-    await api.post('/register',{
-      name: data.name,
-      password: data.password,
-    });
+    try {
+      await api.post("/register", {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
 
-    navigate("/login");
-
-  } catch (error: any) {
-    alert("signup failed");
-  }
-};
+      navigate("/login");
+    } catch (error: any) {
+      alert("signup failed");
+    }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full max-w-sm">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 w-full max-w-sm"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -65,6 +71,20 @@ export default function SignupForm2() {
               <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input placeholder="your_username" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="you@example.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,6 +121,14 @@ export default function SignupForm2() {
 
         <Button type="submit" className="w-full">
           Sign Up
+        </Button>
+
+        <Button
+          onClick={() => navigate("/login")}
+          className="w-full"
+          variant="secondary"
+        >
+          Back to Login
         </Button>
       </form>
     </Form>
