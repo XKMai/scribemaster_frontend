@@ -146,7 +146,7 @@ export function AppSidebar() {
                     onClick={() => navigate("/user")}
                     variant="ghost"
                   >
-                    User Settings
+                    User Profile
                   </Button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
