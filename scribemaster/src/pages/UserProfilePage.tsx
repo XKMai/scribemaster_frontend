@@ -1,6 +1,17 @@
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
 import { useUserStore } from "@/stores/userStore";
+import { User } from "lucide-react";
 
 const UserProfilePage = () => {
   const user = useUserStore((state) => state.user);
@@ -10,13 +21,35 @@ const UserProfilePage = () => {
       <SidebarTrigger />
       <div className="h-screen w-full">
         <div className="flex flex-col p-3">
-          <h1 className="text-2xl font-bold p-6 bg-secondary">User Profile</h1>
-          <div className="flex flex-col p-3">
-            <h1>Username: {user?.name ?? "wait a minute..."}</h1>
-            <p>Email</p>
-            <p>password reset?</p>
-            <p>campaigns joined (list)</p>
-            <p>campaigns created (list) </p>
+          <div className="flex items-center gap-3 mb-8">
+            <User className="h-8 w-8 text-primary" />
+            <h1 className="text-3xl font-bold">User Profile</h1>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  Profile Information
+                </CardTitle>
+                <CardDescription>
+                  View and manage your account details
+                </CardDescription>
+                <CardContent>
+                  <div className="space-y-2">
+                    <Label htmlFor="username">Username</Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="username"
+                        value={user?.name || "Not set"}
+                        readOnly
+                        className="bg-muted"
+                      />
+                      <Badge variant="secondary">Current</Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </CardHeader>
+            </Card>
           </div>
         </div>
       </div>
