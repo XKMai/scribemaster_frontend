@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -35,7 +34,7 @@ const UserProfilePage = () => {
                   View and manage your account details
                 </CardDescription>
                 <CardContent>
-                  <div className="space-y-2">
+                  <div className="space-y-2 mt-3">
                     <Label htmlFor="username">Username</Label>
                     <div className="flex items-center gap-2">
                       <Input
@@ -44,7 +43,18 @@ const UserProfilePage = () => {
                         readOnly
                         className="bg-muted"
                       />
-                      <Badge variant="secondary">Current</Badge>
+                    </div>
+                  </div>
+                  <div className="space-y-2 mt-3">
+                    <Label htmlFor="email">Email Address</Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="email"
+                        // value={user?.email || "Not set"}
+                        value="Not set"
+                        readOnly
+                        className="bg-muted"
+                      />
                     </div>
                   </div>
                 </CardContent>
