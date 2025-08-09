@@ -34,7 +34,7 @@ const ForgotPasswordForm = () => {
 
       navigate("/login");
     } catch (error: any) {
-      alert("signup failed");
+      alert("failed to submit password");
     }
   };
   return (
@@ -60,9 +60,9 @@ const ForgotPasswordForm = () => {
               </FormItem>
             )}
           />
+          <Button type="submit">Submit Email</Button>
         </form>
       </Form>
-      <Button type="submit">Submit Email</Button>
     </>
   );
 };
