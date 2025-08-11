@@ -42,7 +42,7 @@ export function ModeToggle() {
         </DropdownMenuContent>
       </DropdownMenu>
       <HoverCardContent className="text-xs w-fit" side="right">
-        Toggle Information Browser
+        Toggle Light/Dark Mode
       </HoverCardContent>
     </HoverCard>
   );
