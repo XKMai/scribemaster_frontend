@@ -16,7 +16,7 @@ import api from "../../lib/axiosConfig";
 import { useUserStore } from "@/stores/userStore";
 
 const loginSchema = z.object({
-  name: z
+  identifier: z
     .string()
     .min(2)
     .refine(
@@ -36,7 +36,7 @@ export default function LoginForm2() {
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      name: "",
+      identifier: "",
       password: "",
     },
   });
@@ -67,12 +67,12 @@ export default function LoginForm2() {
       >
         <FormField
           control={form.control}
-          name="name"
+          name="identifier"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username / Email</FormLabel>
               <FormControl>
-                <Input placeholder="name" {...field} />
+                <Input placeholder="username/email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
