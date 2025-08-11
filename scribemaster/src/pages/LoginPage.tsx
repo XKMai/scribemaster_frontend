@@ -1,22 +1,6 @@
-import ForgotPasswordForm from "@/components/LoginComponents/ForgotPasswordForm";
 import LoginForm2 from "@/components/LoginComponents/LoginForm2";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router";
 
 const LoginPage = () => {
@@ -31,24 +15,6 @@ const LoginPage = () => {
         <CardContent className="w-full">
           <LoginForm2 />
         </CardContent>
-        <CardFooter className="justify-items-center">
-          <Dialog>
-            <DialogTrigger>
-              <Badge variant="secondary" className="w-full">
-                Forgot your password?
-              </Badge>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Password Reset</DialogTitle>
-                <DialogDescription>
-                  Enter the email address used for your account!
-                </DialogDescription>
-                <ForgotPasswordForm />
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-        </CardFooter>
       </Card>
 
       <br />
