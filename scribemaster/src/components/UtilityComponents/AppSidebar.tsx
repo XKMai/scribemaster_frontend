@@ -37,6 +37,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "../ui/hover-card";
+import { ModeToggle } from "./ModeToggle";
 
 const items = [
   {
@@ -81,26 +82,29 @@ export function AppSidebar() {
         <SidebarGroupLabel className="text-accent-foreground text-sm">
           Scribe Master
         </SidebarGroupLabel>
-        <Sheet>
-          <HoverCard>
-            <HoverCardTrigger>
-              <SheetTrigger asChild>
-                <Button size="icon" variant="ghost">
-                  <Library />
-                </Button>
-              </SheetTrigger>
-            </HoverCardTrigger>
-            <HoverCardContent className="text-xs w-fit" side="right">
-              Toggle Information Browser
-            </HoverCardContent>
-          </HoverCard>
-          <SheetContent
-            side="right"
-            className="max-w-none w-[95vw] sm:w-[80vw] md:w-[70vw] lg:!w-[50vw] xl:!w-[50vw]"
-          >
-            <InformationBrowser />
-          </SheetContent>
-        </Sheet>
+        <div className="flew flex-row">
+          <ModeToggle />
+          <Sheet>
+            <HoverCard>
+              <HoverCardTrigger>
+                <SheetTrigger asChild>
+                  <Button size="icon" variant="outline">
+                    <Library />
+                  </Button>
+                </SheetTrigger>
+              </HoverCardTrigger>
+              <HoverCardContent className="text-xs w-fit" side="right">
+                Toggle Information Browser
+              </HoverCardContent>
+            </HoverCard>
+            <SheetContent
+              side="right"
+              className="max-w-none w-[95vw] sm:w-[80vw] md:w-[70vw] lg:!w-[50vw] xl:!w-[50vw]"
+            >
+              <InformationBrowser />
+            </SheetContent>
+          </Sheet>
+        </div>
       </SidebarHeader>
 
       <SidebarContent>
