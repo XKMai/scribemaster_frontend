@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,11 +10,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/UtilityComponents/AppSidebar";
+import { apiService } from "@/services/apiservice";
 import { useUserStore } from "@/stores/userStore";
 import { User } from "lucide-react";
+import { useState } from "react";
 
 const UserProfilePage = () => {
   const user = useUserStore((state) => state.user);
+  const initialiseUser = useUserStore((state) => state.initialiseUser);
+  const [name, setName] = useState(user?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
+
+  const updateUserInStore = useUserStore((state) => state.setUser);
+
+  const handleSave = async () => {
+    if (!user) return;
+
+    try {
+      const updated = await apiService.updateUser(user.id, { name, email });
+      updateUserInStore(updated.user);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update user");
+    }
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -39,9 +60,8 @@ const UserProfilePage = () => {
                     <div className="flex items-center gap-2">
                       <Input
                         id="username"
-                        value={user?.name || "Not set"}
-                        readOnly
-                        className="bg-muted"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                       />
                     </div>
                   </div>
@@ -50,13 +70,14 @@ const UserProfilePage = () => {
                     <div className="flex items-center gap-2">
                       <Input
                         id="email"
-                        // value={user?.email || "Not set"}
-                        value="Not set"
-                        readOnly
-                        className="bg-muted"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
                   </div>
+                  <Button onClick={handleSave}>Save Changes</Button>
+
+                  <Button onClick={initialiseUser}>Refresh User</Button>
                 </CardContent>
               </CardHeader>
             </Card>
