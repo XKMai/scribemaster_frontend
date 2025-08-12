@@ -28,6 +28,11 @@ export type Item = {
   data: any;
 };
 
+export type UpdateUserRequest = {
+  name?: string;
+  email?: string;
+}
+
 export type CreateNoteRequest = {
   title: string;
   content: string;
@@ -76,6 +81,12 @@ export const apiService = {
   // cookie call
   getCookie: async () => {
     const response = await api.get('/me');
+    return response.data;
+  },
+
+  // user call
+  updateUser: async (userId: number, data: UpdateUserRequest) => {
+     const response = await api.put(`/user/${userId}`, data);
     return response.data;
   },
 
