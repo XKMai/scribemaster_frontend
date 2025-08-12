@@ -17,7 +17,6 @@ import { useState } from "react";
 
 const UserProfilePage = () => {
   const user = useUserStore((state) => state.user);
-  const initialiseUser = useUserStore((state) => state.initialiseUser);
   const [name, setName] = useState(user?.name || "");
   const [email, setEmail] = useState(user?.email || "");
 
@@ -29,6 +28,7 @@ const UserProfilePage = () => {
     try {
       const updated = await apiService.updateUser(user.id, { name, email });
       updateUserInStore(updated.user);
+      alert("User information updated successfully!");
     } catch (err) {
       console.error(err);
       alert("Failed to update user");
@@ -75,9 +75,9 @@ const UserProfilePage = () => {
                       />
                     </div>
                   </div>
-                  <Button onClick={handleSave}>Save Changes</Button>
-
-                  <Button onClick={initialiseUser}>Refresh User</Button>
+                  <Button className="space-y-2 mt-3" onClick={handleSave}>
+                    Save Changes
+                  </Button>
                 </CardContent>
               </CardHeader>
             </Card>
