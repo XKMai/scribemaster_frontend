@@ -46,9 +46,7 @@ export const EntityList = ({ userId }: EntityListProps) => {
       <ScrollArea className="flex-1 overflow-y-auto pr-2">
         <div className="flex flex-col gap-4 p-2">
           {entityIds.length === 0 ? (
-            <div className="text-sm text-muted-foreground">
-              No entities created yet.
-            </div>
+            <div className="text-sm text-white">No entities created yet.</div>
           ) : (
             entityIds.map((id) => (
               <EntityCard
