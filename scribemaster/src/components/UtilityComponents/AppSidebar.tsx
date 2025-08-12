@@ -65,11 +65,6 @@ const items = [
     url: "/information",
     icon: Library,
   },
-  {
-    title: "Login",
-    url: "/login",
-    icon: Library,
-  },
 ];
 
 export function AppSidebar() {
