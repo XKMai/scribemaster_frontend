@@ -3,8 +3,6 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage";
 import "./lib/axiosConfig";
-import CampaignCreationPage from "./pages/CampaignCreationPage";
-import CampaignReaderPage from "./pages/CampaignReaderPage";
 import ProtectedRoute from "./components/UtilityComponents/ProtectedRoute";
 import CampaignExplorerPage from "./pages/CampaignExplorerPage";
 import CharacterCreationPage from "./pages/CharacterCreationPage";
@@ -35,11 +33,6 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/home" element={<HomePage />} />
-              <Route
-                path="/campaigncreation"
-                element={<CampaignCreationPage />}
-              />
-              <Route path="/campaignreader" element={<CampaignReaderPage />} />
               <Route
                 path="/campaign/:campaignId"
                 element={<CampaignExplorerPage />}
