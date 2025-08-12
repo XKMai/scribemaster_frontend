@@ -8,9 +8,9 @@ const LogoutButton = () => {
 
   const handleLogout = async () => {
     try {
-      await api.get("/logout");
+      await api.post("/logout");
       useUserStore.getState().clearUser();
-      navigate("/login");
+      navigate("/login", { replace: true });
     } catch (error) {
       alert("Logout failed: " + error);
     }
