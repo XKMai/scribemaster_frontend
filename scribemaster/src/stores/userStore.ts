@@ -5,6 +5,7 @@ import  {persist } from "zustand/middleware"
 type User = {
     id: number,
     name: string,
+    email: string,
 }
 
 type UserStore = {
