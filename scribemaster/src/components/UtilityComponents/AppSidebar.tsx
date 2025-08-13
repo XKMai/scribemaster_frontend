@@ -27,13 +27,18 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import LogoutButton from "../LoginComponents/LogoutButton";
-import { apiService } from "@/services/apiservice";
-import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import InformationBrowser from "../InformationBrowsingComponents/InformationBrowser";
+import { Link, useNavigate } from "react-router";
+import { useUserStore } from "@/stores/userStore";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
+import { ModeToggle } from "./ModeToggle";
 
-// Menu items.
 const items = [
   {
     title: "Home",
@@ -63,29 +68,38 @@ const items = [
 ];
 
 export function AppSidebar() {
-  const [userName, setUserName] = useState<number | null>(null);
-
-  useEffect(() => {
-    apiService.getCookie().then((res) => setUserName(res.user.name));
-  }, []);
+  const navigate = useNavigate();
+  const userName = useUserStore((state) => state.user?.name);
 
   return (
     <Sidebar>
       <SidebarHeader className="flex flex-row justify-between">
-        <SidebarGroupLabel>ScribeMaster</SidebarGroupLabel>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button size="icon" variant="ghost">
-              <Library />
-            </Button>
-          </SheetTrigger>
-          <SheetContent
-            side="right"
-            className="max-w-none w-[95vw] sm:w-[80vw] md:w-[70vw] lg:!w-[50vw] xl:!w-[50vw]"
-          >
-            <InformationBrowser />
-          </SheetContent>
-        </Sheet>
+        <SidebarGroupLabel className="text-accent-foreground text-sm">
+          Scribe Master
+        </SidebarGroupLabel>
+        <div className="flew flex-row">
+          <ModeToggle />
+          <Sheet>
+            <HoverCard>
+              <HoverCardTrigger>
+                <SheetTrigger asChild>
+                  <Button size="icon" variant="outline">
+                    <Library />
+                  </Button>
+                </SheetTrigger>
+              </HoverCardTrigger>
+              <HoverCardContent className="text-xs w-fit" side="right">
+                Toggle Information Browser
+              </HoverCardContent>
+            </HoverCard>
+            <SheetContent
+              side="right"
+              className="max-w-none w-[95vw] sm:w-[80vw] md:w-[70vw] lg:!w-[50vw] xl:!w-[50vw]"
+            >
+              <InformationBrowser />
+            </SheetContent>
+          </Sheet>
+        </div>
       </SidebarHeader>
 
       <SidebarContent>
@@ -95,10 +109,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -111,7 +125,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
+                <SidebarMenuButton className="border-2 border-accent-foreground">
                   <User2 />
                   {userName}
                   <ChevronUp className="ml-auto" />
@@ -119,12 +133,20 @@ export function AppSidebar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 side="top"
-                className="w-[--radix-popper-anchor-width]"
+                className="w-(--radix-dropdown-menu-trigger-width)"
+                align="start"
               >
                 <DropdownMenuItem>
-                  <span>
-                    <LogoutButton />
-                  </span>
+                  <LogoutButton />
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Button
+                    className="text-sm w-full"
+                    onClick={() => navigate("/user")}
+                    variant="ghost"
+                  >
+                    User Profile
+                  </Button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -42,9 +42,7 @@ export const SpellList = ({ userId }: SpellListProps) => {
       <ScrollArea className="flex-1 overflow-y-auto pr-2">
         <div className="flex flex-col gap-4 p-2">
           {spells.length === 0 ? (
-            <div className="text-sm text-muted-foreground">
-              No spells created yet.
-            </div>
+            <div className="text-sm text-white">No spells created yet.</div>
           ) : (
             spells.map((spell) => (
               <SpellCard

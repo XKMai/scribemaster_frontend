@@ -13,10 +13,18 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
 import api from "../../lib/axiosConfig";
+import { useUserStore } from "@/stores/userStore";
 
-// Zod Schema
 const loginSchema = z.object({
-  name: z.string().min(2, { message: "Username is required" }),
+  identifier: z
+    .string()
+    .min(2)
+    .refine(
+      (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || val.length >= 2,
+      {
+        message: "Must be a valid email or username",
+      }
+    ),
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters" }),
@@ -28,18 +36,22 @@ export default function LoginForm2() {
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      name: "",
+      identifier: "",
       password: "",
     },
   });
 
   const navigate = useNavigate();
 
+  const initialiseUser = useUserStore((state) => state.initialiseUser);
+
   const onSubmit = async (data: LoginSchema) => {
     try {
       await api.post("/login", data, {
         withCredentials: true,
       });
+
+      await initialiseUser();
 
       navigate("/home");
     } catch (error: any) {
@@ -55,12 +67,12 @@ export default function LoginForm2() {
       >
         <FormField
           control={form.control}
-          name="name"
+          name="identifier"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Username / Email</FormLabel>
               <FormControl>
-                <Input placeholder="name" {...field} />
+                <Input placeholder="username/email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

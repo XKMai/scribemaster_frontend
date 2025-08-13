@@ -31,6 +31,7 @@ import {
 } from "../ui/carousel";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
+import { useUserStore } from "@/stores/userStore";
 
 const CampaignCarousel = () => {
   const [campaigns, setCampaigns] = useState<{ id: number; name: string }[]>(
@@ -39,20 +40,23 @@ const CampaignCarousel = () => {
   const [renamingId, setRenamingId] = useState<number | null>(null);
   const [newName, setNewName] = useState("");
   const navigate = useNavigate();
+  const userId = useUserStore((state) => state.user?.id);
+  const refreshKey = useUserStore((state) => state.refreshKey);
 
   useEffect(() => {
     const fetchCampaigns = async () => {
       try {
-        const { user } = await apiService.getCookie();
-        const data = await apiService.getCampaignList(user.id);
-        setCampaigns(data);
+        if (userId) {
+          const data = await apiService.getCampaignList(userId);
+          setCampaigns(data);
+        }
       } catch (err) {
         console.error("Failed to fetch campaigns:", err);
       }
     };
 
     fetchCampaigns();
-  }, []);
+  }, [refreshKey]);
 
   const handleRename = async (id: number) => {
     try {
